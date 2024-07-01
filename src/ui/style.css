@@ -181,3 +181,9 @@ html, body {
   visibility: hidden;
   height: 1.4em; /* 줄의 높이를 유지하기 위해 설정합니다 */
 }
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
