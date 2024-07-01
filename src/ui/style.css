@@ -1,0 +1,230 @@
+/* 전체 배경 */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #E6E6FA;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+/* 메인 컨테이너 */
+.container {
+  width: 1100px; /* 고정된 너비 */
+  max-width: 1100px;
+  height: 800px; /* 고정된 높이 */
+  max-height: 800px;
+  display: flex;
+  background: #FFFFFF;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* 내부 컨테이너 */
+.rectangle-2 {
+  width: 40%;
+  background: rgba(91, 134, 229, 0.51);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+}
+
+.rectangle-2 h1 {
+  font-family: 'Alfa Slab One';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 48px;
+  line-height: 100px;
+  letter-spacing: 0.04em;
+  color: #FFFFFF;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  z-index: 1; /* 이미지 위에 텍스트 표시 */
+}
+
+.rectangle-2::before {
+  content: "";
+  background: url('../../public/example.jpg') no-repeat center center; /* 이미지 경로와 배치 설정 */
+  background-size: cover; /* 이미지 크기 조절 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* 텍스트 뒤에 이미지 배치 */
+  border-radius: 15px 0 0 15px; /* 기존 사각형 모서리 반경과 일치시킴 */
+}
+
+/* 오른쪽 패널 */
+.rectangle-1 {
+  width: 60%;
+  background: #FFFFFF;
+  border-radius: 0 15px 15px 0;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.rectangle-1 h2 {
+  font-family: 'Alfa Slab One';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 40px;
+  letter-spacing: 0.08em;
+  color: #000000;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* 유저 타입 그룹 */
+.user-type-group {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px; /* 라벨 사이 간격 조절 */
+  margin-bottom: 20px;
+  margin-top: 20px; /* 위쪽 여백 추가 */
+  
+}
+
+.user-type-group label {
+  display: flex;
+  align-items: center;
+  font-family: 'Telegraf', sans-serif; /* 폰트 일관성 */
+  font-size: 16px; /* 폰트 크기 조정 */
+  color: #000000; /* 폰트 색상 */
+}
+
+.user-type-group input[type="radio"] {
+  margin-right: 5px;
+}
+
+/* 폼 */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-family: 'Telegraf';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 40px;
+  letter-spacing: 0.08em;
+  color: #9D9D9D;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #9D9D9D;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.login-button, .find-password-button, .verification-button{
+  background: #5B86E5;
+  border: none;
+  border-radius: 8px;
+  color: #FFFFFF;
+  padding: 15px;
+  font-family: 'Telegraf';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  margin-top: 20px; /* 버튼 간격 조절 */
+}
+
+.signup-link, .findpassword-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 16px;
+  color: #000000;
+}
+
+.signup-link a, .findpassword-link a {
+  color: #5B86E5;
+  text-decoration: none;
+}
+
+.signup-link a:hover, .findpassword-link a:hover {
+  text-decoration: underline;
+}
+
+/* 모달 스타일 */
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  background: #FFFFFF;
+  border-radius: 15px;
+  padding: 40px;
+  width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #5B86E5;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  display: inline;
+  padding: 0; /* 추가: 불필요한 여백 제거 */
+  margin: 0; /* 추가: 불필요한 여백 제거 */
+}
+
+.link-button:hover {
+  text-decoration: underline;
+}
+
+
+
+.close-button {
+  background: #CCCCCC;
+  border: none;
+  border-radius: 8px;
+  color: #FFFFFF;
+  padding: 10px;
+  font-family: 'Telegraf', sans-serif;
+  font-style: normal;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.input-container {
+  position: relative;
+}
+
+.timer {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: red;
+  font-size: 12px;
+}
