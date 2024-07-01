@@ -1,0 +1,157 @@
+/* 전체 배경 */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+  background-color: #5b86e5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* 메인 컨테이너 */
+.container {
+  width: 100%;
+  max-width: 1800px;
+  height: 80%;
+  display: flex;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* 내부 컨테이너 */
+.rectangle-2 {
+  width: 40%;
+  background: rgba(91, 134, 229, 0.51);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rectangle-2 h1 {
+  font-family: "Alfa Slab One";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 56px;
+  line-height: 60px;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* 오른쪽 패널 */
+.rectangle-1 {
+  width: 60%;
+  background: #ffffff;
+  border-radius: 0 15px 15px 0;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.rectangle-1 h2 {
+  font-family: "Telegraf";
+  font-style: normal;
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 40px;
+  letter-spacing: 0.08em;
+  color: #000000;
+  margin-bottom: 40px;
+}
+
+/* 폼 */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-family: "Telegraf";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 40px;
+  letter-spacing: 0.08em;
+  color: #9d9d9d;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #9d9d9d;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.login-button,
+.btn {
+  background: #5b86e5;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  padding: 15px;
+  font-family: "Telegraf";
+  font-style: normal;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
+
+.signup-link {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 16px;
+  color: #000000;
+}
+
+.signup-link a {
+  color: #5b86e5;
+  text-decoration: none;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
+
+.email-input {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+div > input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #9d9d9d;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.email-auth-btn {
+  background: #5b86e5;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  padding: 15px;
+  font-family: "Telegraf";
+  font-style: normal;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  right: 5px;
+}
+
