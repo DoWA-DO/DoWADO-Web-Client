@@ -90,7 +90,6 @@ html, body {
   gap: 20px; /* 라벨 사이 간격 조절 */
   margin-bottom: 20px;
   margin-top: 20px; /* 위쪽 여백 추가 */
-  
 }
 
 .user-type-group label {
@@ -128,7 +127,7 @@ html, body {
   font-size: 16px;
 }
 
-.login-button, .find-password-button, .verification-button{
+.login-button, .find-password-button, .verification-button {
   background: #5B86E5;
   border: none;
   border-radius: 8px;
@@ -161,26 +160,6 @@ html, body {
   text-decoration: underline;
 }
 
-/* 모달 스타일 */
-.modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  right: auto;
-  bottom: auto;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-  background: #FFFFFF;
-  border-radius: 15px;
-  padding: 40px;
-  width: 400px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-}
-
-.overlay {
-  background: rgba(0, 0, 0, 0.5);
-}
-
 .link-button {
   background: none;
   border: none;
@@ -198,33 +177,7 @@ html, body {
   text-decoration: underline;
 }
 
-
-
-.close-button {
-  background: #CCCCCC;
-  border: none;
-  border-radius: 8px;
-  color: #FFFFFF;
-  padding: 10px;
-  font-family: 'Telegraf', sans-serif;
-  font-style: normal;
-  font-weight: 800;
-  font-size: 14px;
-  cursor: pointer;
-  width: 100%;
-  text-align: center;
-  margin-top: 10px;
-}
-
-.input-container {
-  position: relative;
-}
-
-.timer {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: red;
-  font-size: 12px;
+.signup-link.hidden {
+  visibility: hidden;
+  height: 1.4em; /* 줄의 높이를 유지하기 위해 설정합니다 */
 }
