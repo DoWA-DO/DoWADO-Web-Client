@@ -2,8 +2,8 @@
 html, body {
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
-  background-color: #E6E6FA;
+  font-family: "Roboto", sans-serif;
+  background-color: #e6e6fa;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,20 +35,20 @@ html, body {
 }
 
 .rectangle-2 h1 {
-  font-family: 'Alfa Slab One';
+  font-family: "Alfa Slab One";
   font-style: normal;
   font-weight: 400;
   font-size: 48px;
   line-height: 100px;
   letter-spacing: 0.04em;
-  color: #FFFFFF;
+  color: #ffffff;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   z-index: 1; /* 이미지 위에 텍스트 표시 */
 }
 
 .rectangle-2::before {
   content: "";
-  background: url('../../public/example.jpg') no-repeat center center; /* 이미지 경로와 배치 설정 */
+  background: url("../../public/example.jpg") no-repeat center center; /* 이미지 경로와 배치 설정 */
   background-size: cover; /* 이미지 크기 조절 */
   position: absolute;
   top: 0;
@@ -62,7 +62,7 @@ html, body {
 /* 오른쪽 패널 */
 .rectangle-1 {
   width: 60%;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 0 15px 15px 0;
   padding: 40px;
   display: flex;
@@ -72,7 +72,7 @@ html, body {
 }
 
 .rectangle-1 h2 {
-  font-family: 'Alfa Slab One';
+  font-family: "Alfa Slab One";
   font-style: normal;
   font-weight: 800;
   font-size: 30px;
@@ -95,7 +95,7 @@ html, body {
 .user-type-group label {
   display: flex;
   align-items: center;
-  font-family: 'Telegraf', sans-serif; /* 폰트 일관성 */
+  font-family: "Telegraf", sans-serif; /* 폰트 일관성 */
   font-size: 16px; /* 폰트 크기 조정 */
   color: #000000; /* 폰트 색상 */
 }
@@ -107,33 +107,75 @@ html, body {
 /* 폼 */
 .form-group {
   margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group label {
-  font-family: 'Telegraf';
+  font-family: "Telegraf";
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
   line-height: 40px;
   letter-spacing: 0.08em;
-  color: #9D9D9D;
+  color: #9d9d9d;
 }
 
 .form-group input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #9D9D9D;
-  border-radius: 8px;
+  border: 1px solid #9d9d9d;
+  border-radius: 5px;
   font-size: 16px;
+  box-sizing: border-box;
+  display: block;
 }
 
-.login-button, .find-password-button, .verification-button {
-  background: #5B86E5;
+.email-input {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.email-input input {
+  width: 100%; /* 버튼의 너비를 뺀 나머지 공간 차지 */
+  padding: 10px;
+  border: 1px solid #9d9d9d;
+  border-radius: 5px 0 0 5px; /* 왼쪽 모서리만 둥글게 */
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.email-input button {
+  position: absolute;
+  width: auto;
+  padding: 10px;
+  top: 5px;
+  bottom: 5px;
+  right: 5px;
+  background: #5b86e5;
   border: none;
   border-radius: 8px;
-  color: #FFFFFF;
+  color: #ffffff;
+  padding: 5px 10px;
+  font-family: "Telegraf";
+  font-style: normal;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  text-align: center;
+}
+
+.login-button,
+.find-password-button,
+.verification-button {
+  background: #5b86e5;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
   padding: 15px;
-  font-family: 'Telegraf';
+  font-family: "Telegraf";
   font-style: normal;
   font-weight: 800;
   font-size: 16px;
@@ -144,26 +186,29 @@ html, body {
   margin-top: 20px; /* 버튼 간격 조절 */
 }
 
-.signup-link, .findpassword-link {
+.signup-link,
+.findpassword-link {
   margin-top: 20px;
   text-align: center;
   font-size: 16px;
   color: #000000;
 }
 
-.signup-link a, .findpassword-link a {
-  color: #5B86E5;
+.signup-link a,
+.findpassword-link a {
+  color: #5b86e5;
   text-decoration: none;
 }
 
-.signup-link a:hover, .findpassword-link a:hover {
+.signup-link a:hover,
+.findpassword-link a:hover {
   text-decoration: underline;
 }
 
 .link-button {
   background: none;
   border: none;
-  color: #5B86E5;
+  color: #5b86e5;
   text-decoration: none;
   cursor: pointer;
   font-size: 16px;
@@ -188,131 +233,79 @@ html, body {
   margin-top: 10px;
 }
 
-/* 이메일 입력 필드와 버튼을 같은 줄에 배치 */
-.email-input-wrapper {
-  position: relative;
+.info-check {
   display: flex;
-  align-items: center; /* 추가: 입력 필드와 버튼을 수직 가운데 정렬 */
+  justify-content: flex-start;
+  gap: 20px; /* 라벨 사이 간격 조절 */
+  margin-bottom: 20px;
+  margin-top: 20px; /* 위쪽 여백 추가 */
 }
 
-.email-input-wrapper input[type="email"] {
-  flex: 1;
-  padding-right: 110px; /* 버튼의 너비만큼 패딩 추가 */
-  box-sizing: border-box;
-}
-
-.verification-button-inline {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%; /* 이메일 입력 필드와 동일한 높이로 설정 */
-  padding: 0 15px;
-  background: #5B86E5;
-  border: none;
-  border-radius: 8px; /* 버튼의 왼쪽을 직각으로 설정 */
-  color: white;
-  cursor: pointer;
+.info-check label {
   display: flex;
   align-items: center;
-  justify-content: center;
+  font-family: "Telegraf", sans-serif; /* 폰트 일관성 */
+  font-size: 16px; /* 폰트 크기 조정 */
+  color: #000000; /* 폰트 색상 */
 }
 
-.verification-button-inline:hover {
-  background: #4a6db3;
+.info-check input[type="radio"] {
+  margin-right: 5px;
 }
 
-/* 동의 체크박스와 라벨을 한 줄에 배치 */
-.consent-group {
-  display: flex;
-  align-items: center;
+.info-check a {
+  text-decoration: none; /* 링크 아래의 밑줄 제거 */
 }
 
-.consent-group label {
-  font-family: 'Telegraf';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 30px;
-  letter-spacing: 0.08em;
-  color: #9D9D9D;
-  margin-left: 10px; /* 체크박스와 라벨 간의 간격 조절 */
-}
-
-/* 모달 스타일 */
 .modal {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
+  background-color: #ffffff;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-  width: 40%; /* 모달의 너비를 조정합니다 */
-  max-height: 50vh; /* 모달의 최대 높이를 설정합니다 */
-  overflow-y: auto; /* 모달 내용이 길어지면 스크롤 가능하게 합니다 */
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.modal h2 {
-  margin-top: 0;
-  font-family: 'Roboto', sans-serif; /* 글꼴 조정 */
-  font-size: 24px; /* 글자 크기 조정 */
-  text-align: center; /* 중앙 정렬 */
-}
-
-.modal-content {
-  white-space: pre-wrap; /* Add this to preserve whitespace and line breaks */
-  font-family: 'Roboto', sans-serif; /* 글꼴 조정 */
-  font-size: 16px; /* 글자 크기 조정 */
-  line-height: 1.5; /* 줄 간격 조정 */
-}
-
-
-.modal-close-button {
-  display: block;
-  margin: 20px auto 0; /* 중앙 정렬 */
-  padding: 10px 20px;
-  background-color: #5B86E5;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: center; /* 텍스트 중앙 정렬 */
-}
-
-.modal-close-button:hover {
-  background: #4a6db3;
-}
-
-/* 동의 체크박스 그룹 */
-.consent-group {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 
-.consent-group label {
-  margin-right: 15px; /* 텍스트와 링크 사이 간격 추가 */
+.modal h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
 }
 
-.link-button {
-  margin-left: 5px; /* 링크와 텍스트 사이 간격 추가 */
-  background: none;
-  border: none;
-  color: #5B86E5;
-  text-decoration: none;
-  cursor: pointer;
+.modal p {
   font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 20px;
 }
 
-.link-button:hover {
-  text-decoration: underline;
+.modal button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal button:hover {
+  background-color: #0056b3;
+}
+
+.info-check a {
+  margin-left: 5px;
+  color: #5b86e5;
 }

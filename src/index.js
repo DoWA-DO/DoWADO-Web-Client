@@ -1,21 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import './ui/style.css';
-import './ui/style.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import "./ui/style.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 /* 페이지 */
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
-import FindPasswordPage from './pages/FindPasswordPage';
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import FindPasswordPage from "./pages/FindPasswordPage";
+import DashboardStudentPage from "./pages/DashboadStudentPage";
 import DashboardFacultyPage from './pages/DashboardFacultyPage'
 import FacultyDocumentPage from './pages/FacultyDocumentPage';
 import StudentManagementPage from './pages/StudentManagementPage';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Router>
@@ -23,10 +23,10 @@ root.render(
         <Route path="/" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/findpassword" element={<FindPasswordPage />} />
+        <Route path="/dashboardstudent" element={<DashboardStudentPage />} />
         <Route path="/dashboardfaculty" element={<DashboardFacultyPage />} />
         <Route path="/facultydocument" element={<FacultyDocumentPage />} />
         <Route path="/studentmanagement" element={<StudentManagementPage />} />
-        
       </Routes>
     </Router>
   </React.StrictMode>
