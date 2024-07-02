@@ -1,15 +1,23 @@
 import React, { useState } from "react";
+import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
+import InfoCheck from "./InfoCheckModal";
 
 const SignupForm = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPasswod] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [emailSent, setEmailSent] = useState(false); // 이메일 인증 상태 관리
   const [verificationCode, setVerificationCode] = useState(""); // 사용자가 입력한 인증 코드
   const [inputVerificationCode, setInputVerificationCode] = useState(""); // 서버에서 받은 인증 코드
   const [passwordError, setPasswordError] = useState(""); // 비밀번호 유효성 검사 에러 메시지
+  const [confirmPwError, setConfirmPwError] = useState(""); // 비밀번호 일치 확인 에러 메시지
   const [emailError, setEmailError] = useState(""); // 이메일 유효성 검사 에러 메시지
+  const [isEmailValid, setIsEmailValid] = useState(false); // 이메일 유효성 상태
+  const [modalOpen, setModalOpen] = useState(false); // 모달 창 상태 관리
+  const [schoolNameError, setSchoolNameError] = useState(""); // 학교 이름 필드 에러 메시지
 
   const validatePassword = (value) => {
     const pwRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[@#$%^&+=!])(?!.*\s).{8,}$/;
@@ -22,26 +30,71 @@ const SignupForm = () => {
     }
   };
 
+  const checkPassword = (pw, confirmPw) => {
+    // 비밀번호 확인
+    console.log(pw, confirmPw);
+    if (pw !== confirmPw) {
+      setConfirmPwError("비밀번호가 일치하지 않습니다.");
+    } else {
+      setConfirmPwError("");
+    }
+  };
+
   const validateEmail = (value) => {
     // 이메일 유효성 검사
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(value)) {
       setEmailError("유효한 이메일 주소를 입력해주세요.");
+      setIsEmailValid(false);
     } else {
       setEmailError("");
+      setIsEmailValid(true);
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // 비밀번호 확인
-    if (password !== confirmPassword) {
-      alert("비밀번호가 일치하지 않습니다.");
+    // 이전 에러 초기화
+    setEmailError("");
+    setPasswordError("");
+    setConfirmPwError("");
+    setSchoolNameError("");
+
+    // 빈칸, 이메일 인증 완료 확인
+    if (!email) {
+      setEmailError("이메일을 입력해 주세요.");
+      return;
+    }
+    if (!password) {
+      setPasswordError("비밀번호를 입력해 주세요.");
+      return;
+    }
+    if (!confirmPassword) {
+      setConfirmPwError("비밀번호를 확인해 주세요.");
+      return;
+    }
+    if (!schoolName) {
+      setSchoolNameError("학교 이름을 입력해 주세요.");
+      return;
+    }
+    if (!isEmailValid || !emailSent) {
+      alert("이메일 인증을 완료해주세요.");
       return;
     }
 
-    // 회원가입 데이터
+    // 체크박스 체크 여부 확인
+    const checkboxChecked = document.getElementById("checkbox").checked;
+    if (!checkboxChecked) {
+      alert("개인정보 수집 및 이용 동의에 체크해주세요.");
+      return;
+    }
+
+    // 오류가 없으면 회원가입 진행
+    if (emailError || passwordError || confirmPwError || schoolNameError) {
+      return;
+    }
+
     const userData = {
       email: email,
       password: password,
@@ -49,11 +102,10 @@ const SignupForm = () => {
     };
 
     try {
-      // 서버로 데이터 전송
       const response = await fetch("http://localhost:8000/signup", {
         method: "POST",
         headers: {
-          "Content-Type": "application/Json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
       });
@@ -63,19 +115,28 @@ const SignupForm = () => {
       }
 
       alert("회원가입이 성공적으로 완료되었습니다.");
-      // 회원가입 완료되면 로그인 페이지로 이동
+      navigate("/LoginPage");
 
       setEmail("");
       setPassword("");
-      setConfirmPasswod("");
+      setConfirmPassword("");
       setSchoolName("");
       setVerificationCode("");
       setEmailSent(false);
       setInputVerificationCode("");
+      setModalOpen(false);
     } catch (error) {
       console.error("Error:", error);
       alert("회원가입 중 오류가 발생했습니다. 다시 시도해 주세요.");
     }
+  };
+
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
   };
 
   const handleEmailAuth = async () => {
@@ -122,84 +183,103 @@ const SignupForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="email">Email</label>
-        <div className="email-input">
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              validateEmail(e.target.value);
-            }}
-            required
-          />
-          <button id="email-Auth-btn" onClick={handleEmailAuth}>
-            이메일 인증
-          </button>
+    <div className="signup-form-container">
+      <form onSubmit={handleSubmit}>
+        <div className="form-group" id="email-form">
+          <label htmlFor="email">이메일</label>
+          <div className="email-input">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                validateEmail(e.target.value);
+              }}
+              required
+            />
+            <button id="email-Auth-btn" onClick={handleEmailAuth}>
+              이메일 인증
+            </button>
+          </div>
+          {emailError && <div className="error-message">{emailError}</div>}
         </div>
-        {emailError && <div className="error-message">{emailError}</div>}
-      </div>
-      {emailSent && (
+        {emailSent && (
+          <div className="form-group">
+            <label htmlFor="verification-code">Verification Code</label>
+            <input
+              type="text"
+              id="verification-code"
+              name="verification-code"
+              value={verificationCode}
+              onChange={handleVerificationCodeChange}
+              required
+            />
+          </div>
+        )}
         <div className="form-group">
-          <label htmlFor="verification-code">Verification Code</label>
+          <label htmlFor="password">비밀번호</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              validatePassword(e.target.value);
+            }}
+          />
+          {passwordError && (
+            <div className="error-message">{passwordError}</div>
+          )}
+        </div>
+        <div className="form-group">
+          <label htmlFor="confirm-password">비밀번호 확인</label>
+          <input
+            type="password"
+            id="confirm-password"
+            name="confirm-password"
+            value={confirmPassword}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              checkPassword(password, e.target.value);
+            }}
+          />
+          {confirmPwError && (
+            <div className="error-message">{confirmPwError}</div>
+          )}
+        </div>
+        <div className="form-group">
+          <label htmlFor="school-name">학교 이름</label>
           <input
             type="text"
-            id="verification-code"
-            name="verification-code"
-            value={verificationCode}
-            onChange={handleVerificationCodeChange}
-            required
+            id="school-name"
+            name="school-name"
+            value={schoolName}
+            onChange={(e) => setSchoolName(e.target.value)}
           />
         </div>
-      )}
-      <div className="form-group">
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-            validatePassword(e.target.value);
-          }}
-          required
-        />
-        {passwordError && <div className="error-message">{passwordError}</div>}
-      </div>
-      <div className="form-group">
-        <label htmlFor="confirm-password">Confirm Password</label>
-        <input
-          type="password"
-          id="confirm-password"
-          name="confirm-password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPasswod(e.target.value)}
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="school-name">School Name</label>
-        <input
-          type="text"
-          id="school-name"
-          name="school-name"
-          value={schoolName}
-          onChange={(e) => setSchoolName(e.target.value)}
-          required
-        />
-      </div>
-      <button type="submit" className="login-button">
-        Sign Up
-      </button>
-      <div className="signup-link">
-        Already have an account? <a href="/">Login Here</a>
-      </div>
-    </form>
+        <div className="info-check">
+          <label>
+            <input type="checkbox" />
+            개인정보 수집 및 이용 동의
+            <a href="#" onClick={openModal}>
+              확인
+            </a>
+          </label>
+        </div>
+        <button type="submit" className="login-button">
+          회원가입
+        </button>
+        <div className="signup-link">
+          계정이 있나요? <a href="/">로그인</a>
+        </div>
+      </form>
+
+      {/* 개인정보 이용 동의 모달 */}
+      <InfoCheck isOpen={modalOpen} closeModal={closeModal} />
+    </div>
   );
 };
 

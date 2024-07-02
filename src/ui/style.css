@@ -1,21 +1,23 @@
 /* 전체 배경 */
+html,
 body {
   margin: 0;
   padding: 0;
   font-family: "Roboto", sans-serif;
-  background-color: #5b86e5;
+  background-color: #e6e6fa;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  overflow: hidden;
+  height: 100%;
+  width: 100%;
 }
 
 /* 메인 컨테이너 */
 .container {
-  width: 100%;
-  max-width: 1800px;
-  height: 80%;
+  width: 1100px; /* 고정된 너비 */
+  max-width: 1100px;
+  height: 800px; /* 고정된 높이 */
+  max-height: 800px;
   display: flex;
   background: #ffffff;
   border-radius: 15px;
@@ -29,18 +31,33 @@ body {
   background: rgba(91, 134, 229, 0.51);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  position: relative;
 }
 
 .rectangle-2 h1 {
   font-family: "Alfa Slab One";
   font-style: normal;
   font-weight: 400;
-  font-size: 56px;
-  line-height: 60px;
+  font-size: 48px;
+  line-height: 100px;
   letter-spacing: 0.04em;
   color: #ffffff;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  z-index: 1; /* 이미지 위에 텍스트 표시 */
+}
+
+.rectangle-2::before {
+  content: "";
+  background: url("../../public/example.jpg") no-repeat center center; /* 이미지 경로와 배치 설정 */
+  background-size: cover; /* 이미지 크기 조절 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* 텍스트 뒤에 이미지 배치 */
+  border-radius: 15px 0 0 15px; /* 기존 사각형 모서리 반경과 일치시킴 */
 }
 
 /* 오른쪽 패널 */
@@ -52,10 +69,11 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 .rectangle-1 h2 {
-  font-family: "Telegraf";
+  font-family: "Alfa Slab One";
   font-style: normal;
   font-weight: 800;
   font-size: 30px;
@@ -63,11 +81,35 @@ body {
   letter-spacing: 0.08em;
   color: #000000;
   margin-bottom: 40px;
+  text-align: center;
+}
+
+/* 유저 타입 그룹 */
+.user-type-group {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px; /* 라벨 사이 간격 조절 */
+  margin-bottom: 20px;
+  margin-top: 20px; /* 위쪽 여백 추가 */
+}
+
+.user-type-group label {
+  display: flex;
+  align-items: center;
+  font-family: "Telegraf", sans-serif; /* 폰트 일관성 */
+  font-size: 16px; /* 폰트 크기 조정 */
+  color: #000000; /* 폰트 색상 */
+}
+
+.user-type-group input[type="radio"] {
+  margin-right: 5px;
 }
 
 /* 폼 */
 .form-group {
   margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group label {
@@ -86,10 +128,49 @@ body {
   border: 1px solid #9d9d9d;
   border-radius: 5px;
   font-size: 16px;
+  box-sizing: border-box;
+  display: block;
+}
+
+.email-input {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.email-input input {
+  width: 100%; /* 버튼의 너비를 뺀 나머지 공간 차지 */
+  padding: 10px;
+  border: 1px solid #9d9d9d;
+  border-radius: 5px 0 0 5px; /* 왼쪽 모서리만 둥글게 */
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.email-input button {
+  position: absolute;
+  width: auto;
+  padding: 10px;
+  top: 5px;
+  bottom: 5px;
+  right: 5px;
+  background: #5b86e5;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  padding: 5px 10px;
+  font-family: "Telegraf";
+  font-style: normal;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  text-align: center;
 }
 
 .login-button,
-.btn {
+.find-password-button,
+.verification-button {
   background: #5b86e5;
   border: none;
   border-radius: 8px;
@@ -103,55 +184,129 @@ body {
   cursor: pointer;
   width: 100%;
   text-align: center;
+  margin-top: 20px; /* 버튼 간격 조절 */
 }
 
-.signup-link {
-  margin-top: 10px;
+.signup-link,
+.findpassword-link {
+  margin-top: 20px;
   text-align: center;
   font-size: 16px;
   color: #000000;
 }
 
-.signup-link a {
+.signup-link a,
+.findpassword-link a {
   color: #5b86e5;
   text-decoration: none;
 }
 
-.signup-link a:hover {
+.signup-link a:hover,
+.findpassword-link a:hover {
   text-decoration: underline;
 }
 
-.email-input {
-  position: relative;
-  display: flex;
-  width: 100%;
-}
-
-div > input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #9d9d9d;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.email-auth-btn {
-  background: #5b86e5;
+.link-button {
+  background: none;
   border: none;
-  border-radius: 8px;
-  color: #ffffff;
-  padding: 15px;
-  font-family: "Telegraf";
-  font-style: normal;
-  font-weight: 800;
-  font-size: 16px;
-  letter-spacing: 0.08em;
+  color: #5b86e5;
+  text-decoration: none;
   cursor: pointer;
-  width: 100%;
+  font-size: 16px;
   text-align: center;
-  position: absolute;
-  top: 5px;
-  bottom: 5px;
-  right: 5px;
+  display: inline;
+  padding: 0; /* 추가: 불필요한 여백 제거 */
+  margin: 0; /* 추가: 불필요한 여백 제거 */
 }
 
+.link-button:hover {
+  text-decoration: underline;
+}
+
+.signup-link.hidden {
+  visibility: hidden;
+  height: 1.4em; /* 줄의 높이를 유지하기 위해 설정합니다 */
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.info-check {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px; /* 라벨 사이 간격 조절 */
+  margin-bottom: 20px;
+  margin-top: 20px; /* 위쪽 여백 추가 */
+}
+
+.info-check label {
+  display: flex;
+  align-items: center;
+  font-family: "Telegraf", sans-serif; /* 폰트 일관성 */
+  font-size: 16px; /* 폰트 크기 조정 */
+  color: #000000; /* 폰트 색상 */
+}
+
+.info-check input[type="radio"] {
+  margin-right: 5px;
+}
+
+.info-check a {
+  text-decoration: none; /* 링크 아래의 밑줄 제거 */
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.modal p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.modal button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal button:hover {
+  background-color: #0056b3;
+}
+
+.info-check a {
+  margin-left: 5px;
+  color: #5b86e5;
+}
