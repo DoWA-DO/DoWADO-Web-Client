@@ -1,0 +1,79 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw; /* 전체 너비 설정 */
+  }
+  
+  .dashboard-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+  }
+  
+  .logout-link {
+    color: #5B86E5;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+  }
+  
+  .dashboard-content {
+    display: flex;
+    flex: 1;
+    width: 100%; /* 전체 너비 설정 */
+    justify-content: space-between;
+    padding-top: 40px; /* 로그아웃 링크의 높이만큼 패딩 추가 */
+    position: relative; /* 수평선 추가를 위해 상대 위치 설정 */
+  }
+  
+  .dashboard-content::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: 100%;
+    background-color: #ccc; /* 수평선 색상 */
+  }
+  
+  .feature {
+    flex: 1; /* 전체 화면의 50%씩 차지하도록 설정 */
+    padding: 20px;
+    box-sizing: border-box;
+    justify-content: center;
+  }
+  
+  .feature1 {
+    border-right: 0px solid #ccc; /* 가운데 회색 바 제거 */
+  }
+  
+  .feature2 {
+    border-left: 0px solid #ccc; /* 가운데 회색 바 제거 */
+  }
+  
+  .feature h2 {
+    text-align: center;
+  }
+  
+  .feature .action-button {
+    display: block;
+    margin: 20px auto; /* 가운데 정렬 및 여백 추가 */
+    padding: 10px 20px;
+    background-color: #5B86E5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+  }
+  
+  .feature .action-button:hover {
+    background-color: #3b5db2; /* 호버 시 색상 변경 */
+  }

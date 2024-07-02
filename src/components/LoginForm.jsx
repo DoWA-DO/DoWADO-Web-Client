@@ -77,9 +77,9 @@ const LoginForm = () => {
         }
 
         if (userType === 'faculty') {
-          navigate('/dashboard1');
+          navigate('/dashboardfaculty');
         } else if (userType === 'student') {
-          navigate('/dashboard2');
+          navigate('/dashboardstudent');
         }
       }
     } catch (error) {
