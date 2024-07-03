@@ -25,7 +25,7 @@ const SignupForm = () => {
   const [agreeError, setAgreeError] = useState(""); // 개인정보 수집 동의 체크박스 에러 메시지
   const [terms, setTerms] = useState(false); // 약관 동의 상태 관리
   const [termsError, setTermsError] = useState(""); // 약관 동의 체크박스 에러 메시지
-  /////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////
   const validatePassword = (value) => {
     const pwRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[@#$%^&+=!])(?!.*\s).{8,}$/;
     if (!pwRegex.test(value)) {

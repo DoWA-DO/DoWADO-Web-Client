@@ -1,84 +1,22 @@
-.dashboard-container {
-  display: flex;
-  height: 100vh;
-  width: 100vw; /* 전체 너비 설정 */
-}
-
-.dashboard-content {
-  display: flex;
-  width: 100%; /* 전체 너비 설정 */
-}
-
-.feature {
-  flex: 1;
-  box-sizing: border-box;
-  position: relative;
-  overflow: hidden; /* 이미지가 잘리지 않도록 설정 */
-}
-
-.feature1, .feature2 {
+.dashboard-faculty {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.feature1 {
-  width: 50%;
-  height: 100vh; /* 화면 전체 높이 */
-}
-
-.feature2 {
-  width: 50%;
-}
-
-.feature1 .content {
-  position: absolute;
-  top: 140px;
-  text-align: center;
-  z-index: 1;
-}
-
-.feature2 .feature2-header {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-}
-
-.logout-link {
-  color: #5B86E5;
-  cursor: pointer;
-  font-size: 16px;
-  text-decoration: none;
-}
-
-.feature h2 {
-  margin-bottom: 10px;
-}
-
-.feature .action-button {
-  margin: 0 auto; /* 가운데 정렬 및 여백 추가 */
-  padding: 10px 20px;
-  background-color: #5B86E5;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 16px;
-  text-decoration: none;
-}
-
-.feature .action-button:hover {
-  background-color: #3b5db2; /* 호버 시 색상 변경 */
-}
-
-.background-image {
+  height: 100vh;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
+  overflow: auto; /* 화면이 작아지면 스크롤 가능하도록 설정 */
+}
+
+.top-bar {
+  width: 100%;
+  background-color: white;
+  color: black;
+  padding: 17px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
   top: 0;
   left: 0;
-  z-index: 0; /* Ensure the image is behind the text */
+  z-index: 1000;
 }
+
