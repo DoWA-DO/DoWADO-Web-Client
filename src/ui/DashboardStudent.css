@@ -8,21 +8,68 @@
 	src: url("../fonts/codropsicons/codropsicons.eot");
 	src: url("../fonts/codropsicons/codropsicons.eot?#iefix") format("embedded-opentype"), url("../fonts/codropsicons/codropsicons.woff") format("woff"), url("../fonts/codropsicons/codropsicons.ttf") format("truetype"), url("../fonts/codropsicons/codropsicons.svg#codropsicons") format("svg");
 } */
-.std-btn-container {
-  display: flex;
-  height: 100vh; /* 화면 전체 높이를 차지하게 설정 */
-  width: 100%;
-}
-
-.std-btn {
-  flex: 1;
+.dashboard-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  box-sizing: border-box;
+  height: 100vh;
+  width: 100vw; /* 전체 너비 설정 */
 }
+
+.dashboard-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+
+.logout-link {
+  color: #5B86E5;
+  cursor: pointer;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.dashboard-content {
+  display: flex;
+  flex: 1;
+  width: 100%; /* 전체 너비 설정 */
+  justify-content: space-between;
+  padding-top: 40px; /* 로그아웃 링크의 높이만큼 패딩 추가 */
+  position: relative; /* 수평선 추가를 위해 상대 위치 설정 */
+}
+
+.dashboard-content::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 100%;
+  background-color: #ccc; /* 수평선 색상 */
+}
+
+.feature {
+  flex: 1; /* 전체 화면의 50%씩 차지하도록 설정 */
+  padding: 20px;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+.feature1 {
+  border-right: 0px solid #ccc; /* 가운데 회색 바 제거 */
+}
+
+.feature2 {
+  border-left: 0px solid #ccc; /* 가운데 회색 바 제거 */
+}
+
+.feature h2 {
+  text-align: center;
+}
+
 
 *,
 *:after,
@@ -54,12 +101,10 @@
   vertical-align: middle;
 }
 
-/* Sizes */
 .button--size-s {
   font-size: 14px;
 }
 
-/* Typography and Roundedness */
 .button--text-upper {
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -68,13 +113,11 @@
   font-weight: 600;
 }
 
-/* Borders */
 .button--border-thick {
   border: 3px solid;
   border-radius: 30px;
 }
 
-/* Winona */
 .button--winona {
   overflow: hidden;
   padding: 0;

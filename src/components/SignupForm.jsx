@@ -5,6 +5,7 @@ import InfoCheck from "./InfoCheckModal";
 
 const SignupForm = () => {
   const navigate = useNavigate();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -26,6 +27,35 @@ const SignupForm = () => {
   const [terms, setTerms] = useState(false); // 약관 동의 상태 관리
   const [termsError, setTermsError] = useState(""); // 약관 동의 체크박스 에러 메시지
   /////////////////////////////////////////////////////////////////////////////////////////////
+
+  // 한글만 포함된 문자열인지 검사하는 함수
+  const validateKorean = (value) => {
+    const koreanRegex = /^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$/;
+    return koreanRegex.test(value);
+  };
+
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+
+    if (validateKorean(value)) {
+      setName(value);
+    } else {
+      setName("");
+    }
+  };
+
+  const validateEmail = (value) => {
+    // 이메일 유효성 검사
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+      setEmailError("유효한 이메일 주소를 입력해주세요.");
+      setIsEmailValid(false);
+    } else {
+      setEmailError("");
+      setIsEmailValid(true);
+    }
+  };
+
   const validatePassword = (value) => {
     const pwRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[@#$%^&+=!])(?!.*\s).{8,}$/;
     if (!pwRegex.test(value)) {
@@ -44,18 +74,6 @@ const SignupForm = () => {
       setConfirmPwError("비밀번호가 일치하지 않습니다.");
     } else {
       setConfirmPwError("");
-    }
-  };
-
-  const validateEmail = (value) => {
-    // 이메일 유효성 검사
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(value)) {
-      setEmailError("유효한 이메일 주소를 입력해주세요.");
-      setIsEmailValid(false);
-    } else {
-      setEmailError("");
-      setIsEmailValid(true);
     }
   };
 
@@ -118,6 +136,7 @@ const SignupForm = () => {
 
     // 회원가입 데이터
     const userData = {
+      name: name,
       email: email,
       password: password,
       schoolName: schoolName,
@@ -139,6 +158,7 @@ const SignupForm = () => {
       alert("회원가입이 성공적으로 완료되었습니다.");
       navigate("/LoginPage");
 
+      setName("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
@@ -213,6 +233,16 @@ const SignupForm = () => {
   return (
     <div className="signup-form-container">
       <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="name">이름</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={name}
+            onChange={handleNameChange}
+          />
+        </div>
         <div className="form-group" id="email-form">
           <label htmlFor="email">이메일</label>
           <div className="email-input">
@@ -227,25 +257,23 @@ const SignupForm = () => {
               }}
               required
             />
-            <button id="email-Auth-btn" onClick={handleEmailAuth}>
+            <button id="email-Auth-btn" type="button" onClick={handleEmailAuth}>
               이메일 인증
             </button>
           </div>
           {emailError && <div className="error-message">{emailError}</div>}
         </div>
-        {emailSent && (
-          <div className="form-group">
-            <label htmlFor="verification-code">Verification Code</label>
-            <input
-              type="text"
-              id="verification-code"
-              name="verification-code"
-              value={verificationCode}
-              onChange={handleVerificationCodeChange}
-              required
-            />
-          </div>
-        )}
+        <div className="form-group">
+          <label htmlFor="verification-code">인증번호</label>
+          <input
+            type="text"
+            id="verification-code"
+            name="verification-code"
+            value={verificationCode}
+            onChange={handleVerificationCodeChange}
+            required
+          />
+        </div>
         <div className="form-group">
           <label htmlFor="password">비밀번호</label>
           <input

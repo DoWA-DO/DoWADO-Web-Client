@@ -18,17 +18,17 @@ import StudentManagementPage from './pages/StudentManagementPage';
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Router>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/findpassword" element={<FindPasswordPage />} />
-        <Route path="/dashboardstudent" element={<DashboardStudentPage />} />
-        <Route path="/dashboardfaculty" element={<DashboardFacultyPage />} />
-        <Route path="/facultydocument" element={<FacultyDocumentPage />} />
-        <Route path="/studentmanagement" element={<StudentManagementPage />} />
-      </Routes>
-    </Router>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/findpassword" element={<FindPasswordPage />} />
+          <Route path="/dashboardstudent" element={<DashboardStudentPage />} />
+          <Route path="/dashboardfaculty" element={<DashboardFacultyPage />} />
+          <Route path="/facultydocument" element={<FacultyDocumentPage />} />
+          <Route path="/studentmanagement" element={<StudentManagementPage />} />
+        </Routes>
+      </Router>
   </React.StrictMode>
 );
 

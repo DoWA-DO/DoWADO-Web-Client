@@ -1,5 +1,6 @@
 /* 전체 배경 */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   font-family: "Roboto", sans-serif;
@@ -13,12 +14,13 @@ html, body {
 
 /* 메인 컨테이너 */
 .container {
-  width: 1100px; /* 고정된 너비 */
-  max-width: 1100px;
-  height: 800px; /* 고정된 높이 */
-  max-height: 800px;
+  width: 80vw; /* 고정된 너비 */
+  /* max-width: 1100px; */
+  min-width: 600px;
+  height: 90vh; /* 고정된 높이 */
+  /* max-height: 800px; */
   display: flex;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 15px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -26,7 +28,7 @@ html, body {
 
 /* 내부 컨테이너 */
 .rectangle-2 {
-  width: 40%;
+  width: 60%;
   background: rgba(91, 134, 229, 0.51);
   display: flex;
   justify-content: center;
@@ -61,7 +63,7 @@ html, body {
 
 /* 오른쪽 패널 */
 .rectangle-1 {
-  width: 60%;
+  width: 40%;
   background: #ffffff;
   border-radius: 0 15px 15px 0;
   padding: 40px;
@@ -69,6 +71,7 @@ html, body {
   flex-direction: column;
   justify-content: center;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 .rectangle-1 h2 {
