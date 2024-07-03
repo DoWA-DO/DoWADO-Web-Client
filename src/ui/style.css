@@ -236,7 +236,8 @@ html, body {
 .info-check {
   display: flex;
   justify-content: flex-start;
-  gap: 20px; /* 라벨 사이 간격 조절 */
+  align-items: center; /* 추가: 아이템들이 세로로 정렬되도록 */
+  gap: 10px; /* 라벨 사이 간격 조절 */
   margin-bottom: 20px;
   margin-top: 20px; /* 위쪽 여백 추가 */
 }
@@ -249,12 +250,18 @@ html, body {
   color: #000000; /* 폰트 색상 */
 }
 
-.info-check input[type="radio"] {
+.info-check input[type="checkbox"] {
   margin-right: 5px;
 }
 
 .info-check a {
+  margin-left: 20px; /* 라벨과 링크 사이 간격 조정 */
+  color: #5b86e5;
   text-decoration: none; /* 링크 아래의 밑줄 제거 */
+}
+
+.info-check a:hover {
+  text-decoration: underline; /* 링크에 호버 시 밑줄 표시 */
 }
 
 .modal {

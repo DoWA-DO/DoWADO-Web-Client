@@ -295,7 +295,7 @@ const SignupForm = () => {
               checked={agree}
               onChange={(e) => setAgree(e.target.checked)}
             />
-            개인정보 수집 및 이용 동의
+            개인정보수집 및 이용 동의
             <a href="#" onClick={() => openModal("privacy")}>
               확인
             </a>
