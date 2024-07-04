@@ -7,10 +7,12 @@ const InfoCheck = ({ isOpen, closeModal, content }) => {
       isOpen={isOpen}
       onRequestClose={closeModal}
       contentLabel="Info Check"
-      className="modal"
+      className="info-check-modal"
       overlayClassName="modal-overlay"
     >
-      <h2>{content === "terms" ? "이용약관 동의" : "개인정보 수집 및 이용 동의"}</h2>
+      <h2>
+        {content === "terms" ? "이용약관 동의" : "개인정보 수집 및 이용 동의"}
+      </h2>
       <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
         {content === "terms"
           ? `
@@ -60,7 +62,27 @@ const InfoCheck = ({ isOpen, closeModal, content }) => {
 이용자는 개인정보 수집 및 이용에 대한 동의를 거부할 권리가 있습니다. 다만, 동의를 거부할 경우 서비스 제공이 제한될 수 있습니다.
           `}
       </pre>
-      <button onClick={closeModal} style={{ display: "block", margin: "20px auto" }}>닫기</button>
+      <button
+        onClick={closeModal}
+        style={{
+          display: "block",
+          margin: "20px auto",
+          background: "#5b86e5",
+          border: "none",
+          borderRadius: "8px",
+          color: "#ffffff",
+          padding: "10px",
+          fontFamily: "Telegraf",
+          fontStyle: "normal",
+          fontWeight: "800",
+          fontSize: "16px",
+          letterSpacing: "0.08em",
+          cursor: "pointer",
+          textAlign: "center",
+        }}
+      >
+        닫기
+      </button>
     </Modal>
   );
 };

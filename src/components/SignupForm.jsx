@@ -233,7 +233,7 @@ const SignupForm = () => {
   return (
     <div className="signup-form-container">
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
+        <div className="lg-form-group">
           <label htmlFor="name">이름</label>
           <input
             type="text"
@@ -243,7 +243,7 @@ const SignupForm = () => {
             onChange={handleNameChange}
           />
         </div>
-        <div className="form-group" id="email-form">
+        <div className="lg-form-group" id="email-form">
           <label htmlFor="email">이메일</label>
           <div className="email-input">
             <input
@@ -255,7 +255,6 @@ const SignupForm = () => {
                 setEmail(e.target.value);
                 validateEmail(e.target.value);
               }}
-              required
             />
             <button id="email-Auth-btn" type="button" onClick={handleEmailAuth}>
               이메일 인증
@@ -263,7 +262,7 @@ const SignupForm = () => {
           </div>
           {emailError && <div className="error-message">{emailError}</div>}
         </div>
-        <div className="form-group">
+        <div className="lg-form-group">
           <label htmlFor="verification-code">인증번호</label>
           <input
             type="text"
@@ -271,10 +270,9 @@ const SignupForm = () => {
             name="verification-code"
             value={verificationCode}
             onChange={handleVerificationCodeChange}
-            required
           />
         </div>
-        <div className="form-group">
+        <div className="lg-form-group">
           <label htmlFor="password">비밀번호</label>
           <input
             type="password"
@@ -290,7 +288,7 @@ const SignupForm = () => {
             <div className="error-message">{passwordError}</div>
           )}
         </div>
-        <div className="form-group">
+        <div className="lg-form-group">
           <label htmlFor="confirm-password">비밀번호 확인</label>
           <input
             type="password"
@@ -306,7 +304,7 @@ const SignupForm = () => {
             <div className="error-message">{confirmPwError}</div>
           )}
         </div>
-        <div className="form-group">
+        <div className="lg-form-group">
           <label htmlFor="school-name">학교 이름</label>
           <input
             type="text"

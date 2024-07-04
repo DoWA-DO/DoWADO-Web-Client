@@ -116,7 +116,7 @@ const LoginForm = () => {
             학생
           </label>
         </div>
-        <div className="form-group">
+        <div className="lg-form-group">
           <label htmlFor="email">{emailLabel}</label>
           <input
             type="email"
@@ -127,7 +127,7 @@ const LoginForm = () => {
             required
           />
         </div>
-        <div className="form-group">
+        <div className="lg-form-group">
           <label htmlFor="password">비밀번호</label>
           <input
             type="password"

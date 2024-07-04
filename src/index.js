@@ -14,14 +14,14 @@ import DashboardStudentPage from "./pages/DashboadStudentPage";
 import DashboardFacultyPage from "./pages/DashboardFacultyPage";
 import FacultyDocumentPage from "./pages/FacultyDocumentPage";
 import StudentManagementPage from "./pages/StudentManagementPage";
-import MainPage from "./pages/MainPage";
+import HomePage from "./pages/HomePage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/findpassword" element={<FindPasswordPage />} />

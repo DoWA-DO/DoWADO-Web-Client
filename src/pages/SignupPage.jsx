@@ -4,13 +4,15 @@ import "../ui/Login.css";
 
 const SignupPage = () => {
   return (
-    <div className="container">
-      <div className="rectangle-2">
-        <h1>DoWA:DO</h1>
-      </div>
-      <div className="rectangle-1">
-        <h2>회원가입</h2>
-        <SignupForm />
+    <div className="lg-bg-container">
+      <div className="lg-container">
+        <div className="lg-logo">
+          <h1>DoWA:DO</h1>
+        </div>
+        <div className="lg-form">
+          <h2>회원가입</h2>
+          <SignupForm />
+        </div>
       </div>
     </div>
   );

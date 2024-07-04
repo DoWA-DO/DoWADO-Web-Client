@@ -1,15 +1,15 @@
 import React from "react";
-import "../ui/Main.css";
-import Main from "../components/Main";
+import "../ui/Home.css";
+import Home from "../components/Home";
 
-const MainPage = () => {
+const HomePage = () => {
   return (
     <div className="container">
       <div className="content-container">
-       <Main />
+       <Home />
       </div>
     </div>
   );
 };
 
-export default MainPage;
+export default HomePage;

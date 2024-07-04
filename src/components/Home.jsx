@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import Dots from "./MainDot";
+import Dots from "./HomeDot";
 
 const Main = () => {
   const DIVIDER_HEIGHT = 5;

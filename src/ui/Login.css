@@ -1,6 +1,8 @@
-/* 전체 배경 */
-html,
-body {
+html {
+  height: 100%;
+}
+
+.lg-bg-container {
   margin: 0;
   padding: 0;
   font-family: "Roboto", sans-serif;
@@ -8,12 +10,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  width: 100%;
+  min-height: 100vh;
 }
 
 /* 메인 컨테이너 */
-.container {
+.lg-container {
   width: 80vw; /* 고정된 너비 */
   min-width: 300px; /* 모바일 화면을 위해 최소 너비 조정 */
   height: 90vh; /* 고정된 높이 */
@@ -26,7 +27,7 @@ body {
 }
 
 /* 내부 컨테이너 */
-.rectangle-2 {
+.lg-logo {
   width: 100%;
   height: 40%; /* 모바일 화면에서 높이 조정 */
   background: rgba(91, 134, 229, 0.51);
@@ -36,7 +37,7 @@ body {
   position: relative;
 }
 
-.rectangle-2 h1 {
+.lg-logo h1 {
   font-family: "Alfa Slab One";
   font-style: normal;
   font-weight: 400;
@@ -48,7 +49,7 @@ body {
   z-index: 1; /* 이미지 위에 텍스트 표시 */
 }
 
-.rectangle-2::before {
+.lg-logo::before {
   content: "";
   background: url("../../public/example.jpg") no-repeat center center;
   background-size: cover;
@@ -62,7 +63,7 @@ body {
 }
 
 /* 오른쪽 패널 */
-.rectangle-1 {
+.lg-form {
   width: 100%;
   height: 60%; /* 모바일 화면에서 높이 조정 */
   background: #ffffff;
@@ -75,7 +76,7 @@ body {
   overflow: auto;
 }
 
-.rectangle-1 h2 {
+.lg-form h2 {
   font-family: "Alfa Slab One";
   font-style: normal;
   font-weight: 800;
@@ -97,13 +98,13 @@ body {
 }
 
 /* 폼 */
-.form-group {
+.lg-form-group {
   margin-bottom: 20px;
   width: 100%;
   box-sizing: border-box;
 }
 
-.form-group label {
+.lg-form-group label {
   font-family: "Telegraf";
   font-style: normal;
   font-weight: 400;
@@ -113,7 +114,7 @@ body {
   color: #9d9d9d;
 }
 
-.form-group input {
+.lg-form-group input {
   width: 100%;
   padding: 10px;
   border: 1px solid #9d9d9d;
@@ -249,7 +250,7 @@ body {
   text-decoration: none; /* 링크 아래의 밑줄 제거 */
 }
 
-.modal {
+.info-check-modal {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -261,26 +262,31 @@ body {
   z-index: 10;
 }
 
+.info-check a {
+  color: #5b86e5;
+  margin-left: 10px;
+}
+
 /* 모바일 화면 */
 @media (min-width: 768px) {
-  .container {
+  .lg-container {
     flex-direction: row; /* 태블릿 이상의 화면에서 수평 배열 */
   }
 
-  .rectangle-2 {
+  .lg-logo {
     width: 60%;
     height: 100%;
   }
 
-  .rectangle-2 h1 {
+  .lg-logo h1 {
     font-size: 48px; /* 태블릿 이상의 화면에서 폰트 크기 조정 */
   }
 
-  .rectangle-2::before {
+  .lg-logo::before {
     border-radius: 15px 0 0 15px; /* 태블릿 이상의 화면에서 모서리 반경 조정 */
   }
 
-  .rectangle-1 {
+  .lg-form {
     width: 40%;
     height: 100%;
     border-radius: 0 15px 15px 0; /* 태블릿 이상의 화면에서 모서리 반경 조정 */
@@ -288,7 +294,7 @@ body {
     justify-content: center;
   }
 
-  .rectangle-1 h2 {
+  .lg-form h2 {
     font-size: 30px; /* 태블릿 이상의 화면에서 폰트 크기 조정 */
     margin-bottom: 40px; /* 태블릿 이상의 화면에서 마진 조정 */
   }
@@ -296,27 +302,27 @@ body {
 
 /* 태블릿 화면 */
 @media (min-width: 768px) and (max-width: 1023px) {
-  .container {
+  .lg-container {
     width: 90vw; /* 예시로 너비를 조정합니다 */
   }
 
-  .rectangle-2 {
+  .lg-logo {
     height: 100%; /* 예시로 높이를 조정합니다 */
     width: 40%;
   }
 
-  .rectangle-1 {
+  .lg-form {
     width: 60%;
     height: 100%;
     padding: 30px; /* 예시로 패딩을 조정합니다 */
   }
 
-  .rectangle-1 h2 {
+  .lg-form h2 {
     font-size: 30px; /* 예시로 폰트 크기를 조정합니다 */
     margin-bottom: 30px; /* 예시로 마진을 조정합니다 */
   }
 
-  .rectangle-2::before {
+  .lg-logo::before {
     border-radius: 15px 0 0 15px; /* 예시로 모서리 반경을 조정합니다 */
   }
 }

@@ -1,15 +1,17 @@
-import React from 'react';
-import SignupForm from '../components/SignupForm';
-import FindPassword from '../components/FindPassword';
+import React from "react";
+import SignupForm from "../components/SignupForm";
+import FindPassword from "../components/FindPassword";
 
 const FindPasswordPage = () => {
   return (
-    <div className="container">
-      <div className="rectangle-2">
-        <h1>DoWA:DO</h1>
-      </div>
-      <div className="rectangle-1">
-        <FindPassword />
+    <div className="lg-bg-container">
+      <div className="lg-container">
+        <div className="lg-logo">
+          <h1>DoWA:DO</h1>
+        </div>
+        <div className="lg-form">
+          <FindPassword />
+        </div>
       </div>
     </div>
   );

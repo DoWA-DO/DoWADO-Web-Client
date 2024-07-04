@@ -18,8 +18,8 @@ const FindPassword = () => {
     <div className="find-password-container">
       <h2>비밀번호 찾기</h2>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
+        <div className="lg-form-group">
+          <label htmlFor="email">이메일</label>
           <input
             type="email"
             id="email"
