@@ -6,7 +6,7 @@ import { useAuth } from "../components/AuthContext";
 
 const SideBar = () => {
     const navigate = useNavigate();
-    const { userType } = useAuth();
+    const { userType } = useAuth(); // 학생, 교직원에 따라 사이드바 나눠서 출력
   
     return (
       <div className="sidebar">

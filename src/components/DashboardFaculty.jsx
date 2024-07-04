@@ -31,7 +31,6 @@ const Feature2 = () => {
 };
 
 const DashboardFaculty = () => {
-const DashboardFaculty = () => {
   return (
     <div className="dashboard-faculty">
       <TopBar />

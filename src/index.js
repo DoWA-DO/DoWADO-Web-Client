@@ -16,6 +16,7 @@ import DashboardFacultyPage from './pages/DashboardFacultyPage';
 import FacultyDocumentPage from './pages/FacultyDocumentPage';
 import StudentManagementPage from './pages/StudentManagementPage';
 import ChatbotPage from "./pages/ChatbotPage";
+import Mypage from "./pages/Mypage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -31,6 +32,8 @@ root.render(
           <Route path="/facultydocument" element={<FacultyDocumentPage />} />
           <Route path="/studentmanagement" element={<StudentManagementPage />} />
           <Route path="/chatbot" element={<ChatbotPage />} />
+          <Route path="/mypage" element={<Mypage />} />
+          
         </Routes>
       </Router>
     </AuthProvider>
