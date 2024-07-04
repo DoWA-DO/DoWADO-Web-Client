@@ -1,10 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
-import Dots from "./HomeDot";
+// import Dots from "./HomeDot";
+import "../ui/Home.css";
+import { useNavigate } from "react-router-dom";
 
-const Main = () => {
+const Home = () => {
+  const navigate = useNavigate();
   const DIVIDER_HEIGHT = 5;
   const outerDivRef = useRef();
   const [currentPage, setCurrentPage] = useState(1);
+
+  const handleClick = () => {
+    navigate('/login');
+  }
+
   useEffect(() => {
     const wheelHandler = (e) => {
       e.preventDefault();
@@ -80,14 +88,16 @@ const Main = () => {
   }, []);
   return (
     <div ref={outerDivRef} className="outer">
-      <Dots currentPage={currentPage} />
-      <div className="inner bg-yellow">이름</div>
+      {/* <Dots currentPage={currentPage} /> */}
+      <div className="inner home-1">이름</div>
       <div className="divider"></div>
-      <div className="inner bg-blue">내용</div>
+      <div className="inner home-2">내용</div>
       <div className="divider"></div>
-      <div className="inner bg-pink">버튼</div>
+      <div className="inner home-3">
+        <button className="start-btn" onClick={handleClick}>시작하기</button>
+      </div>
     </div>
   );
 };
 
-export default Main;
+export default Home;
