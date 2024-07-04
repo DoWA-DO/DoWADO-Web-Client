@@ -14,6 +14,7 @@
   width: 80vw; /* 고정된 너비 */
   min-width: 300px; /* 모바일 화면을 위해 최소 너비 조정 */
   height: 90vh; /* 고정된 높이 */
+  min-height: 600px;
   display: flex;
   flex-direction: column; /* 모바일 화면에서 수직 배열 */
   background: #ffffff;
@@ -25,7 +26,7 @@
 /* 내부 컨테이너 */
 .lg-logo {
   width: 100%;
-  height: 40%; /* 모바일 화면에서 높이 조정 */
+  height: 30%; /* 모바일 화면에서 높이 조정 */
   background: rgba(91, 134, 229, 0.51);
   display: flex;
   justify-content: center;
@@ -61,13 +62,12 @@
 /* 오른쪽 패널 */
 .lg-form {
   width: 100%;
-  height: 60%; /* 모바일 화면에서 높이 조정 */
+  height: 70%; /* 모바일 화면에서 높이 조정 */
   background: #ffffff;
   border-radius: 0 0 15px 15px; /* 모바일 화면에서 모서리 반경 조정 */
   padding: 20px; /* 모바일 화면에서 패딩 조정 */
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   box-sizing: border-box;
   overflow: auto;
 }
@@ -225,8 +225,7 @@
 .info-check {
   display: flex;
   justify-content: flex-start;
-  align-items: center; /* 추가: 아이템들이 세로로 정렬되도록 */
-  gap: 10px; /* 라벨 사이 간격 조절 */
+  gap: 20px; /* 라벨 사이 간격 조절 */
   margin-bottom: 20px;
   margin-top: 20px; /* 위쪽 여백 추가 */
 }
@@ -239,18 +238,12 @@
   color: #000000; /* 폰트 색상 */
 }
 
-.info-check input[type="checkbox"] {
+.info-check input[type="radio"] {
   margin-right: 5px;
 }
 
 .info-check a {
-  margin-left: 20px; /* 라벨과 링크 사이 간격 조정 */
-  color: #5b86e5;
   text-decoration: none; /* 링크 아래의 밑줄 제거 */
-}
-
-.info-check a:hover {
-  text-decoration: underline; /* 링크에 호버 시 밑줄 표시 */
 }
 
 .info-check-modal {
@@ -294,12 +287,21 @@
     height: 100%;
     border-radius: 0 15px 15px 0; /* 태블릿 이상의 화면에서 모서리 반경 조정 */
     padding: 40px; /* 태블릿 이상의 화면에서 패딩 조정 */
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 컨텐츠를 수평 가운데 정렬 */
+    overflow: auto; /* 내용이 넘칠 경우 스크롤바 표시 */
   }
 
   .lg-form h2 {
     font-size: 30px; /* 태블릿 이상의 화면에서 폰트 크기 조정 */
     margin-bottom: 40px; /* 태블릿 이상의 화면에서 마진 조정 */
+    align-self: center; /* h2를 수평 가운데 정렬 */
+  }
+
+  .lg-form > *:not(h2) {
+    flex-grow: 1; /* h2 외의 내부 요소가 전체 높이를 차지하도록 */
+    width: 100%; /* 내부 요소의 너비를 100%로 설정 */
   }
 }
 
@@ -318,14 +320,24 @@
     width: 60%;
     height: 100%;
     padding: 30px; /* 예시로 패딩을 조정합니다 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 컨텐츠를 수평 가운데 정렬 */
+    overflow: auto; /* 내용이 넘칠 경우 스크롤바 표시 */
   }
 
   .lg-form h2 {
     font-size: 30px; /* 예시로 폰트 크기를 조정합니다 */
     margin-bottom: 30px; /* 예시로 마진을 조정합니다 */
+    align-self: center; /* h2를 수평 가운데 정렬 */
   }
 
   .lg-logo::before {
     border-radius: 15px 0 0 15px; /* 예시로 모서리 반경을 조정합니다 */
+  }
+
+  .lg-form > *:not(h2) {
+    flex-grow: 1; /* h2 외의 내부 요소가 전체 높이를 차지하도록 */
+    width: 100%; /* 내부 요소의 너비를 100%로 설정 */
   }
 }
