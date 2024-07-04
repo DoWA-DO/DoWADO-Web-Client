@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from './AuthContext'; // AuthContext 사용
 
 const LoginForm = () => {
   const [userType, setUserType] = useState("faculty"); // 기본값을 'faculty'로 설정
@@ -15,6 +16,7 @@ const LoginForm = () => {
   ); // 아이디 기억하기 상태 추가
   const location = useLocation();
   const navigate = useNavigate();
+  const { setUserType: setAuthUserType } = useAuth(); // AuthContext에서 setUserType 가져오기
 
   useEffect(() => {
     setUserType("faculty"); // 페이지가 로드될 때 기본값으로 초기화
@@ -79,6 +81,8 @@ const LoginForm = () => {
           localStorage.removeItem("rememberedUserType");
           localStorage.removeItem("rememberMe");
         }
+
+        setAuthUserType(userType); // AuthContext에 사용자 유형 설정
 
         if (userType === "faculty") {
           navigate("/dashboardfaculty");

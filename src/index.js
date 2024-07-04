@@ -5,32 +5,40 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { AuthProvider } from "./components/AuthContext"; // AuthProvider 추가
 
 /* 페이지 */
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import FindPasswordPage from "./pages/FindPasswordPage";
-import DashboardStudentPage from "./pages/DashboadStudentPage";
-import DashboardFacultyPage from "./pages/DashboardFacultyPage";
-import FacultyDocumentPage from "./pages/FacultyDocumentPage";
-import StudentManagementPage from "./pages/StudentManagementPage";
+import DashboardStudentPage from "./pages/DashboardStudentPage";
+import DashboardFacultyPage from './pages/DashboardFacultyPage';
+import FacultyDocumentPage from './pages/FacultyDocumentPage';
+import StudentManagementPage from './pages/StudentManagementPage';
+import ChatbotPage from "./pages/ChatbotPage";
+import Mypage from "./pages/Mypage";
 import HomePage from "./pages/HomePage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/findpassword" element={<FindPasswordPage />} />
-        <Route path="/dashboardstudent" element={<DashboardStudentPage />} />
-        <Route path="/dashboardfaculty" element={<DashboardFacultyPage />} />
-        <Route path="/facultydocument" element={<FacultyDocumentPage />} />
-        <Route path="/studentmanagement" element={<StudentManagementPage />} />
-      </Routes>
-    </Router>
+    <AuthProvider> {/* AuthProvider를 추가하여 컨텍스트를 제공 */}
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/findpassword" element={<FindPasswordPage />} />
+          <Route path="/dashboardstudent" element={<DashboardStudentPage />} />
+          <Route path="/dashboardfaculty" element={<DashboardFacultyPage />} />
+          <Route path="/facultydocument" element={<FacultyDocumentPage />} />
+          <Route path="/studentmanagement" element={<StudentManagementPage />} />
+          <Route path="/chatbot" element={<ChatbotPage />} />
+          <Route path="/mypage" element={<Mypage />} />
+          
+        </Routes>
+      </Router>
+    </AuthProvider>
   </React.StrictMode>
 );
 
