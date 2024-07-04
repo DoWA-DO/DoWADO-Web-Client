@@ -348,7 +348,7 @@ const SignupForm = () => {
           회원가입
         </button>
         <div className="signup-link">
-          계정이 있나요? <a href="/">로그인</a>
+          계정이 있나요? <a href="/login">로그인</a>
         </div>
       </form>
 
