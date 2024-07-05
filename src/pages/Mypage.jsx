@@ -1,13 +1,14 @@
 import React from "react";
+import PageLayout from "../components/PageLayout";
 import MypageForm from "../components/MypageForm";
-import TopBar from "../components/TopBar";
 
 const MyPage = () => {
   return (
-    <div>
-      <TopBar />
+    <PageLayout>
+      <div className="mp-page-name">마이페이지</div>
+      <div className="mp-line"></div>
       <MypageForm />
-    </div>
+    </PageLayout>
   );
 };
 

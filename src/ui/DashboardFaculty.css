@@ -6,7 +6,7 @@
   overflow: auto; /* 화면이 작아지면 스크롤 가능하도록 설정 */
 }
 
-.top-bar {
+/* .top-bar {
   width: 100%;
   background-color: white;
   color: black;
@@ -19,4 +19,4 @@
   left: 0;
   z-index: 1000;
 }
-
+ */

@@ -1,0 +1,9 @@
+.page-layout {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 100px; /* TopBar의 높이와 동일한 값 */
+}

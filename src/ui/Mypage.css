@@ -1,39 +1,103 @@
-.mypage-forms {
-  flex: 1;
-  padding: 100px 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* 페이지 이름 스타일 */
+.mp-page-name {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 20px; /* 이름과 줄 사이 간격 */
 }
 
-.form-section {
-  margin-bottom: 20px;
-}
-
-.form-section h2 {
-  margin-bottom: 10px;
-  font-family: "Roboto", sans-serif;
-}
-
-.form-section label {
-  display: block;
-  margin-bottom: 10px;
-  font-family: "Roboto", sans-serif;
-}
-
-.form-section input[type="password"],
-.form-section input[type="file"] {
+/* 구분선 스타일 */
+.mp-line {
   width: 100%;
+  height: 1px;
+  background-color: #ccc;
+  margin: 10px 0; /* 위아래 여백을 한 번에 설정 */
+}
+
+/* 마이페이지 폼 컨테이너 스타일 */
+.mypage-forms {
+  padding: 20px; /* 내부 여백 늘리기 */
+  overflow-y: auto;
+}
+
+/* 각 섹션 컨테이너 스타일 */
+.mp-form-section {
+  margin-bottom: 25px; /* 섹션 간격 조정 */
+}
+
+.pw-change-btn {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.pw-change-btn input {
+  width: 100%; /* 버튼의 너비를 뺀 나머지 공간 차지 */
   padding: 10px;
+  border: 1px solid #9d9d9d;
+  border-radius: 5px 0 0 5px; /* 왼쪽 모서리만 둥글게 */
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.pw-change-btn button {
+  position: absolute;
+  width: auto;
+  top: 5px;
+  bottom: 5px;
+  right: 5px;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  padding: 10px 20px; /* 상하 10px, 좌우 20px */
+  font-family: "Telegraf";
+  font-style: normal;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+
+/* 섹션 제목 스타일 */
+.mp-form-section h4 {
+  margin-bottom: 10px;
+  font-family: "Roboto", sans-serif;
+  color: #333; /* 제목 색상 변경 */
+}
+
+/* 입력 레이블 스타일 */
+.mp-form-section label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: "Roboto", sans-serif;
+  color: #555;
+}
+
+/* 입력 필드 스타일 */
+.mp-form-section input[type="password"],
+.mp-form-section input[type="file"] {
+  width: 100%; /* 너비 100%로 설정 */
+  padding: 12px; /* 안쪽 여백 늘리기 */
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-bottom: 10px;
   font-family: "Roboto", sans-serif;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box; /* 박스 크기를 border-box로 설정하여 패딩과 테두리 포함 */
 }
 
-.form-section button {
-  padding: 10px 20px;
-  background-color: #4caf50;
+/* 입력 필드 포커스 시 스타일 */
+.mp-form-section input[type="password"]:focus,
+.mp-form-section input[type="file"]:focus {
+  border-color: #21a6a1; /* 포커스 시 테두리 색상 변경 */
+  box-shadow: 0 0 8px rgba(33, 166, 161, 0.5); /* 포커스 시 그림자 효과 */
+}
+
+/* 버튼 스타일 */
+.mp-form-section button {
+  padding: 12px 24px; /* 내부 패딩 설정 */
+  background-color: #21a6a1;
   color: white;
   border: none;
   border-radius: 4px;
@@ -42,10 +106,12 @@
   transition: background-color 0.3s;
 }
 
-.form-section button:hover {
-  background-color: #45a049;
+/* 버튼 호버 시 스타일 */
+.mp-form-section button:hover {
+  background-color: #1d8e8a; /* 호버 시 배경색 변경 */
 }
 
+/* 프로필 미리보기 이미지 스타일 */
 .profile-preview {
   margin-top: 10px;
   width: 150px;
@@ -54,3 +120,4 @@
   object-fit: cover;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
