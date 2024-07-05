@@ -263,7 +263,7 @@
   margin-left: 10px;
 }
 
-/* 모바일 화면 */
+/* 태블릿 이상 화면 */
 @media (min-width: 768px) {
   .lg-container {
     flex-direction: row; /* 태블릿 이상의 화면에서 수평 배열 */
