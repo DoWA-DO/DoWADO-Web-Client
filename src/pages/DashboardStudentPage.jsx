@@ -1,12 +1,15 @@
 import React from "react";
 import DashboardStudent from "../components/DashboardStudent.jsx";
 import "../ui/DashboardStudent.css";
+import PageLayout from "../components/PageLayout.jsx";
 
 const DashboardStudentPage = () => {
   return (
-    <div className="dashboard">
-      <DashboardStudent />
-    </div>
+    <PageLayout>
+      <div className="dashboard">
+        <DashboardStudent />
+      </div>
+    </PageLayout>
   );
 };
 

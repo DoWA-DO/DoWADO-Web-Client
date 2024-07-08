@@ -8,6 +8,12 @@ const PageLayout = ({ children }) => {
     <div className="page-layout">
       <TopBar />
       <FormContainer>{children}</FormContainer>
+      <footer className="page-footer">
+        Icons by{" "}
+        <a target="_blank" rel="noopener noreferrer" href="icons8.com">
+          Icons8
+        </a>
+      </footer>
     </div>
   );
 };

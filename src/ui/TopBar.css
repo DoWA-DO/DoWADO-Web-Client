@@ -76,7 +76,7 @@
   font-weight: bold;
   margin-left: 10px; /* 프로필 이미지와 로그아웃 버튼 사이 간격 */
   cursor: pointer;
-  border-radius: 20%;
+  border-radius: 20px;
   background-color: #f5f7f8;
 }
 

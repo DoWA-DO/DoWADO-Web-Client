@@ -1,12 +1,15 @@
-import React from 'react';
-import DashboardFaculty from '../components/DashboardFaculty.jsx';
-import '../ui/DashboardFaculty.css';
+import React from "react";
+import DashboardFaculty from "../components/DashboardFaculty.jsx";
+import "../ui/DashboardFaculty.css";
+import PageLayout from "../components/PageLayout.jsx";
 
 const DashboardFacultyPage = () => {
   return (
-    <div className="dashboard">
-      <DashboardFaculty />
-    </div>
+    <PageLayout>
+      <div className="dashboard">
+        <DashboardFaculty />
+      </div>
+    </PageLayout>
   );
 };
 
