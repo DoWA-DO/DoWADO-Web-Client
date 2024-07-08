@@ -1,125 +1,149 @@
 .chatbot-container {
-    display: flex;
-    flex-direction: column;
-    height: 90vh;
-    width: 100%;
-    background-color: #f5f5f5;
-  }
-  
-  .chatbot-header {
-    padding: 20px;
-    background-color: #5b86e5;
-    color: white;
-    font-size: 24px;
-    text-align: center;
-  }
-  
-  .chatbot-messages {
-    flex: 1;
-    padding: 20px;
-    overflow: hidden; /* Prevents scrollbar in the main container */
-    position: relative; /* Ensures floating letters stay within bounds */
-    width: 1000px;
-  }
-  
-  .chatbot-messages-wrapper {
-    max-height: 100%;
-    overflow-y: auto; /* Allows messages to scroll */
-    position: relative;
-    z-index: 10; /* 채팅 메시지를 맨 위에 표시 */
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  width: 100%;
+  background-color: #f5f5f5;
 }
-  
-  .message {
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    max-width: 60%;
-    z-index: 20; /* 채팅 메시지를 맨 위에 표시 */
-  }
-  
-  .message.user {
-    background-color: #ffffff;
-    margin-left: auto;
-  }
-  
-  .message.bot {
-    background-color: #dcdcdc;
-    align-self: flex-start;
-  }
-  
-  .chatbot-input-container {
-    display: flex;
-    padding: 10px;
-    background-color: white;
-    border-top: 1px solid #ddd;
-  }
-  
-  .chatbot-input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .chatbot-send-button {
-    margin-left: 10px;
-    padding: 10px 20px;
-    background-color: #5b86e5;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
+
+.chatbot-header {
+  padding: 20px;
+  background-color: #21a6a1;
+  color: white;
+  font-size: 24px;
+  text-align: center;
+}
+
+.chatbot-messages {
+  flex: 1;
+  padding: 5px 20px;
+  overflow: hidden; /* Prevents scrollbar in the main container */
+  position: relative; /* Ensures floating letters stay within bounds */
+  width: 100%;
+  max-width: 100%; /* 화면의 전체 너비를 차지하도록 변경 */
+  margin: 0; /* Centers the messages container */
+  display: flex; /* Flexbox 레이아웃을 사용 */
+  flex-direction: column-reverse; /* 메시지가 아래에서 위로 쌓이도록 변경 */
+}
+
+.chatbot-messages-wrapper {
+  flex: 1; /* 부모 컨테이너의 모든 여유 공간을 차지 */
+  overflow-y: auto; /* Allows messages to scroll */
+  position: relative;
+  z-index: 10; /* 채팅 메시지를 맨 위에 표시 */
+}
+
+.message {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  max-width: 60%;
+  z-index: 20;
+  display: block;
+  clear: both;
+}
+
+.message.user {
+  background-color: #ffffff;
+  margin-left: auto;
+  align-self: flex-end;
+  width: fit-content; /* 내용의 길이에 맞춰 박스 크기 설정 */
+}
+
+.message.bot {
+  background-color: #fb6d47;
+  color: #ffffff;
+  width: fit-content; /* 내용의 길이에 맞춰 박스 크기 설정 */
+}
+
+.chatbot-input-container {
+  display: flex;
+  padding: 10px;
+  background-color: white;
+  border-top: 1px solid #ddd;
+}
+
+.chatbot-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.chatbot-send-button {
+  margin-left: 10px;
+  padding: 10px 20px;
+  background-color: #21a6a1;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 /* 자음과 모음에 대한 스타일 및 애니메이션 추가 */
 .floating-letter {
-    position: absolute;
-    font-size: 17px;
-    animation: float 15s infinite ease-in-out;
-    opacity: 0.3;
-    z-index: 5; /* 채팅 메시지보다 뒤에 표시 */
-  }
+  position: absolute;
+  font-size: 17px;
+  animation: float 15s infinite ease-in-out;
+  opacity: 0.3;
+  z-index: 5; /* 채팅 메시지보다 뒤에 표시 */
+}
 
 .animated-letter {
-    transition: all 1.5s ease-in-out;
-    z-index: 10; /* 애니메이션 동안 채팅 메시지 위로 올림 */
-    opacity: 1; /* 애니메이션 동안 투명도 변경 */
+  transition: all 1.5s ease-in-out;
+  z-index: 10; /* 애니메이션 동안 채팅 메시지 위로 올림 */
+  opacity: 1; /* 애니메이션 동안 투명도 변경 */
 }
 
-.blue-glow {
-  animation: blue-glow 1.5s ease-in-out;
+.chatbot-messages-wrapper {
+  flex: 1; /* 부모 컨테이너의 모든 여유 공간을 차지 */
+  overflow-y: auto; /* Allows messages to scroll */
+  position: relative;
+  z-index: 10; /* 채팅 메시지를 맨 위에 표시 */
 }
 
-/* float 애니메이션을 자연스럽게 만듭니다. */
 @keyframes float {
   0% {
-      transform: translate(0, 0);
+    transform: translate(0, 0);
   }
   20% {
-      transform: translate(30px, -20px);
+    transform: translate(30px, -20px);
   }
   40% {
-      transform: translate(-25px, 30px);
+    transform: translate(-25px, 30px);
   }
   60% {
-      transform: translate(20px, -15px);
+    transform: translate(20px, -15px);
   }
   80% {
-      transform: translate(-20px, 25px);
+    transform: translate(-20px, 25px);
   }
   100% {
-      transform: translate(0, 0);
+    transform: translate(0, 0);
   }
 }
 
-@keyframes blue-glow {
-  0% {
-      box-shadow: 0 0 5px rgba(3, 169, 244, 0.5);
+@media (max-width: 767px) {
+  .chatbot-header {
+    font-size: 20px;
+    padding: 15px;
   }
-  50% {
-      box-shadow: 0 0 20px rgba(3, 169, 244, 1);
+
+  .chatbot-messages {
+    padding: 5px 10px;
   }
-  100% {
-      box-shadow: 0 0 5px rgba(3, 169, 244, 0.5);
+
+  .message {
+    max-width: 80%;
+  }
+
+  .chatbot-input {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .chatbot-send-button {
+    padding: 8px 15px;
+    font-size: 14px;
   }
 }

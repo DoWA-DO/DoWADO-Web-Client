@@ -1,13 +1,12 @@
-/* #E88D67
-#F3F7EC
-#006989
-#005C78 */
-
-html,
 body {
   margin: 0;
   padding: 0;
   height: 100%;
+}
+
+.home-logo {
+  width: 600px;
+  height: auto;
 }
 
 .home-container {
@@ -48,17 +47,15 @@ body {
   overflow: hidden;
   width: 250px;
   height: 80px;
-  max-width: 250px;
+  max-width: 100%;
   margin: 1rem auto;
-  text-transform: uppercase;
-  border: 3px solid #e88d67;
+  border: 3px solid #21a6a1;
   border-radius: 15px;
-  background-color: #f3f7ec;
-  color: #e88d67; /* 텍스트 색상 */
+  color: #21a6a1;
   font-size: 26px;
   text-align: center;
-  line-height: 80px; /* 버튼의 높이와 같은 line-height 설정 */
-  transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out; /* 배경색과 텍스트 색상 전환 효과 */
+  line-height: 80px;
+  transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 
 .start-btn:before {
@@ -68,19 +65,47 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: #e88d67;
+  background-color: #21a6a1;
   transform: translateX(-100%);
   transition: transform 0.5s ease-in-out;
-  z-index: -1; /* 배경색이 텍스트 뒤로 이동하도록 z-index 설정 */
+  z-index: -1;
 }
 
 .start-btn:hover {
   color: #ffffff;
-  background-color: #e88d67; /* 마우스를 올렸을 때 배경색 변경 */
+  background-color: #21a6a1;
   cursor: pointer;
 }
 
 .start-btn:hover:before {
   transform: translateX(0);
-  z-index: -2; /* 배경색이 텍스트 뒤로 이동하도록 z-index 설정 */
+  z-index: -2;
+}
+
+@media (max-width: 767px) {
+  .home-logo {
+    width: 250px;
+    height: auto;
+  }
+
+  .start-btn {
+    font-size: 16px;
+    line-height: 60px;
+    width: 200px;
+    height: auto;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .home-logo {
+    width: 400px;
+    height: auto;
+  }
+
+  .start-btn {
+    font-size: 20px;
+    line-height: 60px;
+    width: 250px;
+    height: auto;
+  }
 }

@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   font-family: "Roboto", sans-serif;
-  background-color: #e6e6fa;
+  background-color: #f3f7ec;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -142,7 +142,7 @@
   top: 5px;
   bottom: 5px;
   right: 5px;
-  background: #5b86e5;
+  background: #21a6a1;
   border: none;
   border-radius: 8px;
   color: #ffffff;
@@ -159,7 +159,7 @@
 .login-button,
 .find-password-button,
 .verification-button {
-  background: #5b86e5;
+  background: #21a6a1;
   border: none;
   border-radius: 8px;
   color: #ffffff;
@@ -185,7 +185,7 @@
 
 .signup-link a,
 .findpassword-link a {
-  color: #5b86e5;
+  color: #21a6a1;
   text-decoration: none;
 }
 
@@ -197,7 +197,7 @@
 .link-button {
   background: none;
   border: none;
-  color: #5b86e5;
+  color: #21a6a1;
   text-decoration: none;
   cursor: pointer;
   font-size: 16px;
@@ -259,7 +259,7 @@
 }
 
 .info-check a {
-  color: #5b86e5;
+  color: #21a6a1;
   margin-left: 10px;
 }
 

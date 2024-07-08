@@ -96,7 +96,7 @@
   cursor: pointer;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .topbar-links {
     display: none; /* 모바일 화면에서 기본적으로 숨김 */
     flex-direction: column;

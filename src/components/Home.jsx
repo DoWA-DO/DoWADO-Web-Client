@@ -10,8 +10,8 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const handleClick = () => {
-    navigate('/login');
-  }
+    navigate("/login");
+  };
 
   useEffect(() => {
     const wheelHandler = (e) => {
@@ -89,12 +89,20 @@ const Home = () => {
   return (
     <div ref={outerDivRef} className="outer">
       {/* <Dots currentPage={currentPage} /> */}
-      <div className="inner home-1">이름</div>
+      <div className="inner home-1">
+        <img
+          src={`${process.env.PUBLIC_URL}/DoWADo_logo.png`}
+          alt="Logo"
+          className="home-logo"
+        />
+      </div>
       <div className="divider"></div>
       <div className="inner home-2">내용</div>
       <div className="divider"></div>
       <div className="inner home-3">
-        <button className="start-btn" onClick={handleClick}>시작하기</button>
+        <button className="start-btn" onClick={handleClick}>
+          시작하기
+        </button>
       </div>
     </div>
   );
