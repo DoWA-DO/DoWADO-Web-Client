@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../ui/Mypage.css"; // 스타일을 별도의 CSS 파일로 분리
 import { useAuth } from "./AuthContext"; // 상대 경로 조정
+import { IoPersonCircleOutline } from "react-icons/io5";
 
 const MypageForm = () => {
   const { updatePassword, updateProfilePicture } = useAuth();
@@ -46,11 +47,7 @@ const MypageForm = () => {
     <div className="mypage-forms">
       <div className="mp-form-section">
         <div className="mp-profile">
-          <img
-            src={`${process.env.PUBLIC_URL}/profile_big.png`}
-            alt="Profile"
-            className="mp-profile-img"
-          />
+          <IoPersonCircleOutline className="mp-profile-img" />
         </div>
       </div>
       <div className="mp-form-section">

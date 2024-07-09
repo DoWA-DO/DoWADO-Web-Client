@@ -12,17 +12,19 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import FindPasswordPage from "./pages/FindPasswordPage";
 import DashboardStudentPage from "./pages/DashboardStudentPage";
-import DashboardFacultyPage from './pages/DashboardFacultyPage';
-import FacultyDocumentPage from './pages/FacultyDocumentPage';
-import StudentManagementPage from './pages/StudentManagementPage';
+import DashboardFacultyPage from "./pages/DashboardFacultyPage";
+import StudentManagementPage from "./pages/StudentManagementPage";
 import ChatbotPage from "./pages/ChatbotPage";
 import Mypage from "./pages/Mypage";
 import HomePage from "./pages/HomePage";
+import StudentLogPage from "./pages/StudentLogPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <AuthProvider> {/* AuthProvider를 추가하여 컨텍스트를 제공 */}
+    <AuthProvider>
+      {" "}
+      {/* AuthProvider를 추가하여 컨텍스트를 제공 */}
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -31,11 +33,14 @@ root.render(
           <Route path="/findpassword" element={<FindPasswordPage />} />
           <Route path="/dashboardstudent" element={<DashboardStudentPage />} />
           <Route path="/dashboardfaculty" element={<DashboardFacultyPage />} />
-          <Route path="/facultydocument" element={<FacultyDocumentPage />} />
-          <Route path="/studentmanagement" element={<StudentManagementPage />} />
+          <Route path="/studentlog" element={<StudentLogPage />} />
+          <Route path="/studentlog/:id" element={<StudentLogPage />} />
+          <Route
+            path="/studentmanagement"
+            element={<StudentManagementPage />}
+          />
           <Route path="/chatbot" element={<ChatbotPage />} />
           <Route path="/mypage" element={<Mypage />} />
-          
         </Routes>
       </Router>
     </AuthProvider>

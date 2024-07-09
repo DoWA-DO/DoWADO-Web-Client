@@ -2,12 +2,16 @@ import React, { useState, useEffect } from "react";
 import "../ui/TopBar.css"; // 별도의 CSS 파일로 스타일링
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
+import { IoPersonCircleOutline } from "react-icons/io5";
+import { AiOutlineLogout } from "react-icons/ai";
 
 const TopBar = () => {
   const navigate = useNavigate();
-  const { userType } = useAuth();
+  const { userType: authUserType } = useAuth();
   const [isMobile, setIsMobile] = useState(false); // 모바일 여부 상태 관리
   const [isMenuOpen, setIsMenuOpen] = useState(false); // 메뉴 상태 관리
+
+  const userType = authUserType || "faculty"; /// 지울 것
 
   // 화면 너비가 768px 이하일 때 모바일로 판단
   useEffect(() => {
@@ -60,11 +64,11 @@ const TopBar = () => {
             <div
               className="topbar-link"
               onClick={() => {
-                navigate("/facultydocument");
+                navigate("/studentlog");
                 setIsMenuOpen(false);
               }}
             >
-              공문서 작성
+              학생 상담 기록
             </div>
             <div
               className="topbar-link"
@@ -125,29 +129,13 @@ const TopBar = () => {
             }}
           >
             로그아웃
-            <img
-              src={`${process.env.PUBLIC_URL}/logout.png`}
-              alt="logout-img"
-              className="logout-img"
-            />
+            <AiOutlineLogout className="logout-img" />
           </button>
         )}
       </div>
       {!isMobile && ( // 모바일이 아닐 때만 표시되는 프로필과 로그아웃 버튼
         <div className="top-right-container">
-          <div
-            className="profile"
-            onClick={() => {
-              navigate("/mypage");
-              setIsMenuOpen(false);
-            }}
-          >
-            <img
-              src={`${process.env.PUBLIC_URL}/profile.png`}
-              alt="Profile"
-              className="profile-img"
-            />
-          </div>
+          <IoPersonCircleOutline className="profile" />
           <button
             className="checkout"
             onClick={() => {
@@ -156,11 +144,7 @@ const TopBar = () => {
             }}
           >
             로그아웃
-            <img
-              src={`${process.env.PUBLIC_URL}/logout.png`}
-              alt="logout-img"
-              className="logout-img"
-            />
+            <AiOutlineLogout className="logout-img" />
           </button>
         </div>
       )}

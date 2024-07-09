@@ -17,11 +17,3 @@
 .page-content {
   flex: 1; /* 페이지 내용이 남은 공간을 모두 차지하도록 설정 */
 }
-
-.page-footer {
-  padding: 5px;
-  font-size: 10px;
-  position: fixed; /* 화면 아래 고정 */
-  bottom: 0; /* 화면 하단에 배치 */
-  width: 100%; /* 가로 폭을 화면 전체로 설정 */
-}
