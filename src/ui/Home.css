@@ -2,11 +2,56 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+  font-family: "Raleway", sans-serif !important;
+}
+
+.home-logo-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  height: auto; /* 높이를 자동으로 조정 */
+  display: flex;
+  align-items: center; /* 세로 가운데 정렬 */
 }
 
 .home-logo {
-  width: 600px;
-  height: auto;
+  width: 200px; /* 원하는 크기로 조정하세요 */
+  height: auto; /* 비율에 맞게 높이 자동 조정 */
+}
+
+.home-content-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}
+
+.home-title {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.home-content {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  white-space: pre-wrap;
+}
+
+.blinking-cursor {
+  font-size: 2rem;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 .home-container {
@@ -21,7 +66,7 @@ body {
   width: 100%;
   height: 100%; /* 부모 요소인 .home-container 크기와 동일하게 설정 */
   overflow-y: auto; /* 스크롤이 필요한 경우 스크롤바 표시 */
-  background-color: #f3f7ec;
+  background-color: white;
 }
 
 /* 화면에서 스크롤바 안보이게 */
@@ -49,8 +94,9 @@ body {
   height: 80px;
   max-width: 100%;
   margin: 1rem auto;
-  border: 3px solid #21a6a1;
-  border-radius: 15px;
+  border: 2px solid #21a6a1;
+  /* border-radius: 15px; */
+  background-color: #ffffff;
   color: #21a6a1;
   font-size: 26px;
   text-align: center;
