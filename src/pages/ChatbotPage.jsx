@@ -1,52 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../ui/Chatbot.css";
 import PageLayout from "../components/PageLayout.jsx";
-
-const consonants = [
-  "ㄱ",
-  "ㄴ",
-  "ㄷ",
-  "ㄹ",
-  "ㅁ",
-  "ㅂ",
-  "ㅅ",
-  "ㅇ",
-  "ㅈ",
-  "ㅊ",
-  "ㅋ",
-  "ㅌ",
-  "ㅍ",
-  "ㅎ",
-];
-const vowels = ["ㅏ", "ㅑ", "ㅓ", "ㅕ", "ㅗ", "ㅛ", "ㅜ", "ㅠ", "ㅡ", "ㅣ"];
-const letters = [...consonants, ...vowels];
+import { PulseLoader } from "react-spinners";
 
 const ChatbotPage = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const floatingLettersRef = useRef([]);
-
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const initialMessage = {
-      text: "안녕하세요! 무엇을 도와드릴까요?",
+      text: `안녕하세요! 도와도입니다.
+도와도와 함께 진로상담을 시작해 보세요!`,
       isBot: true,
     };
     setMessages([initialMessage]);
-    generateRandomLetters(); // 페이지 로드 시 자음과 모음 생성
-
-    // 화면 크기가 변경될 때 floating letters 위치 업데이트
-    window.addEventListener("resize", updateLettersPosition);
-
-    return () => {
-      window.removeEventListener("resize", updateLettersPosition);
-    };
   }, []);
 
   useEffect(() => {
     if (messages.length > 0) {
-      // 마지막 메시지로 이동
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
@@ -59,9 +31,22 @@ const ChatbotPage = () => {
 
       // 봇 응답 시뮬레이션
       setTimeout(() => {
-        const botMessage = { text: getChatbotMessageText(), isBot: true };
+        const botMessage = {
+          text: getChatbotMessageText(),
+          isBot: true,
+          loading: true,
+        };
         setMessages((prevMessages) => [...prevMessages, botMessage]);
-      }, 1000);
+
+        setTimeout(() => {
+          const updatedMessage = { ...botMessage, loading: false };
+          setMessages((prevMessages) =>
+            prevMessages.map((msg) =>
+              msg === botMessage ? updatedMessage : msg
+            )
+          );
+        }); 
+      }); 
     }
   };
 
@@ -75,38 +60,6 @@ const ChatbotPage = () => {
     }
   };
 
-  const generateRandomLetters = () => {
-    const container = document.querySelector(".chatbot-messages");
-    const maxLetters = 20; // 최대 생성되는 자음과 모음 수를 제한
-
-    const existingLetters =
-      container.querySelectorAll(".floating-letter").length;
-    const lettersToGenerate = Math.max(0, maxLetters - existingLetters);
-
-    for (let i = 0; i < lettersToGenerate; i++) {
-      const letter = letters[Math.floor(Math.random() * letters.length)];
-      const span = document.createElement("span");
-      span.className = "floating-letter";
-      span.textContent = letter;
-      container.appendChild(span);
-      floatingLettersRef.current.push(span);
-      updatePosition(span); // 초기 위치 설정
-    }
-  };
-
-  const updatePosition = (span) => {
-    const container = document.querySelector(".chatbot-messages");
-    span.style.left = `${Math.random() * (container.clientWidth - 24)}px`;
-    span.style.top = `${Math.random() * (container.clientHeight - 24)}px`;
-  };
-
-  const updateLettersPosition = () => {
-    const container = document.querySelector(".chatbot-messages");
-    floatingLettersRef.current.forEach((span) => {
-      updatePosition(span);
-    });
-  };
-
   return (
     <PageLayout>
       <div className="chatbot-container">
@@ -118,10 +71,12 @@ const ChatbotPage = () => {
                 key={index}
                 className={`message ${msg.isBot ? "bot" : "user"}`}
               >
-                <div className="text">
-                  {msg.text.split("").map((char, i) => (
-                    <span key={i}>{char}</span>
-                  ))}
+                <div className="text" style={{ whiteSpace: "pre-wrap" }}>
+                  {msg.isBot && msg.loading ? (
+                    <PulseLoader color="white" size="10px" />
+                  ) : (
+                    msg.text
+                  )}
                 </div>
               </div>
             ))}
