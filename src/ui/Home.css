@@ -3,20 +3,21 @@ body {
   padding: 0;
   height: 100%;
   font-family: "Raleway", sans-serif !important;
+  overflow: hidden;
 }
 
 .home-logo-container {
   position: absolute;
   top: 20px;
   left: 20px;
-  height: auto; /* 높이를 자동으로 조정 */
+  height: auto;
   display: flex;
-  align-items: center; /* 세로 가운데 정렬 */
+  align-items: center;
 }
 
 .home-logo {
-  width: 200px; /* 원하는 크기로 조정하세요 */
-  height: auto; /* 비율에 맞게 높이 자동 조정 */
+  width: 200px;
+  height: auto;
 }
 
 .home-content-container {
@@ -25,17 +26,18 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 100%;
+  min-height: 100vh;
+  padding: 20px;
 }
 
 .home-title {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: 200px;
+  margin: 20px 0;
+  color: #21a6a1;
 }
 
 .home-content {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: 25px;
   white-space: pre-wrap;
 }
 
@@ -58,50 +60,41 @@ body {
   margin: 0;
   padding: 0;
   width: 100vw;
-  height: 100vh;
-  overflow-y: hidden; /* 필요에 따라 스크롤바를 숨기기 위해 설정 */
-}
-
-.outer {
-  width: 100%;
-  height: 100%; /* 부모 요소인 .home-container 크기와 동일하게 설정 */
-  overflow-y: auto; /* 스크롤이 필요한 경우 스크롤바 표시 */
-  background-color: white;
-}
-
-/* 화면에서 스크롤바 안보이게 */
-.outer::-webkit-scrollbar {
-  display: none;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .inner {
-  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 100px;
-}
-
-.divider {
-  display: none;
+  background-color: #e2fffd;
+  padding: 20px;
 }
 
 .start-btn {
   position: relative;
   display: inline-block;
   overflow: hidden;
-  width: 250px;
-  height: 80px;
+  width: 200px;
+  height: auto;
   max-width: 100%;
-  margin: 1rem auto;
+  margin: 2em auto;
   border: 2px solid #21a6a1;
-  /* border-radius: 15px; */
-  background-color: #ffffff;
+  background-color: #e2fffd;
   color: #21a6a1;
   font-size: 26px;
   text-align: center;
-  line-height: 80px;
+  line-height: 50px;
   transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+  animation: blink 1s 1;
 }
 
 .start-btn:before {
@@ -128,30 +121,87 @@ body {
   z-index: -2;
 }
 
+@media (max-width: 1024px) {
+  .home-logo {
+    width: 150px;
+  }
+
+  .home-title {
+    font-size: 150px;
+  }
+
+  .home-content {
+    font-size: 20px;
+  }
+
+  .start-btn {
+    font-size: 18px;
+    width: 150px;
+    line-height: 40px;
+  }
+
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+
 @media (max-width: 767px) {
   .home-logo {
-    width: 250px;
-    height: auto;
+    width: 100px;
+  }
+
+  .home-title {
+    font-size: 90px;
+  }
+
+  .home-content {
+    font-size: 18px;
   }
 
   .start-btn {
     font-size: 16px;
-    line-height: 60px;
-    width: 200px;
-    height: auto;
+    width: 150px;
+    line-height: 35px;
+  }
+
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 }
 
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (max-width: 479px) {
   .home-logo {
-    width: 400px;
-    height: auto;
+    width: 100px;
+  }
+
+  .home-title {
+    font-size: 60px;
+  }
+
+  .home-content {
+    font-size: 14px;
   }
 
   .start-btn {
-    font-size: 20px;
-    line-height: 60px;
-    width: 250px;
-    height: auto;
+    font-size: 12px;
+    width: 100px;
+    line-height: 25px;
+  }
+
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+
+@media (max-height: 600px) {
+  body {
+    overflow-y: auto;
+  }
+
+  .home-container {
+    overflow: visible;
   }
 }
