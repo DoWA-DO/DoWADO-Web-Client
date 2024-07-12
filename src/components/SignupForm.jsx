@@ -1,122 +1,123 @@
 import React, { useState } from "react";
+import axios from "axios";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import InfoCheck from "./InfoCheckModal";
+import UserTypeSelector from "./UserTypeSelector";
 
 const SignupForm = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [schoolName, setSchoolName] = useState("");
-  const [emailSent, setEmailSent] = useState(false); // 이메일 인증 상태 관리
-  const [verificationCode, setVerificationCode] = useState(""); // 사용자가 입력한 인증 코드
-  const [inputVerificationCode, setInputVerificationCode] = useState(""); // 서버에서 받은 인증 코드
-  const [passwordError, setPasswordError] = useState(""); // 비밀번호 유효성 검사 에러 메시지
-  const [confirmPwError, setConfirmPwError] = useState(""); // 비밀번호 일치 확인 에러 메시지
-  const [emailError, setEmailError] = useState(""); // 이메일 유효성 검사 에러 메시지
-  const [isEmailValid, setIsEmailValid] = useState(false); // 이메일 유효성 상태
-  const [modalOpen, setModalOpen] = useState(false); // 모달 창 상태 관리
-  const [modalContent, setModalContent] = useState(""); // 모달에 표시할 내용
-  const [schoolNameError, setSchoolNameError] = useState(""); // 학교 이름 필드 에러 메시지
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    schoolName: "",
+    schoolGrade: "",
+    schoolClass: "",
+    schoolNumber: "",
+    teacherEmail: "",
+  });
 
-  ///////////////////////////////////////////////////////////////////////////////////////////
-  const [agree, setAgree] = useState(false); // 개인정보 수집 동의 상태 관리
-  const [agreeError, setAgreeError] = useState(""); // 개인정보 수집 동의 체크박스 에러 메시지
-  const [terms, setTerms] = useState(false); // 약관 동의 상태 관리
-  const [termsError, setTermsError] = useState(""); // 약관 동의 체크박스 에러 메시지
-  /////////////////////////////////////////////////////////////////////////////////////////////
+  const [emailSent, setEmailSent] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [inputVerificationCode, setInputVerificationCode] = useState("");
 
-  // 한글만 포함된 문자열인지 검사하는 함수
-  const validateKorean = (value) => {
-    const koreanRegex = /^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$/;
-    return koreanRegex.test(value);
-  };
+  const [errors, setErrors] = useState({});
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+  const [userType, setUserType] = useState("faculty");
 
-  const handleNameChange = (e) => {
-    const value = e.target.value;
+  const [agree, setAgree] = useState(false);
+  const [terms, setTerms] = useState(false);
+  const [agreeError, setAgreeError] = useState("");
+  const [termsError, setTermsError] = useState("");
 
-    if (validateKorean(value)) {
-      setName(value);
-    } else {
-      setName("");
+  const validateKorean = (value) => /^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$/.test(value);
+  const validateEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  const validatePassword = (value) =>
+    /^(?=.*\d)(?=.*[a-z])(?=.*[@#$%^&+=!])(?!.*\s).{8,}$/.test(value);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let filteredValue = value.replace(/\s/g, ""); // 공백 제거
+
+    if (name === "name" || name === "schoolName") {
+      filteredValue = filteredValue.replace(/[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, ""); // 한글만 허용
     }
-  };
 
-  const validateEmail = (value) => {
-    // 이메일 유효성 검사
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(value)) {
-      setEmailError("유효한 이메일 주소를 입력해주세요.");
-      setIsEmailValid(false);
-    } else {
-      setEmailError("");
-      setIsEmailValid(true);
-    }
-  };
+    setFormData((prev) => ({ ...prev, [name]: filteredValue }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
 
-  const validatePassword = (value) => {
-    const pwRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[@#$%^&+=!])(?!.*\s).{8,}$/;
-    if (!pwRegex.test(value)) {
-      setPasswordError(
-        "비밀번호는 숫자, 소문자, 특수문자를 포함하여 8자리 이상이어야 합니다."
-      );
-    } else {
-      setPasswordError("");
-    }
-  };
-
-  const checkPassword = (pw, confirmPw) => {
-    // 비밀번호 확인
-    console.log(pw, confirmPw);
-    if (pw !== confirmPw) {
-      setConfirmPwError("비밀번호가 일치하지 않습니다.");
-    } else {
-      setConfirmPwError("");
+    switch (name) {
+      case "name":
+        if (!validateKorean(filteredValue)) {
+          setErrors((prev) => ({
+            ...prev,
+            name: "한글로 된 이름을 입력해 주세요.",
+          }));
+        }
+        break;
+      case "email":
+        if (!validateEmail(filteredValue)) {
+          setErrors((prev) => ({
+            ...prev,
+            email: "유효한 이메일 주소를 입력해 주세요.",
+          }));
+          setIsEmailValid(false);
+        } else {
+          setIsEmailValid(true);
+        }
+        break;
+      case "password":
+        if (!validatePassword(filteredValue)) {
+          setErrors((prev) => ({
+            ...prev,
+            password:
+              "비밀번호는 숫자, 소문자, 특수문자를 포함하여 8자리 이상이어야 합니다.",
+          }));
+        }
+        break;
+      case "confirmPassword":
+        if (filteredValue !== formData.password) {
+          setErrors((prev) => ({
+            ...prev,
+            confirmPassword: "비밀번호가 일치하지 않습니다.",
+          }));
+        }
+        break;
+      default:
+        break;
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const newErrors = {};
 
-    // 이전 에러 초기화
-    setEmailError("");
-    setPasswordError("");
-    setConfirmPwError("");
-    setSchoolNameError("");
+    if (!formData.name) newErrors.name = "이름을 입력해 주세요.";
+    if (!formData.email) newErrors.email = "이메일을 입력해 주세요.";
+    if (!formData.password) newErrors.password = "비밀번호를 입력해 주세요.";
+    if (!formData.confirmPassword)
+      newErrors.confirmPassword = "비밀번호를 확인해 주세요.";
+    if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
+    if (!formData.schoolName)
+      newErrors.schoolName = "학교 이름을 입력해 주세요.";
+    if (!formData.schoolGrade) newErrors.schoolGrade = "학년을 입력해 주세요.";
+    if (!formData.schoolClass) newErrors.schoolClass = "반을 입력해 주세요.";
+    if (userType === "student" && !formData.schoolNumber)
+      newErrors.schoolNumber = "번호를 입력해 주세요.";
+    if (userType === "student" && !formData.teacherEmail)
+      newErrors.teacherEmail = "담임 선생님 이메일을 입력해 주세요.";
 
-    // 빈칸, 이메일 인증 완료 확인
-    if (!email) {
-      setEmailError("이메일을 입력해 주세요.");
-      return;
-    }
-    if (!password) {
-      setPasswordError("비밀번호를 입력해 주세요.");
-      return;
-    }
-    if (!confirmPassword) {
-      setConfirmPwError("비밀번호를 확인해 주세요.");
-      return;
-    }
-    if (!schoolName) {
-      setSchoolNameError("학교 이름을 입력해 주세요.");
-      return;
-    }
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) return;
+
     if (!isEmailValid || !emailSent) {
       alert("이메일 인증을 완료해주세요.");
-      return;
-    }
-
-    // 체크박스 체크 여부 확인
-    const checkboxChecked = document.getElementById("checkbox").checked;
-    if (!checkboxChecked) {
-      alert("개인정보 수집 및 이용 동의에 체크해주세요.");
-      return;
-    }
-
-    // 오류가 없으면 회원가입 진행
-    if (emailError || passwordError || confirmPwError || schoolNameError) {
       return;
     }
 
@@ -134,43 +135,38 @@ const SignupForm = () => {
       setTermsError("");
     }
 
-    // 회원가입 데이터
-    const userData = {
-      name: name,
-      email: email,
-      password: password,
-      schoolName: schoolName,
-    };
-
     try {
-      const response = await fetch("http://localhost:8000/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+      const endpoint =
+        userType === "faculty"
+          ? "http://localhost:8000/signup/faculty"
+          : "http://localhost:8000/signup/student";
 
-      if (!response.ok) {
+      const response = await axios.post(endpoint, { ...formData, userType });
+
+      if (response.status !== 200) {
         throw new Error("회원가입에 실패했습니다.");
       }
 
       alert("회원가입이 성공적으로 완료되었습니다.");
       navigate("/LoginPage");
 
-      setName("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setSchoolName("");
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        schoolName: "",
+        schoolGrade: "",
+        schoolClass: "",
+        schoolNumber: "",
+        teacherEmail: "",
+      });
       setVerificationCode("");
       setEmailSent(false);
       setInputVerificationCode("");
       setModalOpen(false);
-      /////////////////////////////////////////////////////////
-      setAgree(false); // 동의 상태 초기화
-      setTerms(false); // 약관 동의 상태 초기화
-      /////////////////////////////////////////////////////////
+      setAgree(false);
+      setTerms(false);
     } catch (error) {
       console.error("Error:", error);
       alert("회원가입 중 오류가 발생했습니다. 다시 시도해 주세요.");
@@ -189,29 +185,20 @@ const SignupForm = () => {
 
   const handleEmailAuth = async () => {
     try {
-      // 서버로 이메일 인증 요청
-      console.log("이메일 인증");
-      const response = await fetch(
+      const response = await axios.post(
         "http://localhost:8000/send-verification-code",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email }),
-        }
+        { email: formData.email }
       );
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error("이메일 인증에 실패했습니다.");
       }
 
-      const data = await response.json();
-      setVerificationCode(data.verificationCode);
+      setVerificationCode(response.data.verificationCode);
       setEmailSent(true);
       alert("인증 이메일이 발송되었습니다.");
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Email Auth Error:", error);
       alert("이메일 인증 중 오류가 발생했습니다. 다시 시도해 주세요.");
     }
   };
@@ -224,24 +211,29 @@ const SignupForm = () => {
     e.preventDefault();
     if (inputVerificationCode === verificationCode) {
       alert("이메일 인증이 완료되었습니다.");
-      // 인증 완료 후 필요한 로직 추가
     } else {
       alert("인증 코드가 올바르지 않습니다.");
     }
   };
 
+  const handleUserTypeChange = (e) => {
+    setUserType(e.target.value);
+  };
+
   return (
     <div className="signup-form-container">
       <form onSubmit={handleSubmit}>
+        <UserTypeSelector userType={userType} onChange={handleUserTypeChange} />
         <div className="lg-form-group">
           <label htmlFor="name">이름</label>
           <input
             type="text"
             id="name"
             name="name"
-            value={name}
-            onChange={handleNameChange}
+            value={formData.name}
+            onChange={handleChange}
           />
+          {errors.name && <div className="error-message">{errors.name}</div>}
         </div>
         <div className="lg-form-group" id="email-form">
           <label htmlFor="email">이메일</label>
@@ -250,17 +242,14 @@ const SignupForm = () => {
               type="email"
               id="email"
               name="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                validateEmail(e.target.value);
-              }}
+              value={formData.email}
+              onChange={handleChange}
             />
             <button id="email-Auth-btn" type="button" onClick={handleEmailAuth}>
               이메일 인증
             </button>
           </div>
-          {emailError && <div className="error-message">{emailError}</div>}
+          {errors.email && <div className="error-message">{errors.email}</div>}
         </div>
         <div className="lg-form-group">
           <label htmlFor="verification-code">인증번호</label>
@@ -268,7 +257,7 @@ const SignupForm = () => {
             type="text"
             id="verification-code"
             name="verification-code"
-            value={verificationCode}
+            value={inputVerificationCode}
             onChange={handleVerificationCodeChange}
           />
         </div>
@@ -278,14 +267,11 @@ const SignupForm = () => {
             type="password"
             id="password"
             name="password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              validatePassword(e.target.value);
-            }}
+            value={formData.password}
+            onChange={handleChange}
           />
-          {passwordError && (
-            <div className="error-message">{passwordError}</div>
+          {errors.password && (
+            <div className="error-message">{errors.password}</div>
           )}
         </div>
         <div className="lg-form-group">
@@ -293,15 +279,12 @@ const SignupForm = () => {
           <input
             type="password"
             id="confirm-password"
-            name="confirm-password"
-            value={confirmPassword}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value);
-              checkPassword(password, e.target.value);
-            }}
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
           />
-          {confirmPwError && (
-            <div className="error-message">{confirmPwError}</div>
+          {errors.confirmPassword && (
+            <div className="error-message">{errors.confirmPassword}</div>
           )}
         </div>
         <div className="lg-form-group">
@@ -309,11 +292,74 @@ const SignupForm = () => {
           <input
             type="text"
             id="school-name"
-            name="school-name"
-            value={schoolName}
-            onChange={(e) => setSchoolName(e.target.value)}
+            name="schoolName"
+            value={formData.schoolName}
+            onChange={handleChange}
           />
+          {errors.schoolName && (
+            <div className="error-message">{errors.schoolName}</div>
+          )}
         </div>
+        <div className="lg-form-group row">
+          <label htmlFor="school-grade">학년</label>
+          <input
+            type="number"
+            id="school-grade"
+            name="schoolGrade"
+            value={formData.schoolGrade}
+            onChange={handleChange}
+          />
+          {errors.schoolGrade && (
+            <div className="error-message">{errors.schoolGrade}</div>
+          )}
+        </div>
+        <div className="lg-form-group row">
+          <label htmlFor="school-class">반</label>
+          <input
+            type="number"
+            id="school-class"
+            name="schoolClass"
+            value={formData.schoolClass}
+            onChange={handleChange}
+          />
+          {errors.schoolClass && (
+            <div className="error-message">{errors.schoolClass}</div>
+          )}
+        </div>
+        <div className="lg-form-group row">
+          {userType === "student" && (
+            <>
+              <label htmlFor="school-number">번호</label>
+              <input
+                type="number"
+                id="school-number"
+                name="schoolNumber"
+                value={formData.schoolNumber}
+                onChange={handleChange}
+              />
+              {errors.schoolNumber && (
+                <div className="error-message">{errors.schoolNumber}</div>
+              )}
+            </>
+          )}
+        </div>
+        {userType === "student" && (
+          <>
+            <div className="lg-form-group">
+              <label htmlFor="teacher-email">담임 선생님 이메일</label>
+              <input
+                type="email"
+                id="teacher-email"
+                name="teacherEmail"
+                value={formData.teacherEmail}
+                onChange={handleChange}
+              />
+              {errors.teacherEmail && (
+                <div className="error-message">{errors.teacherEmail}</div>
+              )}
+            </div>
+          </>
+        )}
         <div className="info-check">
           <label>
             <input
@@ -350,7 +396,6 @@ const SignupForm = () => {
         </div>
       </form>
 
-      {/* 개인정보 이용 동의 모달 */}
       <InfoCheck
         isOpen={modalOpen}
         closeModal={closeModal}

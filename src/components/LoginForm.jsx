@@ -1,88 +1,118 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from './AuthContext'; // AuthContext 사용
+import React, { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+import { useCookies } from "react-cookie";
+import UserTypeSelector from "./UserTypeSelector";
 
 const LoginForm = () => {
-  const [userType, setUserType] = useState("faculty"); // 기본값을 'faculty'로 설정
-  const [email, setEmail] = useState(
-    localStorage.getItem("rememberedEmail") || ""
-  ); // 로컬 저장소에서 이메일 가져오기
-  const [password, setPassword] = useState(""); // Added state for password
-  const [emailLabel, setEmailLabel] = useState("Email"); // Email 라벨 상태 추가
-  const [errorMessage, setErrorMessage] = useState(""); // Error message 상태 추가
-  const [rememberMe, setRememberMe] = useState(
-    localStorage.getItem("rememberMe") === "true"
-  ); // 아이디 기억하기 상태 추가
+  const [userType, setUserType] = useState("faculty");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [pwErrorMessage, setPwErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { setUserType: setAuthUserType } = useAuth(); // AuthContext에서 setUserType 가져오기
+  const { setUserType: setAuthUserType } = useAuth();
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "rememberedEmail",
+    "rememberedUserType",
+    "rememberMe",
+  ]);
 
   useEffect(() => {
-    setUserType("faculty"); // 페이지가 로드될 때 기본값으로 초기화
-    const rememberedUserType = localStorage.getItem("rememberedUserType");
+    const rememberedUserType = cookies.rememberedUserType;
     if (rememberedUserType) {
       setUserType(rememberedUserType);
-      if (rememberedUserType === "student") {
-        setEmailLabel("아이디");
-      } else {
-        setEmailLabel("이메일");
-      }
+    } else {
+      setUserType("faculty");
     }
-  }, [location.pathname]);
+  }, [location.pathname, cookies.rememberedUserType]);
 
-  const handleUserTypeChange = (e) => {
+  useEffect(() => {
+    const rememberedEmail = cookies.rememberedEmail;
+    const rememberedUserType = cookies.rememberedUserType;
+    if (rememberedEmail && rememberedUserType === userType) {
+      setEmail(rememberedEmail);
+    } else {
+      setEmailErrorMessage("");
+      setPwErrorMessage("");
+      setEmail("");
+    }
+    const rememberedRememberMe = cookies.rememberMe === "true";
+    setRememberMe(rememberedRememberMe);
+  }, [cookies.rememberedEmail, cookies.rememberedUserType, userType]);
+
+  const handleUserTypeChange = useCallback((e) => {
     setUserType(e.target.value);
-    if (e.target.value === "student") {
-      setEmailLabel("아이디"); // 학생일 때 라벨을 'ID'로 변경
-    } else {
-      setEmailLabel("이메일"); // 교직원일 때 라벨을 'E-mail'로 변경
-    }
-  };
+    setEmail(""); // 사용자 유형 변경 시 이메일 초기화
+  }, []);
 
-  const handleEmailChange = (e) => {
+  const handleEmailChange = useCallback((e) => {
     setEmail(e.target.value);
-  };
+    setEmailErrorMessage(""); // 이메일 입력 시 오류 메시지 초기화
+  }, []);
 
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = useCallback((e) => {
     setPassword(e.target.value);
-  };
+    setPwErrorMessage(""); // 비밀번호 입력 시 오류 메시지 초기화
+  }, []);
 
-  const handleRememberMeChange = (e) => {
-    const isChecked = e.target.checked;
-    setRememberMe(isChecked);
-    if (isChecked) {
-      localStorage.setItem("rememberedEmail", email);
-      localStorage.setItem("rememberedUserType", userType);
-      localStorage.setItem("rememberMe", "true");
-    } else {
-      localStorage.removeItem("rememberedEmail");
-      localStorage.removeItem("rememberedUserType");
-      localStorage.removeItem("rememberMe");
-    }
-  };
+  const handleRememberMeChange = useCallback((e) => {
+    setRememberMe(e.target.checked);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setEmailErrorMessage(""); // 제출 시 오류 메시지 초기화
+    setPwErrorMessage("");
+    setErrorMessage("");
+
+    let hasError = false;
+
+    if (!email) {
+      setEmailErrorMessage("이메일을 입력해주세요.");
+      hasError = true;
+    }
+
+    if (!password) {
+      setPwErrorMessage("비밀번호를 입력해주세요.");
+      hasError = true;
+    }
+
+    if (hasError) {
+      // 입력되지 않은 경우 handleSubmit 실행 중지
+      return;
+    }
+
     try {
-      const response = await axios.post("http://localhost:5000/api/login", {
+      const endpoint =
+        userType === "faculty"
+          ? "http://localhost:5000/api/login/faculty"
+          : "http://localhost:5000/api/login/student";
+
+      const response = await axios.post(endpoint, {
         email,
         password,
         userType,
       });
 
+      console.log("Login response:", response.data);
+
       if (response.status === 200) {
         if (rememberMe) {
-          localStorage.setItem("rememberedEmail", email);
-          localStorage.setItem("rememberedUserType", userType);
-          localStorage.setItem("rememberMe", "true");
+          setCookie("rememberedEmail", email, { path: "/" });
+          setCookie("rememberedUserType", userType, { path: "/" });
+          setCookie("rememberMe", "true", { path: "/" });
         } else {
-          localStorage.removeItem("rememberedEmail");
-          localStorage.removeItem("rememberedUserType");
-          localStorage.removeItem("rememberMe");
+          removeCookie("rememberedEmail", { path: "/" });
+          removeCookie("rememberedUserType", { path: "/" });
+          removeCookie("rememberMe", { path: "/" });
         }
 
-        setAuthUserType(userType); // AuthContext에 사용자 유형 설정
+        setAuthUserType(userType);
 
         if (userType === "faculty") {
           navigate("/dashboardfaculty");
@@ -91,82 +121,57 @@ const LoginForm = () => {
         }
       }
     } catch (error) {
-      setPassword(""); // 비밀번호 입력 칸 비우기
-      setErrorMessage("아이디와 비밀번호를 확인해주세요!"); // 로그인 실패 시 에러 메시지 설정
+      setPassword("");
+      setErrorMessage("이메일과 비밀번호를 확인해주세요!");
       console.error("Login failed", error);
     }
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <div className="user-type-group">
-          <label>
-            <input
-              type="radio"
-              value="faculty"
-              checked={userType === "faculty"}
-              onChange={handleUserTypeChange}
-            />
-            교직원
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="student"
-              checked={userType === "student"}
-              onChange={handleUserTypeChange}
-            />
-            학생
-          </label>
-        </div>
-        <div className="lg-form-group">
-          <label htmlFor="email">{emailLabel}</label>
+    <form onSubmit={handleSubmit}>
+      <UserTypeSelector userType={userType} onChange={handleUserTypeChange} />
+      <div className="lg-form-group">
+        <label htmlFor="email">이메일</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={email}
+          onChange={handleEmailChange}
+        />
+        {emailErrorMessage && (
+          <p className="error-message">{emailErrorMessage}</p>
+        )}
+      </div>
+      <div className="lg-form-group">
+        <label htmlFor="password">비밀번호</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={password}
+          onChange={handlePasswordChange}
+        />
+        {pwErrorMessage && <p className="error-message">{pwErrorMessage}</p>}
+      </div>
+      <div className="user-type-group">
+        <label>
           <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={handleEmailChange}
-            required
+            type="checkbox"
+            checked={rememberMe}
+            onChange={handleRememberMeChange}
           />
-        </div>
-        <div className="lg-form-group">
-          <label htmlFor="password">비밀번호</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-        </div>
-        <div className="user-type-group">
-          <label>
-            <input
-              type="checkbox"
-              checked={rememberMe}
-              onChange={handleRememberMeChange}
-            />
-            아이디 기억하기
-          </label>
-        </div>
-        <button type="submit" className="login-button">
-          Login
-        </button>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}{" "}
-        {/* 경고 메시지 표시 */}
-        <div
-          className={`signup-link ${userType === "student" ? "hidden" : ""}`}
-        >
-          처음이신가요? <a href="/signup">회원가입</a>
-        </div>
-        <div className="findpassword-link">
-          <a href="/findpassword">비밀번호 찾기</a>
-        </div>
-      </form>
-    </>
+          이메일 기억하기
+        </label>
+      </div>
+      <button type="submit" className="login-button">
+        Login
+      </button>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      <div className="signup-link">
+        처음이신가요? <a href="/signup">회원가입</a>
+      </div>
+    </form>
   );
 };
 

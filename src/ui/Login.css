@@ -1,8 +1,11 @@
-.lg-bg-container {
+/* LoginForm.css */
+
+/* 기본 설정과 전역 스타일 */
+body {
   margin: 0;
   padding: 0;
   font-family: "Roboto", sans-serif;
-  background-color: #f3f7ec;
+  background-color: #e2fffd;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,59 +15,24 @@
 /* 메인 컨테이너 */
 .lg-container {
   width: 80vw; /* 고정된 너비 */
-  min-width: 300px; /* 모바일 화면을 위해 최소 너비 조정 */
+  min-width: 300px;
   height: 90vh; /* 고정된 높이 */
   min-height: 600px;
   display: flex;
-  flex-direction: column; /* 모바일 화면에서 수직 배열 */
+  flex-direction: row; /* 수평 배열 */
   background: #ffffff;
   border-radius: 15px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  max-width: 600px;
+  padding: 30px;
 }
 
-/* 내부 컨테이너 */
-.lg-logo {
-  width: 100%;
-  height: 30%; /* 모바일 화면에서 높이 조정 */
-  background: rgba(91, 134, 229, 0.51);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  position: relative;
-}
-
-.lg-logo h1 {
-  font-family: "Alfa Slab One";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 30px; /* 모바일 화면에서 폰트 크기 조정 */
-  line-height: 100px;
-  letter-spacing: 0.04em;
-  color: #ffffff;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  z-index: 1; /* 이미지 위에 텍스트 표시 */
-}
-
-.lg-logo::before {
-  content: "";
-  background: url("../../public/example.jpg") no-repeat center center;
-  background-size: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  border-radius: 15px 15px 0 0; /* 모바일 화면에서 모서리 반경 조정 */
-}
-
-/* 오른쪽 패널 */
+/* 로그인/회원가입 폼 */
 .lg-form {
   width: 100%;
-  height: 70%; /* 모바일 화면에서 높이 조정 */
+  height: 100%;
   background: #ffffff;
-  border-radius: 0 0 15px 15px; /* 모바일 화면에서 모서리 반경 조정 */
   padding: 20px; /* 모바일 화면에서 패딩 조정 */
   display: flex;
   flex-direction: column;
@@ -73,8 +41,6 @@
 }
 
 .lg-form h2 {
-  font-family: "Alfa Slab One";
-  font-style: normal;
   font-weight: 800;
   font-size: 30px; /* 모바일 화면에서 폰트 크기 조정 */
   line-height: 30px;
@@ -91,6 +57,7 @@
   gap: 20px;
   margin-bottom: 20px;
   margin-top: 20px;
+  width: 100%;
 }
 
 /* 폼 */
@@ -108,6 +75,7 @@
   line-height: 40px;
   letter-spacing: 0.08em;
   color: #9d9d9d;
+  width: 100%;
 }
 
 .lg-form-group input {
@@ -117,13 +85,13 @@
   border-radius: 5px;
   font-size: 16px;
   box-sizing: border-box;
-  display: block;
 }
 
 .email-input {
   display: flex;
   align-items: center;
   position: relative;
+  width: 100%;
 }
 
 .email-input input {
@@ -147,8 +115,6 @@
   border-radius: 8px;
   color: #ffffff;
   padding: 5px 10px;
-  font-family: "Telegraf";
-  font-style: normal;
   font-weight: 800;
   font-size: 15px;
   letter-spacing: 0.08em;
@@ -156,9 +122,7 @@
   text-align: center;
 }
 
-.login-button,
-.find-password-button,
-.verification-button {
+.login-button {
   background: #21a6a1;
   border: none;
   border-radius: 8px;
@@ -172,70 +136,48 @@
   cursor: pointer;
   width: 100%;
   text-align: center;
-  margin-top: 20px; /* 버튼 간격 조절 */
+  margin-top: 20px;
 }
 
-.signup-link,
-.findpassword-link {
+.signup-link {
   margin-top: 20px;
   text-align: center;
   font-size: 16px;
   color: #000000;
+  width: 100%;
 }
 
-.signup-link a,
-.findpassword-link a {
+.signup-link a {
   color: #21a6a1;
   text-decoration: none;
 }
 
-.signup-link a:hover,
-.findpassword-link a:hover {
+.signup-link a:hover {
   text-decoration: underline;
-}
-
-.link-button {
-  background: none;
-  border: none;
-  color: #21a6a1;
-  text-decoration: none;
-  cursor: pointer;
-  font-size: 16px;
-  text-align: center;
-  display: inline;
-  padding: 0; /* 추가: 불필요한 여백 제거 */
-  margin: 0; /* 추가: 불필요한 여백 제거 */
-}
-
-.link-button:hover {
-  text-decoration: underline;
-}
-
-.signup-link.hidden {
-  visibility: hidden;
-  height: 1.4em; /* 줄의 높이를 유지하기 위해 설정합니다 */
 }
 
 .error-message {
   color: red;
   font-size: 14px;
   margin-top: 10px;
+  width: 100%;
 }
 
 .info-check {
   display: flex;
   justify-content: flex-start;
-  gap: 20px; /* 라벨 사이 간격 조절 */
+  gap: 20px;
   margin-bottom: 20px;
-  margin-top: 20px; /* 위쪽 여백 추가 */
+  margin-top: 20px;
+  width: 100%;
 }
 
 .info-check label {
   display: flex;
   align-items: center;
-  font-family: "Telegraf", sans-serif; /* 폰트 일관성 */
-  font-size: 16px; /* 폰트 크기 조정 */
-  color: #000000; /* 폰트 색상 */
+  font-family: "Telegraf", sans-serif;
+  font-size: 16px;
+  color: #000000;
 }
 
 .info-check input[type="radio"] {
@@ -243,7 +185,7 @@
 }
 
 .info-check a {
-  text-decoration: none; /* 링크 아래의 밑줄 제거 */
+  text-decoration: none;
 }
 
 .info-check-modal {
@@ -263,81 +205,107 @@
   margin-left: 10px;
 }
 
-/* 태블릿 이상 화면 */
-@media (min-width: 768px) {
+/* 479px 이하 화면 */
+@media (max-width: 479px) {
   .lg-container {
-    flex-direction: row; /* 태블릿 이상의 화면에서 수평 배열 */
-  }
-
-  .lg-logo {
-    width: 60%;
-    height: 100%;
-  }
-
-  .lg-logo h1 {
-    font-size: 48px; /* 태블릿 이상의 화면에서 폰트 크기 조정 */
-  }
-
-  .lg-logo::before {
-    border-radius: 15px 0 0 15px; /* 태블릿 이상의 화면에서 모서리 반경 조정 */
+    padding: 20px;
   }
 
   .lg-form {
-    width: 40%;
-    height: 100%;
-    border-radius: 0 15px 15px 0; /* 태블릿 이상의 화면에서 모서리 반경 조정 */
-    padding: 40px; /* 태블릿 이상의 화면에서 패딩 조정 */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 컨텐츠를 수평 가운데 정렬 */
-    overflow: auto; /* 내용이 넘칠 경우 스크롤바 표시 */
+    width: 100%;
+    padding: 15px;
   }
 
   .lg-form h2 {
-    font-size: 30px; /* 태블릿 이상의 화면에서 폰트 크기 조정 */
-    margin-bottom: 40px; /* 태블릿 이상의 화면에서 마진 조정 */
-    align-self: center; /* h2를 수평 가운데 정렬 */
+    font-size: 24px;
+    margin-bottom: 15px;
   }
 
-  .lg-form > *:not(h2) {
-    flex-grow: 1; /* h2 외의 내부 요소가 전체 높이를 차지하도록 */
-    width: 100%; /* 내부 요소의 너비를 100%로 설정 */
+  .lg-form-group input {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .login-button {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .email-input button {
+    padding: 3px;
+    font-size: 12px;
+  }
+
+  .signup-link {
+    font-size: 14px;
   }
 }
 
-/* 태블릿 화면 */
-@media (min-width: 768px) and (max-width: 1023px) {
+/* 480px에서 767px 화면 */
+@media (min-width: 480px) and (max-width: 767px) {
   .lg-container {
-    width: 90vw; /* 예시로 너비를 조정합니다 */
-  }
-
-  .lg-logo {
-    height: 100%; /* 예시로 높이를 조정합니다 */
-    width: 40%;
+    padding: 25px;
   }
 
   .lg-form {
-    width: 60%;
-    height: 100%;
-    padding: 30px; /* 예시로 패딩을 조정합니다 */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 컨텐츠를 수평 가운데 정렬 */
-    overflow: auto; /* 내용이 넘칠 경우 스크롤바 표시 */
+    width: 100%;
+    padding: 18px;
   }
 
   .lg-form h2 {
-    font-size: 30px; /* 예시로 폰트 크기를 조정합니다 */
-    margin-bottom: 30px; /* 예시로 마진을 조정합니다 */
-    align-self: center; /* h2를 수평 가운데 정렬 */
+    font-size: 26px;
+    margin-bottom: 18px;
   }
 
-  .lg-logo::before {
-    border-radius: 15px 0 0 15px; /* 예시로 모서리 반경을 조정합니다 */
+  .lg-form-group input {
+    padding: 9px;
+    font-size: 15px;
+  }
+
+  .login-button {
+    padding: 13px;
+    font-size: 15px;
+  }
+
+  .signup-link {
+    font-size: 15px;
+  }
+}
+
+/* 768px에서 1023px 화면 */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .lg-form {
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+  }
+
+  .lg-form h2 {
+    font-size: 30px;
+    margin-bottom: 30px;
+    align-self: center;
+  }
+
+  .lg-form-group input {
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .login-button {
+    padding: 15px;
+    font-size: 16px;
+  }
+
+  .signup-link {
+    font-size: 16px;
   }
 
   .lg-form > *:not(h2) {
-    flex-grow: 1; /* h2 외의 내부 요소가 전체 높이를 차지하도록 */
-    width: 100%; /* 내부 요소의 너비를 100%로 설정 */
+    flex-grow: 1;
+    width: 100%;
   }
 }
