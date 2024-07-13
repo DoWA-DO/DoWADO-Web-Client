@@ -55,7 +55,7 @@ const ChangePassword = ({
               required
             />
           </div>
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
+          {errorMessage && <p className="cp-error-message">{errorMessage}</p>}
           <button type="submit" className="submit-button">
             변경
           </button>

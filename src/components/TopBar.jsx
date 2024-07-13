@@ -11,7 +11,7 @@ const TopBar = () => {
   const [isMobile, setIsMobile] = useState(false); // 모바일 여부 상태 관리
   const [isMenuOpen, setIsMenuOpen] = useState(false); // 메뉴 상태 관리
 
-  const userType = authUserType || "student"; /// 삭제 예정
+  const userType = authUserType || "faculty"; /// 삭제 예정
 
   // 화면 너비가 768px 이하일 때 모바일로 판단
   useEffect(() => {
