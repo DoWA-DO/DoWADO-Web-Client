@@ -1,20 +1,36 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../ui/Chatbot.css";
-import PageLayout from "../components/PageLayout.jsx";
 import { PulseLoader } from "react-spinners";
+import { FaArrowUp, FaArrowLeft } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const ChatbotPage = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const initialMessage = {
       text: `안녕하세요! 도와도입니다.
 도와도와 함께 진로상담을 시작해 보세요!`,
       isBot: true,
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     };
-    setMessages([initialMessage]);
+
+    const dateMessage = {
+      text: new Date().toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+      isDate: true,
+    };
+
+    setMessages([dateMessage, initialMessage]);
   }, []);
 
   useEffect(() => {
@@ -25,7 +41,14 @@ const ChatbotPage = () => {
 
   const handleSendMessage = () => {
     if (input.trim() !== "") {
-      const userMessage = { text: input, isBot: false };
+      const userMessage = {
+        text: input,
+        isBot: false,
+        time: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      };
       setMessages([...messages, userMessage]);
       setInput("");
 
@@ -35,6 +58,10 @@ const ChatbotPage = () => {
           text: getChatbotMessageText(),
           isBot: true,
           loading: true,
+          time: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
         };
         setMessages((prevMessages) => [...prevMessages, botMessage]);
 
@@ -45,8 +72,8 @@ const ChatbotPage = () => {
               msg === botMessage ? updatedMessage : msg
             )
           );
-        }); 
-      }); 
+        });
+      });
     }
   };
 
@@ -54,50 +81,68 @@ const ChatbotPage = () => {
     setInput(e.target.value);
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
       handleSendMessage();
     }
   };
 
   return (
-    <PageLayout>
-      <div className="chatbot-container">
-        <div className="chatbot-header">챗봇</div>
-        <div className="chatbot-messages">
-          <div className="chatbot-messages-wrapper">
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`message ${msg.isBot ? "bot" : "user"}`}
-              >
-                <div className="text" style={{ whiteSpace: "pre-wrap" }}>
-                  {msg.isBot && msg.loading ? (
-                    <PulseLoader color="white" size="10px" />
-                  ) : (
-                    msg.text
-                  )}
-                </div>
-              </div>
-            ))}
-            <div ref={messagesEndRef}></div>
-          </div>
-        </div>
-        <div className="chatbot-input-container">
-          <input
-            type="text"
-            className="chatbot-input"
-            placeholder="메시지를 입력하세요..."
-            value={input}
-            onChange={handleInputChange}
-            onKeyPress={handleKeyPress}
-          />
-          <button className="chatbot-send-button" onClick={handleSendMessage}>
-            보내기
-          </button>
+    <div className="chatbot-container">
+      <div className="chatbot-header">
+        <button className="back-btn" onClick={() => navigate("/chatbot")}>
+          <FaArrowLeft size="20" />
+        </button>
+        <button className="report-btn">레포트 보기</button>
+      </div>
+      <div className="chatbot-messages">
+        <div className="chatbot-messages-wrapper">
+          {messages.map((msg, index) => (
+            <div
+              key={index}
+              className={`message-wrapper ${msg.isBot ? "bot" : "user"}`}
+            >
+              {msg.isDate ? (
+                <div className="date-message">{msg.text}</div>
+              ) : (
+                <>
+                  <div className={`message ${msg.isBot ? "bot" : "user"}`}>
+                    <div className="text" style={{ whiteSpace: "pre-wrap" }}>
+                      {msg.isBot && msg.loading ? (
+                        <PulseLoader color="white" size="10px" />
+                      ) : (
+                        msg.text
+                      )}
+                    </div>
+                  </div>
+                  <div
+                    className={`time ${msg.isBot ? "bot-time" : "user-time"}`}
+                  >
+                    {msg.time}
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
+          <div ref={messagesEndRef}></div>
         </div>
       </div>
-    </PageLayout>
+      <div className="chatbot-input-container">
+        <textarea
+          type="text"
+          className="chatbot-input"
+          placeholder="메시지를 입력하세요..."
+          value={input}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          rows="1"
+        />
+        <button className="chatbot-send-button" onClick={handleSendMessage}>
+          <FaArrowUp />
+        </button>
+      </div>
+    </div>
   );
 };
 
