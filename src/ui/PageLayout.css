@@ -1,19 +1,43 @@
 .page-layout {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding-top: 100px; /* TopBar의 높이와 동일한 값 */
-}
-
-.page-layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* 최소 높이를 화면 전체로 설정 */
+  height: 100vh;
+  width: 100vw;
 }
 
 .page-content {
-  flex: 1; /* 페이지 내용이 남은 공간을 모두 차지하도록 설정 */
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 80px; /* TopBar의 높이만큼 패딩 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-container {
+  width: 90vw;
+  height: 85vh;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+@media (max-width: 767px) {
+  .form-container {
+    width: 90vw;
+    height: 80vh;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 479px) {
+  .form-container {
+    width: 90vw;
+    height: 80vh;
+    padding: 10px;
+  }
 }

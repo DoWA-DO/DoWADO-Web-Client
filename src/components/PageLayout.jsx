@@ -1,13 +1,14 @@
 import React from "react";
 import TopBar from "./TopBar";
-import FormContainer from "./FormContainer";
-import "../ui/PageLayout.css"; // 스타일을 별도의 CSS 파일로 분리
+import "../ui/PageLayout.css";
 
 const PageLayout = ({ children }) => {
   return (
     <div className="page-layout">
       <TopBar />
-      <FormContainer>{children}</FormContainer>
+      <div className="page-content">
+        <div className="form-container">{children}</div>
+      </div>
     </div>
   );
 };

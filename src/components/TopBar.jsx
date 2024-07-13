@@ -11,7 +11,7 @@ const TopBar = () => {
   const [isMobile, setIsMobile] = useState(false); // 모바일 여부 상태 관리
   const [isMenuOpen, setIsMenuOpen] = useState(false); // 메뉴 상태 관리
 
-  const userType = authUserType || "student"; /// 삭제 예정
+  const userType = authUserType || "faculty"; /// 삭제 예정
 
   // 화면 너비가 768px 이하일 때 모바일로 판단
   useEffect(() => {
@@ -55,15 +55,6 @@ const TopBar = () => {
             <div
               className="topbar-link"
               onClick={() => {
-                navigate("/mypage");
-                setIsMenuOpen(false);
-              }}
-            >
-              마이페이지
-            </div>
-            <div
-              className="topbar-link"
-              onClick={() => {
                 navigate("/studentlog");
                 setIsMenuOpen(false);
               }}
@@ -73,11 +64,11 @@ const TopBar = () => {
             <div
               className="topbar-link"
               onClick={() => {
-                navigate("/studentmanagement");
+                navigate("/mypage");
                 setIsMenuOpen(false);
               }}
             >
-              학생 관리
+              마이페이지
             </div>
           </>
         ) : (
@@ -94,16 +85,7 @@ const TopBar = () => {
             <div
               className="topbar-link"
               onClick={() => {
-                navigate("/mypage");
-                setIsMenuOpen(false);
-              }}
-            >
-              마이페이지
-            </div>
-            <div
-              className="topbar-link"
-              onClick={() => {
-                navigate("/chatbot");
+                navigate("/studentLog");
                 setIsMenuOpen(false);
               }}
             >
@@ -112,11 +94,11 @@ const TopBar = () => {
             <div
               className="topbar-link"
               onClick={() => {
-                navigate("/consultationrecords");
+                navigate("/mypage");
                 setIsMenuOpen(false);
               }}
             >
-              상담 기록 보기
+              마이페이지
             </div>
           </>
         )}
