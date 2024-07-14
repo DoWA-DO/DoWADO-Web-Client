@@ -1,158 +1,231 @@
-import React, { useState, useEffect, useRef } from "react";
-import "../ui/Chatbot.css";
-import { PulseLoader } from "react-spinners";
-import { FaArrowUp, FaArrowLeft } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import axios from "axios";
+import {
+  useGlobalFilter,
+  useSortBy,
+  useTable,
+  usePagination,
+} from "react-table";
+import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import "../ui/ChatLog.css";
 
-const ChatbotPage = () => {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const messagesEndRef = useRef(null);
+const ChatLog = ({ searchTerm }) => {
   const navigate = useNavigate();
+  const [students, setStudents] = useState([]);
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const initialMessage = {
-      text: `안녕하세요! 도와도입니다.
-도와도와 함께 진로상담을 시작해 보세요!`,
-      isBot: true,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/students");
+        setStudents(response.data);
+        setFilteredStudents(response.data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const dateMessage = {
-      text: new Date().toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }),
-      isDate: true,
-    };
-
-    setMessages([dateMessage, initialMessage]);
+    fetchStudents();
   }, []);
 
   useEffect(() => {
-    if (messages.length > 0) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (!searchTerm) {
+      setFilteredStudents(students);
+    } else {
+      const filteredData = students.filter((student) =>
+        student.name.includes(searchTerm.trim())
+      );
+      setFilteredStudents(filteredData);
     }
-  }, [messages]);
+  }, [searchTerm, students]);
 
-  const handleSendMessage = () => {
-    if (input.trim() !== "") {
-      const userMessage = {
-        text: input,
-        isBot: false,
-        time: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-      setMessages([...messages, userMessage]);
-      setInput("");
+  const columns = useMemo(
+    () => [
+      {
+        Header: "상담일시",
+        accessor: "date",
+      },
+      {
+        Header: "학번",
+        accessor: "number",
+      },
+      {
+        Header: "이름",
+        accessor: "name",
+      },
+      {
+        Header: "상담기록",
+        accessor: "chat-log",
+        disableSortBy: true,
+        Cell: ({ row }) => (
+          <button
+            className="log-btn"
+            onClick={() => navigate(`/chatdetail/${row.original.id}`)}
+          >
+            상담기록 확인
+          </button>
+        ),
+      },
+      {
+        Header: "레포트",
+        accessor: "report",
+        disableSortBy: true,
+        Cell: ({ row }) => (
+          <button
+            className="log-btn"
+            onClick={() => navigate(`/report/${row.original.id}`)}
+          >
+            레포트 확인
+          </button>
+        ),
+      },
+    ],
+    [navigate]
+  );
 
-      // 봇 응답 시뮬레이션
-      setTimeout(() => {
-        const botMessage = {
-          text: getChatbotMessageText(),
-          isBot: true,
-          loading: true,
-          time: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        };
-        setMessages((prevMessages) => [...prevMessages, botMessage]);
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    page,
+    nextPage,
+    previousPage,
+    canNextPage,
+    canPreviousPage,
+    gotoPage,
+    pageCount,
+    state: { pageIndex },
+  } = useTable(
+    {
+      columns,
+      data: filteredStudents,
+      initialState: { pageIndex: 0, pageSize: 10 },
+    },
+    useGlobalFilter,
+    useSortBy,
+    usePagination
+  );
 
-        setTimeout(() => {
-          const updatedMessage = { ...botMessage, loading: false };
-          setMessages((prevMessages) =>
-            prevMessages.map((msg) =>
-              msg === botMessage ? updatedMessage : msg
-            )
-          );
-        });
-      });
-    }
-  };
+  const buttonsToShow = 5;
 
-  const handleInputChange = (e) => {
-    setInput(e.target.value);
-  };
+  const calculatePageButtons = useCallback(() => {
+    const totalButtons = Math.min(buttonsToShow, pageCount);
+    const start = Math.max(0, pageIndex - Math.floor(totalButtons / 2));
+    return Array.from({ length: totalButtons }, (_, i) => start + i);
+  }, [pageCount, pageIndex]);
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
+  const pageButtons = useMemo(
+    () => calculatePageButtons(),
+    [calculatePageButtons]
+  );
 
   return (
-    <div className="chatbot-container">
-      <div className="chatbot-header">
-        <button className="back-btn" onClick={() => navigate("/chatbot")}>
-          <FaArrowLeft size="20" />
-        </button>
-        <button className="report-btn">레포트 보기</button>
-      </div>
-      <div className="chatbot-messages">
-        <div className="chatbot-messages-wrapper">
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`message-wrapper ${msg.isBot ? "bot" : "user"}`}
+    <>
+      {loading ? (
+        <div className="sl-messages">Loading...</div>
+      ) : error ? (
+        <div className="sl-messages">Error: {error}</div>
+      ) : students.length === 0 ? (
+        <div className="sl-messages">상담 내역이 없습니다.</div>
+      ) : filteredStudents.length === 0 ? (
+        <div className="sl-messages">검색 결과가 없습니다.</div>
+      ) : (
+        <div className="sl-table-container">
+          <div className="sl-table-wrapper">
+            <table className="sl-table" {...getTableProps()}>
+              <thead className="sl-table-head">
+                {headerGroups.map((headerGroup) => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column) => (
+                      <th
+                        {...column.getHeaderProps(
+                          column.getSortByToggleProps()
+                        )}
+                      >
+                        {column.render("Header")}
+                        {column.canSort &&
+                        column.Header !== "상담기록" &&
+                        column.Header !== "레포트" ? (
+                          column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <FaSortDown style={{ marginLeft: "5px" }} />
+                            ) : (
+                              <FaSortUp style={{ marginLeft: "5px" }} />
+                            )
+                          ) : (
+                            <FaSort style={{ marginLeft: "5px" }} />
+                          )
+                        ) : null}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody className="sl-table-body" {...getTableBodyProps()}>
+                {page.map((row) => {
+                  prepareRow(row);
+                  return (
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map((cell) => (
+                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div className="sl-pagination">
+            <button
+              className="sl-arrow-btn"
+              onClick={() => gotoPage(0)}
+              disabled={!canPreviousPage}
             >
-              {msg.isDate ? (
-                <div className="date-message">{msg.text}</div>
-              ) : (
-                <>
-                  <div className={`message ${msg.isBot ? "bot" : "user"}`}>
-                    <div className="text" style={{ whiteSpace: "pre-wrap" }}>
-                      {msg.isBot && msg.loading ? (
-                        <PulseLoader color="white" size="10px" />
-                      ) : (
-                        msg.text
-                      )}
-                    </div>
-                  </div>
-                  <div
-                    className={`time ${msg.isBot ? "bot-time" : "user-time"}`}
-                  >
-                    {msg.time}
-                  </div>
-                </>
-              )}
-            </div>
-          ))}
-          <div ref={messagesEndRef}></div>
+              {"<<"}
+            </button>
+            <button
+              className="sl-arrow-btn"
+              onClick={() => previousPage()}
+              disabled={!canPreviousPage}
+            >
+              {"<"}
+            </button>
+            {pageButtons.map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => gotoPage(pageNumber)}
+                className={`sl-page-btn ${
+                  pageIndex === pageNumber ? "active" : ""
+                }`}
+              >
+                {pageNumber + 1}
+              </button>
+            ))}
+            <button
+              className="sl-arrow-btn"
+              onClick={() => nextPage()}
+              disabled={!canNextPage}
+            >
+              {">"}
+            </button>
+            <button
+              className="sl-arrow-btn"
+              onClick={() => gotoPage(pageCount - 1)}
+              disabled={!canNextPage}
+            >
+              {">>"}
+            </button>
+          </div>
         </div>
-      </div>
-      <div className="chatbot-input-container">
-        <textarea
-          type="text"
-          className="chatbot-input"
-          placeholder="메시지를 입력하세요..."
-          value={input}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          rows="1"
-        />
-        <button className="chatbot-send-button" onClick={handleSendMessage}>
-          <FaArrowUp />
-        </button>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
-const getChatbotMessageText = () => {
-  const responses = [
-    "어떻게 도와드릴까요?",
-    "좀 더 설명해 주시겠어요?",
-    "도움이 필요하시면 말씀해 주세요.",
-  ];
-  return responses[Math.floor(Math.random() * responses.length)];
-};
-
-export default ChatbotPage;
+export default ChatLog;

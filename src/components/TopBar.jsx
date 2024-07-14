@@ -85,7 +85,7 @@ const TopBar = () => {
             <div
               className="topbar-link"
               onClick={() => {
-                navigate("/studentLog");
+                navigate("/studentChat");
                 setIsMenuOpen(false);
               }}
             >
