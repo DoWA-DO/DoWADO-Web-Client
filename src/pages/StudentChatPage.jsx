@@ -2,15 +2,20 @@ import React from "react";
 import ChatLog from "../components/ChatLog.jsx";
 import PageLayout from "../components/PageLayout.jsx";
 import "../ui/StudentChatPage.css";
+import { useNavigate } from "react-router-dom";
 
 const StudentChatPage = () => {
+  const navigate = useNavigate();
+
   return (
     <PageLayout>
-      <div className="student-chat-title">
-        <div className="sl-page-name">상담</div>
-        <button>상담하기</button>
+      <div className="chat-title">
+        <div className="chat-page-name">상담 기록</div>
+        <button className="chat-btn" onClick={() => navigate("/chatbot")}>
+          상담하기
+        </button>
       </div>
-      <div className="sl-line"></div>
+      <div className="chat-line"></div>
       <ChatLog />
     </PageLayout>
   );

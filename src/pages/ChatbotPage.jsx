@@ -91,7 +91,7 @@ const ChatbotPage = () => {
   return (
     <div className="chatbot-container">
       <div className="chatbot-header">
-        <button className="back-btn" onClick={() => navigate("/chatbot")}>
+        <button className="back-btn" onClick={() => navigate("/studentchat")}>
           <FaArrowLeft size="20" />
         </button>
         <button className="report-btn">레포트 보기</button>
