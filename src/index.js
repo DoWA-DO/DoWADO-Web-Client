@@ -40,8 +40,8 @@ root.render(
           <Route path="/chatbot" element={<ChatbotPage />} />
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/studentchat" element={<StudentChatPage />} />
-          <Route path="/report:id" element={<ReportPage />} />
-          <Route path="/chatdetail:id" element={<ChatDetailPage />} />
+          <Route path="/report" element={<ReportPage />} />
+          <Route path="/chatdetail" element={<ChatDetailPage />} />
         </Routes>
       </Router>
     </AuthProvider>

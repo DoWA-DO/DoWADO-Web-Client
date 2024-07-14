@@ -83,7 +83,7 @@ const Table = ({ columns, data, navigate }) => {
                         <button
                           className="log-btn"
                           onClick={() =>
-                            navigate(`/chatdetail/${row.original.id}`)
+                            navigate(`/chatdetail/`)
                           }
                         >
                           상담기록 확인
@@ -91,7 +91,7 @@ const Table = ({ columns, data, navigate }) => {
                       ) : cell.column.id === "report" ? (
                         <button
                           className="log-btn"
-                          onClick={() => navigate(`/report/${row.original.id}`)}
+                          onClick={() => navigate(`/report`)}
                         >
                           레포트 확인
                         </button>
@@ -211,7 +211,7 @@ const ChatLog = ({ searchTerm }) => {
         Cell: ({ row }) => (
           <button
             className="log-btn"
-            onClick={() => navigate(`/chatdetail/${row.original.id}`)}
+            onClick={() => navigate(`/chatdetail`)}
           >
             상담기록 확인
           </button>
@@ -224,7 +224,7 @@ const ChatLog = ({ searchTerm }) => {
         Cell: ({ row }) => (
           <button
             className="log-btn"
-            onClick={() => navigate(`/report/${row.original.id}`)}
+            onClick={() => navigate(`/report`)}
           >
             레포트 확인
           </button>
