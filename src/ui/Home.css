@@ -3,7 +3,7 @@ body {
   padding: 0;
   height: 100%;
   font-family: "Raleway", sans-serif !important;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .home-logo-container {
@@ -139,11 +139,6 @@ body {
     width: 150px;
     line-height: 40px;
   }
-
-  body {
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
 }
 
 @media (max-width: 767px) {
@@ -188,20 +183,5 @@ body {
     font-size: 12px;
     width: 100px;
     line-height: 25px;
-  }
-
-  body {
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-}
-
-@media (max-height: 600px) {
-  body {
-    overflow-y: auto;
-  }
-
-  .home-container {
-    overflow: visible;
   }
 }

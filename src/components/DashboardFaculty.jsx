@@ -1,7 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import TopBar from "./TopBar";
-import SideBar from "./SideBar";
 import "../ui/DashboardFaculty.css";
 
 const Feature1 = () => {
@@ -49,7 +47,7 @@ const Feature2 = () => {
 const DashboardFaculty = () => {
   return (
     <div className="dashboard-faculty">
-      <TopBar />
+      {/* <TopBar /> */}
       <div className="main-content">
         {/* <SideBar /> */}
         <div className="content">{/* 여기에 메인 컨텐츠를 추가 */}</div>

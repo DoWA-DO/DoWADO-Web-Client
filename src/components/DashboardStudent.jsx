@@ -1,15 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../ui/DashboardStudent.css";
-import TopBar from "./TopBar";
-import SideBar from "./SideBar";
 
 const DashboardStudent = () => {
     const navigate = useNavigate();
     
     return (
         <div className="dashboard-faculty">
-          <TopBar />
+          {/* <TopBar /> */}
           <div className="main-content">
             {/* <SideBar /> */}
             <div className="content">

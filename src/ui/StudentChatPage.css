@@ -36,11 +36,20 @@
   .chat-page-name {
     font-size: 20px;
   }
+
+  .chat-btn {
+    font-size: 18px;
+  }
 }
 
 @media (max-width: 479px) {
   .chat-page-name {
     font-size: 18px;
     margin: 5px;
+  }
+
+  .chat-btn {
+    font-size: 15px;
+    padding: 5px;
   }
 }
