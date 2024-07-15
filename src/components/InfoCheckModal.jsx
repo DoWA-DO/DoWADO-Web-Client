@@ -1,5 +1,6 @@
 import React from "react";
 import Modal from "react-modal";
+import "../ui/InfoCheckModal.css"; // CSS 파일 import
 
 const InfoCheck = ({ isOpen, closeModal, content }) => {
   return (
@@ -8,12 +9,12 @@ const InfoCheck = ({ isOpen, closeModal, content }) => {
       onRequestClose={closeModal}
       contentLabel="Info Check"
       className="info-check-modal"
-      overlayClassName="modal-overlay"
+      overlayClassName="info-modal-overlay"
     >
-      <h2>
+      <h2 className="info-modal-title">
         {content === "terms" ? "이용약관 동의" : "개인정보 수집 및 이용 동의"}
       </h2>
-      <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+      <pre className="info-modal-content">
         {content === "terms"
           ? `
 '도와도'(이하 "회사" 또는 "도와도"라고 함)의 서비스 이용약관은 회사가 제공하는 모든 서비스의 이용과 관련하여 이용자의 권리, 의무 및 책임사항을 규정하고 있습니다. 회사의 서비스를 이용하기 위해서는 본 약관에 동의하여야 합니다.
@@ -62,25 +63,7 @@ const InfoCheck = ({ isOpen, closeModal, content }) => {
 이용자는 개인정보 수집 및 이용에 대한 동의를 거부할 권리가 있습니다. 다만, 동의를 거부할 경우 서비스 제공이 제한될 수 있습니다.
           `}
       </pre>
-      <button
-        onClick={closeModal}
-        style={{
-          display: "block",
-          margin: "20px auto",
-          background: "#5b86e5",
-          border: "none",
-          borderRadius: "8px",
-          color: "#ffffff",
-          padding: "10px",
-          fontFamily: "Telegraf",
-          fontStyle: "normal",
-          fontWeight: "800",
-          fontSize: "16px",
-          letterSpacing: "0.08em",
-          cursor: "pointer",
-          textAlign: "center",
-        }}
-      >
+      <button className="info-modal-button" onClick={closeModal}>
         닫기
       </button>
     </Modal>

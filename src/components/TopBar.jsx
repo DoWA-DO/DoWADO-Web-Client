@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { AiOutlineLogout } from "react-icons/ai";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { IoClose } from "react-icons/io5";
 
 const TopBar = () => {
   const navigate = useNavigate();
@@ -131,7 +133,8 @@ const TopBar = () => {
         </div>
       )}
       <div className="hamburger-menu" onClick={toggleMenu}>
-        ☰
+        {isMenuOpen ? <IoClose /> : <RxHamburgerMenu />
+        }
       </div>
     </div>
   );
