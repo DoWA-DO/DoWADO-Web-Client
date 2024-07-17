@@ -21,12 +21,12 @@ const MypageForm = () => {
     const fetchUserInfo = () => {
       const userRole = "student"; // 테스트용 더미 데이터
       const dummyUser = {
-        name: "홍길동",
-        email: "hong@example.com",
-        school: "서울고등학교",
-        grade: "3학년",
+        name: "박주현",
+        email: "teacher@example.com",
+        school: "에이블스쿨",
+        grade: "1학년",
         class: "1반",
-        number: "12번",
+        number: "1번",
         profilePicture: "", // 테스트용 기본 이미지 URL
       };
       setRole(userRole);

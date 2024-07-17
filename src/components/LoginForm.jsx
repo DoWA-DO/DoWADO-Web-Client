@@ -6,7 +6,7 @@ import { useCookies } from "react-cookie";
 import UserTypeSelector from "./UserTypeSelector";
 
 const LoginForm = () => {
-  const [userType, setUserType] = useState("faculty");
+  const [userType, setUserType] = useState("faculty"); // userType 초기값을 "teacher"로 변경
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
@@ -88,16 +88,19 @@ const LoginForm = () => {
     }
 
     try {
-      const endpoint =
-        userType === "faculty"
-          ? "http://localhost:5000/api/login/faculty"
-          : "http://localhost:5000/api/login/student";
-
-      const response = await axios.post(endpoint, {
-        email,
-        password,
-        userType,
-      });
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/login",
+        {
+          username: email,
+          password,
+          scope: userType === "faculty" ? "teacher" : "student",
+        },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
 
       console.log("Login response:", response.data);
 

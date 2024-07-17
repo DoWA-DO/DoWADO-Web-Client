@@ -47,9 +47,7 @@ const Feature2 = () => {
 const DashboardFaculty = () => {
   return (
     <div className="dashboard-faculty">
-      {/* <TopBar /> */}
       <div className="main-content">
-        {/* <SideBar /> */}
         <div className="content">{/* 여기에 메인 컨텐츠를 추가 */}</div>
       </div>
     </div>

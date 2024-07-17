@@ -10,7 +10,6 @@ import { AuthProvider } from "./components/AuthContext"; // AuthProvider 추가
 /* 페이지 */
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
-import FindPasswordPage from "./pages/FindPasswordPage";
 import DashboardStudentPage from "./pages/DashboardStudentPage";
 import DashboardFacultyPage from "./pages/DashboardFacultyPage";
 import ChatbotPage from "./pages/ChatbotPage";
@@ -32,7 +31,6 @@ root.render(
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route path="/findpassword" element={<FindPasswordPage />} />
           <Route path="/dashboardstudent" element={<DashboardStudentPage />} />
           <Route path="/dashboardfaculty" element={<DashboardFacultyPage />} />
           <Route path="/studentlog" element={<StudentLogPage />} />
