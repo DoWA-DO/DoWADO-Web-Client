@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-import { useCookies } from "react-cookie";
 import UserTypeSelector from "./UserTypeSelector";
 
 const LoginForm = () => {
@@ -15,25 +14,20 @@ const LoginForm = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { setUserType: setAuthUserType } = useAuth();
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "rememberedEmail",
-    "rememberedUserType",
-    "rememberMe",
-  ]);
+  const { setUserType: setAuthUserType, setAuthToken } = useAuth(); // AuthContext에서 setAuthToken 추가
 
   useEffect(() => {
-    const rememberedUserType = cookies.rememberedUserType;
+    const rememberedUserType = localStorage.getItem("rememberedUserType");
     if (rememberedUserType) {
       setUserType(rememberedUserType);
     } else {
       setUserType("faculty");
     }
-  }, [location.pathname, cookies.rememberedUserType]);
+  }, [location.pathname]);
 
   useEffect(() => {
-    const rememberedEmail = cookies.rememberedEmail;
-    const rememberedUserType = cookies.rememberedUserType;
+    const rememberedEmail = localStorage.getItem("rememberedEmail");
+    const rememberedUserType = localStorage.getItem("rememberedUserType");
     if (rememberedEmail && rememberedUserType === userType) {
       setEmail(rememberedEmail);
     } else {
@@ -41,9 +35,9 @@ const LoginForm = () => {
       setPwErrorMessage("");
       setEmail("");
     }
-    const rememberedRememberMe = cookies.rememberMe === "true";
+    const rememberedRememberMe = localStorage.getItem("rememberMe") === "true";
     setRememberMe(rememberedRememberMe);
-  }, [cookies.rememberedEmail, cookies.rememberedUserType, userType]);
+  }, [userType]);
 
   const handleUserTypeChange = useCallback((e) => {
     setUserType(e.target.value);
@@ -105,17 +99,22 @@ const LoginForm = () => {
       console.log("Login response:", response.data);
 
       if (response.status === 200) {
+        const token = response.data.access_token; // 토큰을 받아옴
+
         if (rememberMe) {
-          setCookie("rememberedEmail", email, { path: "/" });
-          setCookie("rememberedUserType", userType, { path: "/" });
-          setCookie("rememberMe", "true", { path: "/" });
+          localStorage.setItem("rememberedEmail", email);
+          localStorage.setItem("rememberedUserType", userType);
+          localStorage.setItem("rememberMe", "true");
         } else {
-          removeCookie("rememberedEmail", { path: "/" });
-          removeCookie("rememberedUserType", { path: "/" });
-          removeCookie("rememberMe", { path: "/" });
+          localStorage.removeItem("rememberedEmail");
+          localStorage.removeItem("rememberedUserType");
+          localStorage.removeItem("rememberMe");
         }
 
+        localStorage.setItem("authToken", token); // 로컬 스토리지에 토큰 저장
+
         setAuthUserType(userType);
+        setAuthToken(token); // AuthContext에 토큰 저장
 
         if (userType === "faculty") {
           navigate("/dashboardfaculty");
