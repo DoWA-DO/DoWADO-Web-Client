@@ -78,7 +78,7 @@ const PageLayout = ({ children }) => {
               <div
                 className="topbar-link"
                 onClick={() => {
-                  navigate("/mypage");
+                  navigate("/mypagefaculty");
                   setIsMenuOpen(false);
                 }}
               >
@@ -108,7 +108,7 @@ const PageLayout = ({ children }) => {
               <div
                 className="topbar-link"
                 onClick={() => {
-                  navigate("/mypage");
+                  navigate("/mypagestudent");
                   setIsMenuOpen(false);
                 }}
               >

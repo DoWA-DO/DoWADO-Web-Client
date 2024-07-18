@@ -5,7 +5,7 @@ import { useAuth } from "./AuthContext";
 import UserTypeSelector from "./UserTypeSelector";
 
 const LoginForm = () => {
-  const [userType, setUserType] = useState("faculty"); // userType 초기값을 "teacher"로 변경
+  const [userType, setUserType] = useState("faculty"); // 초기값을 "faculty"로 설정
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
@@ -77,7 +77,6 @@ const LoginForm = () => {
     }
 
     if (hasError) {
-      // 입력되지 않은 경우 handleSubmit 실행 중지
       return;
     }
 
@@ -96,8 +95,6 @@ const LoginForm = () => {
         }
       );
 
-      console.log("Login response:", response.data);
-
       if (response.status === 200) {
         const token = response.data.access_token; // 토큰을 받아옴
 
@@ -110,8 +107,6 @@ const LoginForm = () => {
           localStorage.removeItem("rememberedUserType");
           localStorage.removeItem("rememberMe");
         }
-
-        localStorage.setItem("authToken", token); // 로컬 스토리지에 토큰 저장
 
         setAuthUserType(userType);
         setAuthToken(token); // AuthContext에 토큰 저장

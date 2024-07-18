@@ -13,12 +13,13 @@ import SignupPage from "./pages/SignupPage";
 import DashboardStudentPage from "./pages/DashboardStudentPage";
 import DashboardFacultyPage from "./pages/DashboardFacultyPage";
 import ChatbotPage from "./pages/ChatbotPage";
-import Mypage from "./pages/Mypage";
 import HomePage from "./pages/HomePage";
 import StudentLogPage from "./pages/StudentLogPage";
 import StudentChatPage from "./pages/StudentChatPage";
 import ReportPage from "./pages/ReportPage";
 import ChatDetailPage from "./pages/ChatDetailPage";
+import MypageFaculty from "./pages/MypageFaculty";
+import MypageStudent from "./pages/MypageStudent";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -36,10 +37,11 @@ root.render(
           <Route path="/studentlog" element={<StudentLogPage />} />
           <Route path="/studentlog/:id" element={<StudentLogPage />} />
           <Route path="/chatbot" element={<ChatbotPage />} />
-          <Route path="/mypage" element={<Mypage />} />
           <Route path="/studentchat" element={<StudentChatPage />} />
           <Route path="/report" element={<ReportPage />} />
           <Route path="/chatdetail" element={<ChatDetailPage />} />
+          <Route path="/mypagestudent" element={<MypageStudent />} />
+          <Route path="/mypageFaculty" element={<MypageFaculty />} />
         </Routes>
       </Router>
     </AuthProvider>
