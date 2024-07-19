@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ChatLog from "../components/ChatLog";
+import ChatLogFaculty from "../components/ChatLogFaculty";
 import "../ui/StudentLogPage.css";
 import PageLayout from "../components/PageLayout";
 
@@ -64,7 +64,7 @@ const StudentLogPage = () => {
       </div>
       <div className="sl-line"></div>
       <Search onSubmit={handleSearchSubmit} />
-      <ChatLog />
+      <ChatLogFaculty />
     </PageLayout>
   );
 };

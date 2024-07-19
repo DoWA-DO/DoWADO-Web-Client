@@ -1,26 +1,120 @@
 import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../ui/Chatbot.css";
-import { PulseLoader } from "react-spinners";
 import { FaArrowUp, FaArrowLeft } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 
 const ChatbotPage = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const { chat_id, chat_student_email, chat_status } = location.state || {};
 
   useEffect(() => {
-    const initialMessage = {
-      text: `안녕하세요! 도와도입니다.
-도와도와 함께 진로상담을 시작해 보세요!`,
-      isBot: true,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
+    if (chat_id && chat_student_email && chat_status !== undefined) {
+      if (chat_status === 0) {
+        // 완료되지 않은 채팅의 경우
+        fetchChatContent(chat_id, chat_student_email);
+      } else {
+        createChat(chat_id, chat_student_email, chat_status);
+      }
+    }
+  }, [chat_id, chat_student_email, chat_status]);
 
+  const createChat = async (id, email, status) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/chat/create", // 새 채팅 생성
+        {
+          chat_id: id,
+          chat_student_email: email,
+          chat_status: status,
+        }
+      );
+      console.log("Chat created:", response.data);
+    } catch (error) {
+      console.error("Error creating chat:", error);
+    }
+  };
+
+  const fetchChatContent = async (id, email) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/v1/chat/get_content`, // 완료되지 않은 상담 채팅 내용 불러옴
+        {
+          params: { chat_id: id, chat_student_email: email },
+        }
+      );
+      const fetchedMessages = response.data.chat_content
+        .split("\n")
+        .map((msg) => {
+          return {
+            text: msg,
+            isBot: msg.startsWith("Bot:"),
+            time: new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          };
+        });
+      setMessages((prevMessages) => [...prevMessages, ...fetchedMessages]);
+    } catch (error) {
+      console.error("Error fetching chat content:", error);
+    }
+  };
+
+  const createReport = async (content) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/report/create", // 레포트 생성
+        {
+          chat_content: content,
+        }
+      );
+      console.log("Report created:", response.data);
+    } catch (error) {
+      console.error("Error creating report:", error);
+    }
+  };
+
+  const saveChatLog = async () => {
+    try {
+      const chatContent = messages
+        .filter((msg) => !msg.isDate)
+        .map((msg) => `${msg.text}`)
+        .join("\n");
+      await axios.post(`http://localhost:8000/api/v1/chat/upload`, {
+        // 채팅 내용 저장
+        chat_id,
+        chat_student_email,
+        chat_content: chatContent,
+      });
+      console.log("Chat log saved successfully");
+      return chatContent;
+    } catch (error) {
+      console.error("Error saving chat log:", error);
+      throw error; // Rethrow the error to handle it in handleCreateReport
+    }
+  };
+
+  const appendChatLog = async (newMessage) => {
+    try {
+      await axios.post(`http://localhost:8000/api/v1/chat/update`, {
+        // 원래 있던 채팅 내역에 채팅 추가
+        chat_id,
+        chat_student_email,
+        chat_content: newMessage,
+      });
+      console.log("Chat log appended successfully");
+    } catch (error) {
+      console.error("Error appending chat log:", error);
+    }
+  };
+
+  useEffect(() => {
     const dateMessage = {
       text: new Date().toLocaleDateString("ko-KR", {
         year: "numeric",
@@ -30,16 +124,17 @@ const ChatbotPage = () => {
       isDate: true,
     };
 
-    setMessages([dateMessage, initialMessage]);
+    setMessages((prevMessages) => [...prevMessages, dateMessage]);
   }, []);
 
   useEffect(() => {
+    // 새 메시지가 생성되면 밑으로 이동
     if (messages.length > 0) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (input.trim() !== "") {
       const userMessage = {
         text: input,
@@ -49,31 +144,14 @@ const ChatbotPage = () => {
           minute: "2-digit",
         }),
       };
-      setMessages([...messages, userMessage]);
+      setMessages((prevMessages) => [...prevMessages, userMessage]);
       setInput("");
 
-      // 봇 응답 시뮬레이션
-      setTimeout(() => {
-        const botMessage = {
-          text: getChatbotMessageText(),
-          isBot: true,
-          loading: true,
-          time: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        };
-        setMessages((prevMessages) => [...prevMessages, botMessage]);
+      // 챗 로그에 추가
+      await appendChatLog(userMessage.text);
 
-        setTimeout(() => {
-          const updatedMessage = { ...botMessage, loading: false };
-          setMessages((prevMessages) =>
-            prevMessages.map((msg) =>
-              msg === botMessage ? updatedMessage : msg
-            )
-          );
-        });
-      });
+      // 챗 로그 저장
+      await saveChatLog();
     }
   };
 
@@ -88,13 +166,30 @@ const ChatbotPage = () => {
     }
   };
 
+  const handleCreateReport = async () => {
+    try {
+      // saveChatLog 함수를 호출하여 레포트 생성 위한 컨텐츠 생성
+      const chatContent = await saveChatLog();
+      await createReport(chatContent);
+    } catch (error) {
+      console.error("Error creating report:", error);
+    }
+  };
+
   return (
     <div className="chatbot-container">
       <div className="chatbot-header">
-        <button className="back-btn" onClick={() => navigate("/studentchat")}>
+        <button
+          className="back-btn"
+          onClick={() => {
+            navigate("/studentchat");
+          }}
+        >
           <FaArrowLeft size="20" />
         </button>
-        <button className="report-btn">레포트 보기</button>
+        <button className="report-btn" onClick={handleCreateReport}>
+          레포트 보기
+        </button>
       </div>
       <div className="chatbot-messages">
         <div className="chatbot-messages-wrapper">
@@ -109,11 +204,7 @@ const ChatbotPage = () => {
                 <>
                   <div className={`message ${msg.isBot ? "bot" : "user"}`}>
                     <div className="text" style={{ whiteSpace: "pre-wrap" }}>
-                      {msg.isBot && msg.loading ? (
-                        <PulseLoader color="white" size="10px" />
-                      ) : (
-                        msg.text
-                      )}
+                      {msg.text}
                     </div>
                   </div>
                   <div
@@ -144,15 +235,6 @@ const ChatbotPage = () => {
       </div>
     </div>
   );
-};
-
-const getChatbotMessageText = () => {
-  const responses = [
-    "어떻게 도와드릴까요?",
-    "좀 더 설명해 주시겠어요?",
-    "도움이 필요하시면 말씀해 주세요.",
-  ];
-  return responses[Math.floor(Math.random() * responses.length)];
 };
 
 export default ChatbotPage;

@@ -8,6 +8,7 @@ import {
 } from "react-table";
 import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 import "../ui/ChatLog.css";
 
 const Table = ({ columns, data, navigate }) => {
@@ -33,6 +34,7 @@ const Table = ({ columns, data, navigate }) => {
 
   const buttonsToShow = 5;
 
+  // 페이징
   const calculatePageButtons = useCallback(() => {
     const totalButtons = Math.min(buttonsToShow, pageCount);
     const start = Math.max(0, pageIndex - Math.floor(totalButtons / 2));
@@ -83,21 +85,48 @@ const Table = ({ columns, data, navigate }) => {
                         <button
                           className="log-btn"
                           onClick={() =>
-                            navigate(`/chatdetail/`)
+                            navigate("/chatbot", {
+                              state: {
+                                chat_id: row.original.id,
+                                chat_student_email: row.original.email,
+                                chat_status: row.original.chat_status,
+                              },
+                            })
                           }
+                          disabled={row.original.chat_status === 0}
                         >
-                          상담기록 확인
+                          상담기록 보기
                         </button>
                       ) : cell.column.id === "report" ? (
                         <button
                           className="log-btn"
-                          onClick={() => navigate(`/report`)}
+                          onClick={() => {
+                            if (row.original.chat_status === 0) {
+                              navigate("/chatbot", {
+                                state: {
+                                  chat_id: row.original.id,
+                                  chat_student_email: row.original.email,
+                                  chat_status: row.original.chat_status,
+                                },
+                              });
+                            } else {
+                              navigate("/report", {
+                                state: {
+                                  chat_id: row.original.id,
+                                  chat_student_email: row.original.email,
+                                  report_id: row.original.report_id,
+                                },
+                              });
+                            }
+                          }}
                         >
-                          레포트 확인
+                          {row.original.chat_status === 0
+                            ? "상담 이어하기"
+                            : "레포트 보기"}
                         </button>
                       ) : (
                         <Link
-                          to={`/students/${row.original.id}`} // 학생 개별 페이지로 이동
+                          to={`/students/${row.original.id}`}
                           style={{ textDecoration: "none", color: "inherit" }}
                         >
                           {cell.render("Cell")}
@@ -156,19 +185,23 @@ const Table = ({ columns, data, navigate }) => {
   );
 };
 
-const ChatLog = ({ searchTerm }) => {
+const ChatLogStudent = () => {
   const navigate = useNavigate();
+  const { userEmail } = useAuth(); // useAuth 훅 사용
   const [students, setStudents] = useState([]);
-  const [filteredStudents, setFilteredStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/students");
+        const response = await axios.get(
+          "http://localhost:8000/api/v1/chat/read", // 학생 상담 기록 조회
+          {
+            params: { email: userEmail },
+          }
+        );
         setStudents(response.data);
-        setFilteredStudents(response.data);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -177,18 +210,7 @@ const ChatLog = ({ searchTerm }) => {
     };
 
     fetchStudents();
-  }, []);
-
-  useEffect(() => {
-    if (!searchTerm) {
-      setFilteredStudents(students);
-    } else {
-      const filteredData = students.filter((student) =>
-        student.name.includes(searchTerm.trim())
-      );
-      setFilteredStudents(filteredData);
-    }
-  }, [searchTerm, students]);
+  }, [userEmail]);
 
   const columns = useMemo(
     () => [
@@ -211,9 +233,18 @@ const ChatLog = ({ searchTerm }) => {
         Cell: ({ row }) => (
           <button
             className="log-btn"
-            onClick={() => navigate(`/chatdetail`)}
+            onClick={() =>
+              navigate("/chatbot", {
+                state: {
+                  chat_id: row.original.id,
+                  chat_student_email: row.original.email,
+                  chat_status: row.original.chat_status,
+                },
+              })
+            }
+            disabled={row.original.chat_status === 0}
           >
-            상담기록 확인
+            상담기록 보기
           </button>
         ),
       },
@@ -224,9 +255,27 @@ const ChatLog = ({ searchTerm }) => {
         Cell: ({ row }) => (
           <button
             className="log-btn"
-            onClick={() => navigate(`/report`)}
+            onClick={() => {
+              if (row.original.chat_status === 0) {
+                navigate("/chatbot", {
+                  state: {
+                    chat_id: row.original.id,
+                    chat_student_email: row.original.email,
+                    chat_status: row.original.chat_status,
+                  },
+                });
+              } else {
+                navigate("/report", {
+                  state: {
+                    chat_id: row.original.id,
+                    chat_student_email: row.original.email,
+                    report_id: row.original.report_id,
+                  },
+                });
+              }
+            }}
           >
-            레포트 확인
+            {row.original.chat_status === 0 ? "상담 이어하기" : "레포트 보기"}
           </button>
         ),
       },
@@ -242,13 +291,11 @@ const ChatLog = ({ searchTerm }) => {
         <div className="sl-messages">Error: {error}</div>
       ) : students.length === 0 ? (
         <div className="sl-messages">상담 내역이 없습니다.</div>
-      ) : filteredStudents.length === 0 ? (
-        <div className="sl-messages">검색 결과가 없습니다.</div>
       ) : (
-        <Table columns={columns} data={filteredStudents} navigate={navigate} />
+        <Table columns={columns} data={students} navigate={navigate} />
       )}
     </>
   );
 };
 
-export default ChatLog;
+export default ChatLogStudent;
