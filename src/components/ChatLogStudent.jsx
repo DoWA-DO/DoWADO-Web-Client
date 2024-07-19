@@ -85,7 +85,7 @@ const Table = ({ columns, data, navigate }) => {
                         <button
                           className="log-btn"
                           onClick={() =>
-                            navigate("/chatbot", {
+                            navigate("/chatbotdetail", {
                               state: {
                                 chat_id: row.original.id,
                                 chat_student_email: row.original.email,
@@ -234,7 +234,7 @@ const ChatLogStudent = () => {
           <button
             className="log-btn"
             onClick={() =>
-              navigate("/chatbot", {
+              navigate("/chatbotdetail", {
                 state: {
                   chat_id: row.original.id,
                   chat_student_email: row.original.email,

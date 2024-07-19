@@ -9,6 +9,8 @@ import {
 import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import "../ui/ChatLog.css";
+import { useAuth } from "../components/AuthContext";
+import userEvent from "@testing-library/user-event";
 
 const Table = ({ columns, data, navigate }) => {
   const {
@@ -82,14 +84,30 @@ const Table = ({ columns, data, navigate }) => {
                       {cell.column.id === "chat-log" ? (
                         <button
                           className="log-btn"
-                          onClick={() => navigate(`/chatdetail/`)}
+                          onClick={() =>
+                            navigate("/chatbotdetail", {
+                              state: {
+                                chat_id: row.original.id,
+                                chat_student_email: userEmail,
+                                chat_status: row.original.chat_status,
+                              },
+                            })
+                          }
                         >
                           상담기록 확인
                         </button>
                       ) : cell.column.id === "report" ? (
                         <button
                           className="log-btn"
-                          onClick={() => navigate(`/report`)}
+                          onClick={() =>
+                            navigate("/report", {
+                              state: {
+                                teacher_email: userEmail,
+                                chat_id: row.original.id,
+                                report_id: row.original.report_id,
+                              },
+                            })
+                          }
                         >
                           레포트 확인
                         </button>
@@ -154,62 +172,76 @@ const Table = ({ columns, data, navigate }) => {
   );
 };
 
-const ChatLogFaculty = ({ searchTerm }) => {
+const ChatLogFaculty = ({ filterType, searchTerm }) => {
   const navigate = useNavigate();
-  const [students, setStudents] = useState([]);
+  const { userEmail } = useAuth();
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const chat_status = 1; // 교사 chat_status는 1
 
-  useEffect(() => {
-    const fetchStudents = async () => {
+  const fetchStudents = useCallback(
+    async (filterType, search) => {
+      // searchTerm이 비어있으면 전체 기록 조회
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/v1/chat/read"
+          "http://localhost:8000/api/v1/chat/read", // 학생 상담 기록 조회
+          {
+            params: {
+              teacher_email: userEmail,
+              chat_status,
+              filter_type: filterType,
+              search,
+            },
+          }
         );
-        setStudents(response.data);
         setFilteredStudents(response.data);
       } catch (error) {
         setError(error.message);
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchStudents();
-  }, []);
+    },
+    [userEmail, chat_status]
+  );
 
   useEffect(() => {
-    if (!searchTerm) {
-      setFilteredStudents(students);
-    } else {
-      const filteredData = students.filter((student) =>
-        student.name.includes(searchTerm.trim())
-      );
-      setFilteredStudents(filteredData);
+    if (userEmail) {
+      fetchStudents(filterType, searchTerm);
     }
-  }, [searchTerm, students]);
+  }, [userEmail, chat_status, filterType, searchTerm, fetchStudents]);
 
   const columns = useMemo(
     () => [
       {
         Header: "상담일시",
-        accessor: "date",
+        accessor: "chat_date",
       },
       {
         Header: "학번",
-        accessor: "number",
+        accessor: "student_number",
       },
       {
         Header: "이름",
-        accessor: "name",
+        accessor: "student_name",
       },
       {
         Header: "상담기록",
         accessor: "chat-log",
         disableSortBy: true,
         Cell: ({ row }) => (
-          <button className="log-btn" onClick={() => navigate(`/chatdetail`)}>
+          <button
+            className="log-btn"
+            onClick={() =>
+              navigate("/chatbotdetail", {
+                state: {
+                  chat_id: row.original.id,
+                  teacher_email: userEmail,
+                  chat_status: row.original.chat_status,
+                },
+              })
+            }
+          >
             상담기록 확인
           </button>
         ),
@@ -234,10 +266,8 @@ const ChatLogFaculty = ({ searchTerm }) => {
         <div className="sl-messages">Loading...</div>
       ) : error ? (
         <div className="sl-messages">Error: {error}</div>
-      ) : students.length === 0 ? (
-        <div className="sl-messages">상담 내역이 없습니다.</div>
       ) : filteredStudents.length === 0 ? (
-        <div className="sl-messages">검색 결과가 없습니다.</div>
+        <div className="sl-messages">상담 내역이 없습니다.</div>
       ) : (
         <Table columns={columns} data={filteredStudents} navigate={navigate} />
       )}

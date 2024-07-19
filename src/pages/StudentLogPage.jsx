@@ -9,7 +9,7 @@ const Search = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(filterValue);
+    onSubmit(filterType, filterValue);
   };
 
   const handleKeyDown = (e) => {
@@ -51,9 +51,11 @@ const Search = ({ onSubmit }) => {
 };
 
 const StudentLogPage = () => {
+  const [filterType, setFilterType] = useState("name");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSearchSubmit = (term) => {
+  const handleSearchSubmit = (type, term) => {
+    setFilterType(type);
     setSearchTerm(term);
   };
 
@@ -64,7 +66,7 @@ const StudentLogPage = () => {
       </div>
       <div className="sl-line"></div>
       <Search onSubmit={handleSearchSubmit} />
-      <ChatLogFaculty />
+      <ChatLogFaculty filterType={filterType} searchTerm={searchTerm} />
     </PageLayout>
   );
 };
