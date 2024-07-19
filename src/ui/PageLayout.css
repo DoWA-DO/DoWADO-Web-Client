@@ -4,20 +4,20 @@
   min-height: 100vh;
   width: 100vw;
   background-color: #ffffff;
-  box-sizing: border-box; 
+  box-sizing: border-box;
   overflow: hidden;
 }
 
 .page-content {
   flex: 1;
   overflow-y: auto;
-  padding: 80px 20px 20px 20px; 
+  padding: 80px 20px 20px 20px;
   box-sizing: border-box;
 }
 
 @media (min-width: 1025px) {
   .page-content {
-    padding-top: 100px; 
+    padding-top: 100px;
   }
 }
 
@@ -30,12 +30,12 @@
   background-color: #ffffff;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  position: fixed; 
+  position: fixed;
   width: 100%;
-  height: 80px; 
+  height: 80px;
   top: 0;
   left: 0;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 .top-logo {
@@ -55,7 +55,7 @@
   padding: 10px 15px;
   cursor: pointer;
   text-align: center;
-  font-size: 18px; 
+  font-size: 18px;
   font-weight: bold;
   color: black;
   text-decoration: none;
@@ -63,7 +63,7 @@
 }
 
 .topbar-link:not(:last-child) {
-  margin-right: 10px; 
+  margin-right: 10px;
 }
 
 .topbar-link:hover {
@@ -74,6 +74,11 @@
 .top-right-container {
   display: flex;
   align-items: center;
+}
+
+.topbar-link.active {
+  color: #21a7a0;
+  border-bottom: 2px solid #21a7a0;
 }
 
 .profile {
@@ -90,10 +95,10 @@
   display: flex;
   align-items: center;
   border: none;
-  padding: 5px 10px; 
+  padding: 5px 10px;
   font-size: 18px;
   font-weight: bold;
-  margin-left: 10px; 
+  margin-left: 10px;
   cursor: pointer;
   border-radius: 20px;
   background-color: #f5f7f8;
@@ -106,7 +111,7 @@
 .logout-img {
   width: 18px;
   height: 18px;
-  margin-left: 5px; 
+  margin-left: 5px;
 }
 
 .hamburger-menu {
@@ -117,7 +122,7 @@
 
 @media (max-width: 767px) {
   .top-bar {
-    height: 60px; 
+    height: 60px;
   }
 
   .topbar-links {
@@ -140,27 +145,36 @@
   }
 
   .topbar-links.open {
-    display: flex; 
+    display: flex;
   }
 
   .hamburger-menu {
-    display: block; 
+    display: block;
   }
 
   .top-right-container {
-    display: none; 
+    display: none;
   }
 
   .topbar-link,
   .profile,
   .checkout {
     margin: 0;
-    height: 50px; 
-    padding: 0 15px; 
-    width: 100%; 
+    height: 50px;
+    padding: 0 15px;
+    width: 100%;
     display: flex;
-    align-items: center; 
-    justify-content: flex-end; 
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .topbar-link:not(:last-child) {
+    margin-right: 0;
+  }
+
+  .topbar-link.active {
+    color: black;
+    border-bottom: none;
   }
 
   .profile-img {
@@ -189,15 +203,15 @@
 
 @media (min-width: 768px) and (max-width: 1024px) {
   .top-bar {
-    height: 70px; 
+    height: 70px;
   }
 
   .top-logo {
-    width: 100px; 
+    width: 100px;
   }
 
   .topbar-link {
-    font-size: 15px; 
+    font-size: 15px;
   }
 
   .profile-img {
@@ -206,7 +220,7 @@
   }
 
   .checkout {
-    font-size: 14px; 
+    font-size: 14px;
   }
 
   .logout-img {
@@ -218,6 +232,7 @@
 @media (max-width: 479px) {
   .topbar-link {
     font-size: 16px;
+    margin: 5px;
   }
 
   .checkout {

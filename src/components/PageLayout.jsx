@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { AiOutlineLogout } from "react-icons/ai";
 import "../ui/PageLayout.css";
 import InfoCheck from "./InfoCheckModal";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { IoClose } from "react-icons/io5";
 
 const PageLayout = ({ children }) => {
   const navigate = useNavigate();
+  const location = useLocation(); // 현재 경로를 가져옴
   const { userType: authUserType } = useAuth();
   const [isMobile, setIsMobile] = useState(false); // 모바일 여부 상태 관리
   const [isMenuOpen, setIsMenuOpen] = useState(false); // 메뉴 상태 관리
@@ -44,6 +47,11 @@ const PageLayout = ({ children }) => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // 현재 경로와 일치하는 링크에 active 클래스를 추가하는 함수
+  const getLinkClass = (path) => {
+    return location.pathname === path ? "topbar-link active" : "topbar-link";
+  };
+
   return (
     <div className="page-layout">
       <div className="top-bar">
@@ -58,7 +66,7 @@ const PageLayout = ({ children }) => {
           {userType === "faculty" ? (
             <>
               <div
-                className="topbar-link"
+                className={getLinkClass("/dashboardfaculty")}
                 onClick={() => {
                   navigate("/dashboardfaculty");
                   setIsMenuOpen(false);
@@ -67,7 +75,7 @@ const PageLayout = ({ children }) => {
                 홈
               </div>
               <div
-                className="topbar-link"
+                className={getLinkClass("/studentlog")}
                 onClick={() => {
                   navigate("/studentlog");
                   setIsMenuOpen(false);
@@ -76,7 +84,7 @@ const PageLayout = ({ children }) => {
                 학생 상담 기록
               </div>
               <div
-                className="topbar-link"
+                className={getLinkClass("/mypagefaculty")}
                 onClick={() => {
                   navigate("/mypagefaculty");
                   setIsMenuOpen(false);
@@ -88,7 +96,7 @@ const PageLayout = ({ children }) => {
           ) : (
             <>
               <div
-                className="topbar-link"
+                className={getLinkClass("/dashboardstudent")}
                 onClick={() => {
                   navigate("/dashboardstudent");
                   setIsMenuOpen(false);
@@ -97,7 +105,7 @@ const PageLayout = ({ children }) => {
                 홈
               </div>
               <div
-                className="topbar-link"
+                className={getLinkClass("/studentChat")}
                 onClick={() => {
                   navigate("/studentChat");
                   setIsMenuOpen(false);
@@ -106,7 +114,7 @@ const PageLayout = ({ children }) => {
                 상담하기
               </div>
               <div
-                className="topbar-link"
+                className={getLinkClass("/mypagestudent")}
                 onClick={() => {
                   navigate("/mypagestudent");
                   setIsMenuOpen(false);
@@ -131,7 +139,7 @@ const PageLayout = ({ children }) => {
         </div>
         {!isMobile && ( // 모바일이 아닐 때만 표시되는 프로필과 로그아웃 버튼
           <div className="top-right-container">
-            <IoPersonCircleOutline className="profile" />
+            {/* <IoPersonCircleOutline className="profile" /> */}
             <button
               className="checkout"
               onClick={() => {
@@ -145,7 +153,7 @@ const PageLayout = ({ children }) => {
           </div>
         )}
         <div className="hamburger-menu" onClick={toggleMenu}>
-          ☰
+          {isMenuOpen ? <IoClose /> : <RxHamburgerMenu />}
         </div>
       </div>
       <div className="page-content">{children}</div>

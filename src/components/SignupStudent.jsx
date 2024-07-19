@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import InfoCheck from "./InfoCheckModal";
 
@@ -15,21 +14,20 @@ const SignupStudent = () => {
     student_grade: "",
     student_class: "",
     student_number: "",
-    teacher_email: "",
+    student_teacher_email: "",
   });
 
   const [errors, setErrors] = useState({});
-  const [isEmailValid, setIsEmailValid] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
-
   const [agree, setAgree] = useState(false);
   const [terms, setTerms] = useState(false);
   const [agreeError, setAgreeError] = useState("");
   const [termsError, setTermsError] = useState("");
 
   const validateKorean = (value) => /^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$/.test(value);
-  const validateEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  const validateEmail = (value) =>
+    /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(value);
   const validatePassword = (value) =>
     /^(?=.*\d)(?=.*[a-z])(?=.*[@#$%^&+=!])(?!.*\s).{8,}$/.test(value);
 
@@ -95,6 +93,20 @@ const SignupStudent = () => {
     }
   };
 
+  const handleAgreeChange = (e) => {
+    setAgree(e.target.checked);
+    if (e.target.checked) {
+      setAgreeError("");
+    }
+  };
+
+  const handleTermsChange = (e) => {
+    setTerms(e.target.checked);
+    if (e.target.checked) {
+      setTermsError("");
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newErrors = {};
@@ -117,8 +129,8 @@ const SignupStudent = () => {
       newErrors.student_class = "반을 입력해 주세요.";
     if (!formData.student_number)
       newErrors.student_number = "번호를 입력해 주세요.";
-    if (!formData.teacher_email)
-      newErrors.teacher_email = "담임 선생님 이메일을 입력해 주세요.";
+    if (!formData.student_teacher_email)
+      newErrors.student_teacher_email = "담임 선생님 이메일을 입력해 주세요.";
 
     setErrors(newErrors);
 
@@ -141,6 +153,7 @@ const SignupStudent = () => {
     try {
       const endpoint = "http://localhost:8000/api/v1/student/signup";
 
+      console.log(formData);
       const response = await axios.post(endpoint, formData);
 
       if (response.status !== 200) {
@@ -159,13 +172,17 @@ const SignupStudent = () => {
         student_grade: "",
         student_class: "",
         student_number: "",
-        teacher_email: "",
+        student_teacher_email: "",
       });
       setAgree(false);
       setTerms(false);
     } catch (error) {
-      console.error("Error:", error);
-      alert("회원가입 중 오류가 발생했습니다. 다시 시도해 주세요.");
+      if (error.response && error.response.status === 409) {
+        alert("이미 가입된 이메일입니다.");
+      } else {
+        console.error("Error:", error);
+        alert("회원가입 중 오류가 발생했습니다. 다시 시도해 주세요.");
+      }
     }
   };
 
@@ -189,6 +206,7 @@ const SignupStudent = () => {
             id="student_name"
             name="student_name"
             value={formData.student_name}
+            placeholder="이름(한글)"
             onChange={handleChange}
           />
           {errors.student_name && (
@@ -202,6 +220,7 @@ const SignupStudent = () => {
             id="student_email"
             name="student_email"
             value={formData.student_email}
+            placeholder="이메일"
             onChange={handleChange}
           />
           {errors.student_email && (
@@ -215,6 +234,7 @@ const SignupStudent = () => {
             id="student_password"
             name="student_password"
             value={formData.student_password}
+            placeholder="영문, 숫자, 특수문자 포함 8자 이상 입력"
             onChange={handleChange}
           />
           {errors.student_password && (
@@ -228,6 +248,7 @@ const SignupStudent = () => {
             id="student_password2"
             name="student_password2"
             value={formData.student_password2}
+            placeholder="비밀번호 확인"
             onChange={handleChange}
           />
           {errors.student_password2 && (
@@ -241,6 +262,7 @@ const SignupStudent = () => {
             id="student_school"
             name="student_school"
             value={formData.student_school}
+            placeholder="학교 이름(한글)"
             onChange={handleChange}
           />
           {errors.student_school && (
@@ -254,6 +276,9 @@ const SignupStudent = () => {
             id="student_grade"
             name="student_grade"
             value={formData.student_grade}
+            placeholder="학년"
+            min={1}
+            max={6}
             onChange={handleChange}
           />
           {errors.student_grade && (
@@ -267,6 +292,8 @@ const SignupStudent = () => {
             id="student_class"
             name="student_class"
             value={formData.student_class}
+            placeholder="반"
+            min={1}
             onChange={handleChange}
           />
           {errors.student_class && (
@@ -280,6 +307,8 @@ const SignupStudent = () => {
             id="student_number"
             name="student_number"
             value={formData.student_number}
+            placeholder="번호"
+            min={1}
             onChange={handleChange}
           />
           {errors.student_number && (
@@ -287,37 +316,44 @@ const SignupStudent = () => {
           )}
         </div>
         <div className="lg-form-group">
-          <label htmlFor="teacher_email">담임 선생님 이메일</label>
+          <label htmlFor="student_teacher_email">담임 선생님 이메일</label>
           <input
             type="email"
-            id="teacher_email"
-            name="teacher_email"
-            value={formData.teacher_email}
+            id="student_teacher_email"
+            name="student_teacher_email"
+            value={formData.student_teacher_email}
+            placeholder="teacher@example.com"
             onChange={handleChange}
           />
-          {errors.teacher_email && (
-            <div className="error-message">{errors.teacher_email}</div>
+          {errors.student_teacher_email && (
+            <div className="error-message">{errors.student_teacher_email}</div>
           )}
         </div>
         <div className="info-check">
-          <label>
+          <label htmlFor="privacy">
             <input
               type="checkbox"
               checked={agree}
-              onChange={(e) => setAgree(e.target.checked)}
+              onChange={handleAgreeChange}
             />
-            개인정보수집 및 이용 동의
+            개인정보 수집이용 동의
+            <a href="#" onClick={() => openModal("privacy")}>
+              확인
+            </a>
           </label>
           {agreeError && <div className="error-message">{agreeError}</div>}
         </div>
         <div className="info-check">
-          <label>
+          <label htmlFor="terms">
             <input
               type="checkbox"
               checked={terms}
-              onChange={(e) => setTerms(e.target.checked)}
+              onChange={handleTermsChange}
             />
             이용약관 동의
+            <a href="#" onClick={() => openModal("terms")}>
+              확인
+            </a>
           </label>
           {termsError && <div className="error-message">{termsError}</div>}
         </div>
@@ -328,7 +364,7 @@ const SignupStudent = () => {
           계정이 있나요? <a href="/login">로그인</a>
         </div>
       </form>
-            <InfoCheck
+      <InfoCheck
         isOpen={modalOpen}
         closeModal={closeModal}
         content={modalContent}

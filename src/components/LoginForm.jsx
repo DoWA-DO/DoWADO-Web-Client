@@ -42,6 +42,7 @@ const LoginForm = () => {
   const handleUserTypeChange = useCallback((e) => {
     setUserType(e.target.value);
     setEmail(""); // 사용자 유형 변경 시 이메일 초기화
+    setErrorMessage("");
   }, []);
 
   const handleEmailChange = useCallback((e) => {
@@ -133,6 +134,7 @@ const LoginForm = () => {
           type="email"
           id="email"
           name="email"
+          placeholder="user@example.com"
           value={email}
           onChange={handleEmailChange}
         />
