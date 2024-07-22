@@ -10,9 +10,8 @@ import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import "../ui/ChatLog.css";
 import { useAuth } from "../components/AuthContext";
-import userEvent from "@testing-library/user-event";
 
-const Table = ({ columns, data, navigate }) => {
+const Table = ({ columns, data, navigate, userEmail }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -88,7 +87,7 @@ const Table = ({ columns, data, navigate }) => {
                             navigate("/chatbotdetail", {
                               state: {
                                 chat_id: row.original.id,
-                                chat_student_email: userEmail,
+                                chat_student_email: userEmail, 
                                 chat_status: row.original.chat_status,
                               },
                             })
@@ -102,7 +101,7 @@ const Table = ({ columns, data, navigate }) => {
                           onClick={() =>
                             navigate("/report", {
                               state: {
-                                teacher_email: userEmail,
+                                teacher_email: userEmail, 
                                 chat_id: row.original.id,
                                 report_id: row.original.report_id,
                               },
@@ -182,7 +181,6 @@ const ChatLogFaculty = ({ filterType, searchTerm }) => {
 
   const fetchStudents = useCallback(
     async (filterType, search) => {
-      // searchTerm이 비어있으면 전체 기록 조회
       try {
         const response = await axios.get(
           "http://localhost:8000/api/v1/chat/read", // 학생 상담 기록 조회
@@ -251,13 +249,24 @@ const ChatLogFaculty = ({ filterType, searchTerm }) => {
         accessor: "report",
         disableSortBy: true,
         Cell: ({ row }) => (
-          <button className="log-btn" onClick={() => navigate(`/report`)}>
+          <button
+            className="log-btn"
+            onClick={() =>
+              navigate("/report", {
+                state: {
+                  teacher_email: userEmail,
+                  chat_id: row.original.id,
+                  report_id: row.original.report_id,
+                },
+              })
+            }
+          >
             레포트 확인
           </button>
         ),
       },
     ],
-    [navigate]
+    [navigate, userEmail]
   );
 
   return (
@@ -269,7 +278,12 @@ const ChatLogFaculty = ({ filterType, searchTerm }) => {
       ) : filteredStudents.length === 0 ? (
         <div className="sl-messages">상담 내역이 없습니다.</div>
       ) : (
-        <Table columns={columns} data={filteredStudents} navigate={navigate} />
+        <Table
+          columns={columns}
+          data={filteredStudents}
+          navigate={navigate}
+          userEmail={userEmail}
+        />  
       )}
     </>
   );
