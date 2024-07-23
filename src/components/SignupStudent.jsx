@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import InfoCheck from "./InfoCheckModal";
@@ -10,13 +10,14 @@ const SignupStudent = () => {
     student_email: "",
     student_password: "",
     student_password2: "",
-    student_school: "",
+    school_id: "",
     student_grade: "",
     student_class: "",
     student_number: "",
-    student_teacher_email: "",
+    student_teacher_email: "",  // 선생님 이메일 추가
   });
 
+  const [schools, setSchools] = useState([]); // 학교 목록 상태 추가
   const [errors, setErrors] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
@@ -25,9 +26,22 @@ const SignupStudent = () => {
   const [agreeError, setAgreeError] = useState("");
   const [termsError, setTermsError] = useState("");
 
+  useEffect(() => {
+    // 학교 목록 불러오기
+    const fetchSchools = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/student/school_list");
+        setSchools(response.data);
+      } catch (error) {
+        console.error("학교 목록 불러오기 오류:", error);
+      }
+    };
+    fetchSchools();
+  }, []);
+
   const validateKorean = (value) => /^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$/.test(value);
   const validateEmail = (value) =>
-    /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(value);
+    /^[a-zA-Z0-9+\-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(value);
   const validatePassword = (value) =>
     /^(?=.*\d)(?=.*[a-z])(?=.*[@#$%^&+=!])(?!.*\s).{8,}$/.test(value);
 
@@ -88,9 +102,23 @@ const SignupStudent = () => {
           setErrors((prev) => ({ ...prev, student_password2: "" }));
         }
         break;
+      case "student_teacher_email":
+        if (!validateEmail(filteredValue)) {
+          setErrors((prev) => ({
+            ...prev,
+            student_teacher_email: "유효한 이메일 주소를 입력해 주세요.",
+          }));
+        }
+        break;
       default:
         break;
     }
+  };
+
+  const handleSchoolChange = (e) => {
+    const selectedSchoolId = e.target.value;
+    setFormData((prev) => ({ ...prev, school_id: selectedSchoolId }));
+    setErrors((prev) => ({ ...prev, school_id: "" }));
   };
 
   const handleAgreeChange = (e) => {
@@ -121,15 +149,15 @@ const SignupStudent = () => {
       newErrors.student_password2 = "비밀번호를 확인해 주세요.";
     if (formData.student_password !== formData.student_password2)
       newErrors.student_password2 = "비밀번호가 일치하지 않습니다.";
-    if (!formData.student_school)
-      newErrors.student_school = "학교 이름을 입력해 주세요.";
+    if (!formData.school_id) // 학교 ID 확인
+      newErrors.school_id = "학교를 선택해 주세요.";
     if (!formData.student_grade)
       newErrors.student_grade = "학년을 입력해 주세요.";
     if (!formData.student_class)
       newErrors.student_class = "반을 입력해 주세요.";
     if (!formData.student_number)
       newErrors.student_number = "번호를 입력해 주세요.";
-    if (!formData.student_teacher_email)
+    if (!formData.student_teacher_email) // 선생님 이메일 확인
       newErrors.student_teacher_email = "담임 선생님 이메일을 입력해 주세요.";
 
     setErrors(newErrors);
@@ -151,12 +179,12 @@ const SignupStudent = () => {
     }
 
     try {
-      const endpoint = "http://localhost:8000/api/v1/student/signup";
+      const endpoint = "http://localhost:8000/student/sign-up"; // axios 요청 경로 수정
 
       console.log(formData);
       const response = await axios.post(endpoint, formData);
 
-      if (response.status !== 200) {
+      if (response.status !== 201) { // 상태 코드를 201로 기대
         throw new Error("회원가입에 실패했습니다.");
       }
 
@@ -168,11 +196,11 @@ const SignupStudent = () => {
         student_email: "",
         student_password: "",
         student_password2: "",
-        student_school: "",
+        school_id: "", // 학교 ID 초기화
         student_grade: "",
         student_class: "",
         student_number: "",
-        student_teacher_email: "",
+        student_teacher_email: "", // 선생님 이메일 초기화
       });
       setAgree(false);
       setTerms(false);
@@ -256,17 +284,22 @@ const SignupStudent = () => {
           )}
         </div>
         <div className="lg-form-group">
-          <label htmlFor="student_school">학교 이름</label>
-          <input
-            type="text"
-            id="student_school"
-            name="student_school"
-            value={formData.student_school}
-            placeholder="학교 이름(한글)"
-            onChange={handleChange}
-          />
-          {errors.student_school && (
-            <div className="error-message">{errors.student_school}</div>
+          <label htmlFor="school_id">학교 이름</label>
+          <select
+            id="school_id"
+            name="school_id"
+            value={formData.school_id}
+            onChange={handleSchoolChange}
+          >
+            <option value="">학교를 선택해 주세요</option>
+            {schools.map((school) => (
+              <option key={school.school_id} value={school.school_id}>
+                {school.school_name}
+              </option>
+            ))}
+          </select>
+          {errors.school_id && (
+            <div className="error-message">{errors.school_id}</div>
           )}
         </div>
         <div className="lg-form-group row">
@@ -330,30 +363,30 @@ const SignupStudent = () => {
           )}
         </div>
         <div className="info-check">
-          <label htmlFor="privacy">
+          <label>
             <input
               type="checkbox"
               checked={agree}
               onChange={handleAgreeChange}
             />
             개인정보 수집이용 동의
-            <a href="#" onClick={() => openModal("privacy")}>
+            <button type="button" onClick={() => openModal("privacy")}>
               확인
-            </a>
+            </button>
           </label>
           {agreeError && <div className="error-message">{agreeError}</div>}
         </div>
         <div className="info-check">
-          <label htmlFor="terms">
+          <label>
             <input
               type="checkbox"
               checked={terms}
               onChange={handleTermsChange}
             />
             이용약관 동의
-            <a href="#" onClick={() => openModal("terms")}>
+            <button type="button" onClick={() => openModal("terms")}>
               확인
-            </a>
+            </button>
           </label>
           {termsError && <div className="error-message">{termsError}</div>}
         </div>

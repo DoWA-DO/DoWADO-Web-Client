@@ -6,8 +6,8 @@ const UserTypeSelector = ({ userType, onChange }) => {
       <label>
         <input
           type="radio"
-          value="faculty"
-          checked={userType === "faculty"}
+          value="teacher"
+          checked={userType === "teacher"}
           onChange={onChange}
         />
         교직원

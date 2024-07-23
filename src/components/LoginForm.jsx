@@ -5,7 +5,7 @@ import { useAuth } from "./AuthContext";
 import UserTypeSelector from "./UserTypeSelector";
 
 const LoginForm = () => {
-  const [userType, setUserType] = useState("faculty"); // 초기값을 "faculty"로 설정
+  const [userType, setUserType] = useState("teacher"); // 초기값을 "teacher"로 설정
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
@@ -14,14 +14,14 @@ const LoginForm = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { setUserType: setAuthUserType, setAuthToken } = useAuth(); // AuthContext에서 setAuthToken 추가
+  const { setUserType: setAuthUserType, setAuthToken } = useAuth();
 
   useEffect(() => {
     const rememberedUserType = localStorage.getItem("rememberedUserType");
     if (rememberedUserType) {
       setUserType(rememberedUserType);
     } else {
-      setUserType("faculty");
+      setUserType("teacher");
     }
   }, [location.pathname]);
 
@@ -47,12 +47,12 @@ const LoginForm = () => {
 
   const handleEmailChange = useCallback((e) => {
     setEmail(e.target.value);
-    setEmailErrorMessage(""); // 이메일 입력 시 오류 메시지 초기화
+    setEmailErrorMessage("");
   }, []);
 
   const handlePasswordChange = useCallback((e) => {
     setPassword(e.target.value);
-    setPwErrorMessage(""); // 비밀번호 입력 시 오류 메시지 초기화
+    setPwErrorMessage("");
   }, []);
 
   const handleRememberMeChange = useCallback((e) => {
@@ -61,7 +61,7 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setEmailErrorMessage(""); // 제출 시 오류 메시지 초기화
+    setEmailErrorMessage("");
     setPwErrorMessage("");
     setErrorMessage("");
 
@@ -83,12 +83,12 @@ const LoginForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/login",
-        {
-          username: email,
-          password,
-          scope: userType === "faculty" ? "teacher" : "student",
-        },
+        "http://localhost:8000/auth/login",
+        new URLSearchParams({
+          email: email,
+          password: password,
+          user_type: userType
+        }),
         {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -97,7 +97,7 @@ const LoginForm = () => {
       );
 
       if (response.status === 200) {
-        const token = response.data.access_token; // 토큰을 받아옴
+        const { access_token, refresh_token } = response.data;
 
         if (rememberMe) {
           localStorage.setItem("rememberedEmail", email);
@@ -110,9 +110,9 @@ const LoginForm = () => {
         }
 
         setAuthUserType(userType);
-        setAuthToken(token); // AuthContext에 토큰 저장
+        setAuthToken({ access_token, refresh_token });
 
-        if (userType === "faculty") {
+        if (userType === "teacher") {
           navigate("/dashboardfaculty");
         } else if (userType === "student") {
           navigate("/dashboardstudent");
