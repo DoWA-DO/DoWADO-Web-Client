@@ -36,7 +36,9 @@ const SignupFaculty = () => {
     // 학교 목록 불러오기
     const fetchSchools = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/student/school_list");
+        const response = await axios.get(
+          "http://localhost:8000/student/school_list"
+        );
         setSchools(response.data);
       } catch (error) {
         console.error("학교 목록 불러오기 오류:", error);
@@ -186,7 +188,8 @@ const SignupFaculty = () => {
       newErrors.teacher_password2 = "비밀번호를 확인해 주세요.";
     if (formData.teacher_password !== formData.teacher_password2)
       newErrors.teacher_password2 = "비밀번호가 일치하지 않습니다.";
-    if (!formData.school_id) // 학교 ID 확인
+    if (!formData.school_id)
+      // 학교 ID 확인
       newErrors.school_id = "학교를 선택해 주세요.";
     if (!formData.teacher_grade)
       newErrors.teacher_grade = "학년을 입력해 주세요.";
@@ -369,6 +372,7 @@ const SignupFaculty = () => {
           <select
             id="school_id"
             name="school_id"
+            className="school_id"
             value={formData.school_id}
             onChange={handleSchoolChange}
           >
@@ -447,7 +451,10 @@ const SignupFaculty = () => {
           회원가입
         </button>
         <div className="signup-link">
-          계정이 있나요? <button type="button" onClick={() => navigate("/login")}>로그인</button>
+          계정이 있나요?{" "}
+          <a type="button" onClick={() => navigate("/login")}>
+            로그인
+          </a>
         </div>
       </form>
 

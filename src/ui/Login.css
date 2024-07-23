@@ -78,13 +78,48 @@ body {
   width: 100%;
 }
 
-.lg-form-group input {
+.lg-form-group input,
+.lg-form-group select {
   width: 100%;
   padding: 10px;
   border: 1px solid #9d9d9d;
   border-radius: 5px;
   font-size: 16px;
   box-sizing: border-box;
+}
+
+.school_id {
+  width: 100%;
+  color: grey;
+}
+
+.school_id select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #9d9d9d;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+  appearance: none;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.school_id option {
+  font-size: 16px;
+  padding: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+
+.school_id select:focus,
+.school_id option:focus {
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .email-input {
@@ -98,8 +133,8 @@ body {
   width: 100%; /* 버튼의 너비를 뺀 나머지 공간 차지 */
   padding: 10px;
   border: 1px solid #9d9d9d;
-  border-radius: 5px 0 0 5px; /* 왼쪽 모서리만 둥글게 */
-  font-size: 16px;
+  border-radius: 5px;
+  /font-size: 16px;
   box-sizing: border-box;
 }
 
@@ -128,7 +163,6 @@ body {
   border-radius: 8px;
   color: #ffffff;
   padding: 15px;
-  font-family: "Telegraf";
   font-style: normal;
   font-weight: 800;
   font-size: 16px;
@@ -187,7 +221,6 @@ input[type="number"] {
 .info-check label {
   display: flex;
   align-items: center;
-  font-family: "Telegraf", sans-serif;
   font-size: 16px;
   color: #000000;
   white-space: nowrap;
@@ -197,8 +230,16 @@ input[type="number"] {
   margin-right: 5px;
 }
 
-.info-check a {
-  text-decoration: none;
+.info-check button {
+  background-color: #ffffff;
+  border: none;
+  color: #21a6a1;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.info-check button:hover {
+  text-decoration: underline;
 }
 
 .info-check-modal {
@@ -249,6 +290,12 @@ input[type="number"] {
     font-size: 12px;
   }
 
+  .school_id select,
+  .school_id option {
+    font-size: 14px;
+    padding: 8px;
+  }
+
   .signup-link {
     font-size: 14px;
   }
@@ -278,6 +325,12 @@ input[type="number"] {
   .login-button {
     padding: 13px;
     font-size: 15px;
+  }
+
+  .school_id select,
+  .school_id option {
+    font-size: 15px;
+    padding: 9px;
   }
 
   .signup-link {
@@ -315,6 +368,12 @@ input[type="number"] {
 
   .signup-link {
     font-size: 16px;
+  }
+
+  .school_id select,
+  .school_id option {
+    font-size: 16px;
+    padding: 10px;
   }
 
   .lg-form > *:not(h2) {

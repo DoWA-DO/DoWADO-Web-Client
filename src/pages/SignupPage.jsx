@@ -4,7 +4,7 @@ import SignupFaculty from "../components/SignupFaculty";
 import SignupStudent from "../components/SignupStudent";
 
 const SignupPage = () => {
-  const [userType, setUserType] = useState("faculty");
+  const [userType, setUserType] = useState("teacher");
 
   const handleUserTypeChange = (event) => {
     setUserType(event.target.value);
@@ -15,7 +15,7 @@ const SignupPage = () => {
       <div className="lg-form">
         <h2>회원가입</h2>
         <UserTypeSelector userType={userType} onChange={handleUserTypeChange} />
-        {userType === "faculty" && <SignupFaculty />}
+        {userType === "teacher" && <SignupFaculty />}
         {userType === "student" && <SignupStudent />}
       </div>
     </div>
