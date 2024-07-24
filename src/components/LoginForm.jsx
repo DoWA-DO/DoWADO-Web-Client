@@ -103,9 +103,9 @@ const LoginForm = () => {
         localStorage.setItem("userEmail", userEmail);
 
         if (userType === "teacher") {
-          navigate("/dashboardfaculty");
+          navigate("/studentlog");
         } else if (userType === "student") {
-          navigate("/dashboardstudent");
+          navigate("/studentchat");
         }
       }
     } catch (error) {
