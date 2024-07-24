@@ -1,48 +1,45 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import "../ui/Report.css";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../components/AuthContext";
 
 const ReportPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { chat_id, chat_student_email, report_id } = location.state || {};
-  const [reportContent, setReportContent] = useState("");
+  const { reportData } = location.state || {};
+  const { userType } = useAuth();
 
-  useEffect(() => {
-    if (report_id) {
-      fetchReportContent(report_id);
-    }
-  }, [report_id]);
-
-  const fetchReportContent = async (id) => {
+  const handleBackClick = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8000/api/v1/report/content`, // 레포트 내용 호출
-        {
-          params: { report_id: id },
-        }
-      );
-      setReportContent(response.data.report_content);
+      console.log("back click");
     } catch (error) {
-      console.error("Error fetching report content:", error);
+      console.error("Error saving chat log on back click:", error);
+    } finally {
+      if (userType === "faculty") {
+        navigate("/studentlog");
+      } else if (userType === "student") {
+        navigate("/studentchat");
+      }
     }
   };
 
   return (
     <div className="report-container">
       <div className="report-header">
-        <button className="back-btn" onClick={() => navigate("/studentchat")}>
+        <button className="back-btn" onClick={handleBackClick}>
           <FaArrowLeft size="20" />
         </button>
       </div>
       <div className="report-content">
-        {reportContent ? (
-          <pre>{reportContent}</pre>
-        ) : (
-          <p>레포트 내용을 불러오는 중...</p>
-        )}
+        <div className="sentences-container">
+          {reportData.prediction.map((item, index) => (
+            <div key={index} className="sentences">
+              ***님께 추천드리는 직업군은 <span className="job">{item}</span>
+              입니다.
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

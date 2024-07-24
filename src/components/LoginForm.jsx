@@ -5,89 +5,70 @@ import { useAuth } from "./AuthContext";
 import UserTypeSelector from "./UserTypeSelector";
 
 const LoginForm = () => {
-  const [userType, setUserType] = useState("teacher"); // 초기값을 "faculty"로 설정
-  const [email, setEmail] = useState("");
+  const [userType, setUserType] = useState(
+    () => localStorage.getItem("rememberedUserType") || "teacher"
+  );
+  const [email, setEmail] = useState(() => {
+    const rememberedEmail = localStorage.getItem("rememberedEmail");
+    const rememberedUserType = localStorage.getItem("rememberedUserType");
+    return rememberedEmail && rememberedUserType === userType
+      ? rememberedEmail
+      : "";
+  });
   const [password, setPassword] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [pwErrorMessage, setPwErrorMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(
+    () => localStorage.getItem("rememberMe") === "true"
+  );
   const location = useLocation();
   const navigate = useNavigate();
   const {
     setUserType: setAuthUserType,
     setAuthToken,
     setUserEmail,
-  } = useAuth(); // AuthContext에서 setUserEmail 추가
+  } = useAuth();
 
   useEffect(() => {
-    const rememberedUserType = localStorage.getItem("rememberedUserType");
-    if (rememberedUserType) {
-      setUserType(rememberedUserType);
-    } else {
-      setUserType("teacher");
-    }
-  }, [location.pathname]);
-
-  useEffect(() => {
-    const rememberedEmail = localStorage.getItem("rememberedEmail");
-    const rememberedUserType = localStorage.getItem("rememberedUserType");
-    if (rememberedEmail && rememberedUserType === userType) {
-      setEmail(rememberedEmail);
-    } else {
-      setEmailErrorMessage("");
-      setPwErrorMessage("");
+    const handleUserTypeChange = (e) => {
+      setUserType(e.target.value);
       setEmail("");
-    }
-    const rememberedRememberMe = localStorage.getItem("rememberMe") === "true";
-    setRememberMe(rememberedRememberMe);
-  }, [userType]);
+      setErrorMessage("");
+    };
 
-  const handleUserTypeChange = useCallback((e) => {
-    setUserType(e.target.value);
-    setEmail(""); // 사용자 유형 변경 시 이메일 초기화
-    setErrorMessage("");
-  }, []);
+    const handleEmailChange = (e) => {
+      setEmail(e.target.value);
+      setEmailErrorMessage("");
+    };
 
-  const handleEmailChange = useCallback((e) => {
-    setEmail(e.target.value);
-    setEmailErrorMessage(""); // 이메일 입력 시 오류 메시지 초기화
-  }, []);
+    const handlePasswordChange = (e) => {
+      setPassword(e.target.value);
+      setPwErrorMessage("");
+    };
 
-  const handlePasswordChange = useCallback((e) => {
-    setPassword(e.target.value);
-    setPwErrorMessage(""); // 비밀번호 입력 시 오류 메시지 초기화
-  }, []);
-
-  const handleRememberMeChange = useCallback((e) => {
-    setRememberMe(e.target.checked);
+    const handleRememberMeChange = (e) => {
+      setRememberMe(e.target.checked);
+    };
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setEmailErrorMessage(""); // 제출 시 오류 메시지 초기화
+    setEmailErrorMessage("");
     setPwErrorMessage("");
     setErrorMessage("");
 
-    let hasError = false;
-
     if (!email) {
       setEmailErrorMessage("이메일을 입력해주세요.");
-      hasError = true;
+      return;
     }
 
     if (!password) {
       setPwErrorMessage("비밀번호를 입력해주세요.");
-      hasError = true;
-    }
-
-    if (hasError) {
       return;
     }
 
     try {
-      console.log(userType);
-
       const response = await axios.post(
         "http://localhost:8000/auth/login",
         new URLSearchParams({
@@ -103,8 +84,8 @@ const LoginForm = () => {
       );
 
       if (response.status === 200) {
-        const token = response.data.access_token; // 토큰을 받아옴
-        const userEmail = email; // 로그인 시 입력된 이메일을 저장
+        const token = response.data.access_token;
+        const userEmail = email;
 
         if (rememberMe) {
           localStorage.setItem("rememberedEmail", email);
@@ -117,9 +98,9 @@ const LoginForm = () => {
         }
 
         setAuthUserType(userType);
-        setAuthToken(token); // AuthContext에 토큰 저장
-        setUserEmail(userEmail); // AuthContext에 이메일 저장
-        localStorage.setItem("userEmail", userEmail); // 로컬 스토리지에 이메일 저장
+        setAuthToken(token);
+        setUserEmail(userEmail);
+        localStorage.setItem("userEmail", userEmail);
 
         if (userType === "teacher") {
           navigate("/dashboardfaculty");
@@ -136,7 +117,10 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <UserTypeSelector userType={userType} onChange={handleUserTypeChange} />
+      <UserTypeSelector
+        userType={userType}
+        onChange={(e) => setUserType(e.target.value)}
+      />
       <div className="lg-form-group">
         <label htmlFor="email">이메일</label>
         <input
@@ -145,7 +129,7 @@ const LoginForm = () => {
           name="email"
           placeholder="user@example.com"
           value={email}
-          onChange={handleEmailChange}
+          onChange={(e) => setEmail(e.target.value)}
         />
         {emailErrorMessage && (
           <p className="error-message">{emailErrorMessage}</p>
@@ -158,7 +142,7 @@ const LoginForm = () => {
           id="password"
           name="password"
           value={password}
-          onChange={handlePasswordChange}
+          onChange={(e) => setPassword(e.target.value)}
         />
         {pwErrorMessage && <p className="error-message">{pwErrorMessage}</p>}
       </div>
@@ -167,7 +151,7 @@ const LoginForm = () => {
           <input
             type="checkbox"
             checked={rememberMe}
-            onChange={handleRememberMeChange}
+            onChange={(e) => setRememberMe(e.target.checked)}
           />
           이메일 기억하기
         </label>

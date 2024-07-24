@@ -1,138 +1,141 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../ui/Chatbot.css";
 import { FaArrowUp, FaArrowLeft } from "react-icons/fa";
+import { useAuth } from "../components/AuthContext";
+import { PulseLoader, PuffLoader } from "react-spinners";
 
 const ChatbotPage = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [sessionId, setSessionId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [reportLoading, setReportLoading] = useState(false); // 추가된 상태
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const { chat_id, chat_student_email, chat_status } = location.state || {};
+  const { authToken, userType } = useAuth();
 
   useEffect(() => {
-    if (chat_id && chat_student_email && chat_status !== undefined) {
-      if (chat_status === 0) {
-        // 완료되지 않은 채팅의 경우
-        fetchChatContent(chat_id, chat_student_email);
-      } else {
-        createChat(chat_id, chat_student_email, chat_status);
+    const initiateChatSession = async () => {
+      try {
+        if (!sessionId) {
+          const newSessionId = await createChatbotSession();
+          setSessionId(newSessionId);
+        }
+      } catch (error) {
+        console.error("Error initiating chat session:", error);
       }
-    }
-  }, [chat_id, chat_student_email, chat_status]);
-
-  const createChat = async (id, email, status) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/chat/create", // 새 채팅 생성
-        {
-          chat_id: id,
-          chat_student_email: email,
-          chat_status: status,
-        }
-      );
-      console.log("Chat created:", response.data);
-    } catch (error) {
-      console.error("Error creating chat:", error);
-    }
-  };
-
-  const fetchChatContent = async (id, email) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8000/api/v1/chat/get_content`, // 완료되지 않은 상담 채팅 내용 불러옴
-        {
-          params: { chat_id: id, chat_student_email: email },
-        }
-      );
-      const fetchedMessages = response.data.chat_content
-        .split("\n")
-        .map((msg) => {
-          return {
-            text: msg,
-            isBot: msg.startsWith("Bot:"),
-            time: new Date().toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-          };
-        });
-      setMessages((prevMessages) => [...prevMessages, ...fetchedMessages]);
-    } catch (error) {
-      console.error("Error fetching chat content:", error);
-    }
-  };
-
-  const createReport = async (content) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/report/create", // 레포트 생성
-        {
-          chat_content: content,
-        }
-      );
-      console.log("Report created:", response.data);
-    } catch (error) {
-      console.error("Error creating report:", error);
-    }
-  };
-
-  const saveChatLog = async () => {
-    try {
-      const chatContent = messages
-        .filter((msg) => !msg.isDate)
-        .map((msg) => `${msg.text}`)
-        .join("\n");
-      await axios.post(`http://localhost:8000/api/v1/chat/upload`, {
-        // 채팅 내용 저장
-        chat_id,
-        chat_student_email,
-        chat_content: chatContent,
-      });
-      console.log("Chat log saved successfully");
-      return chatContent;
-    } catch (error) {
-      console.error("Error saving chat log:", error);
-      throw error; // Rethrow the error to handle it in handleCreateReport
-    }
-  };
-
-  const appendChatLog = async (newMessage) => {
-    try {
-      await axios.post(`http://localhost:8000/api/v1/chat/update`, {
-        // 원래 있던 채팅 내역에 채팅 추가
-        chat_id,
-        chat_student_email,
-        chat_content: newMessage,
-      });
-      console.log("Chat log appended successfully");
-    } catch (error) {
-      console.error("Error appending chat log:", error);
-    }
-  };
-
-  useEffect(() => {
-    const dateMessage = {
-      text: new Date().toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }),
-      isDate: true,
     };
 
-    setMessages((prevMessages) => [...prevMessages, dateMessage]);
-  }, []);
-
-  useEffect(() => {
-    // 새 메시지가 생성되면 밑으로 이동
-    if (messages.length > 0) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (authToken) {
+      console.log("Auth Token found: ", authToken);
+      initiateChatSession();
+    } else {
+      console.error("Auth token is missing");
     }
-  }, [messages]);
+  }, [authToken, sessionId]);
+
+  const createChatbotSession = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/careerchat/new-session",
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          params: {
+            token: authToken,
+          },
+        }
+      );
+      console.log("Session creation response:", response.data);
+      return response.data.session_id;
+    } catch (error) {
+      console.error("Error creating chatbot session:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+      }
+      throw error;
+    }
+  };
+
+  const createChatbotMessage = async (sessionId, inputQuery) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/careerchat/chat",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          params: {
+            session_id: sessionId,
+            input_query: inputQuery,
+            token: authToken,
+          },
+        }
+      );
+      return response.data.response;
+    } catch (error) {
+      console.error("Error creating chatbot message:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+      }
+      throw error;
+    }
+  };
+
+  const saveChatlog = async (sessionId) => {
+    try {
+      console.log("sessionid: ", sessionId);
+      await axios.post("http://localhost:8000/careerchat/save-chatlog", null, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+        params: {
+          session_id: sessionId,
+          token: authToken,
+        },
+      });
+    } catch (error) {
+      console.error("Error saving chat log:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+      }
+      throw error;
+    }
+  };
+
+  const getReport = async (sessionId) => {
+    try {
+      setReportLoading(true); // 로딩 시작
+      const response = await axios.post(
+        "http://localhost:8000/careerchat/predict",
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          params: {
+            session_id: sessionId,
+            token: authToken,
+          },
+        }
+      );
+      console.log("Report response:", response.data);
+      return response.data; // 레포트 결과를 반환
+    } catch (error) {
+      console.error("Error getting report:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+      }
+      throw error;
+    } finally {
+      setReportLoading(false); // 로딩 종료
+    }
+  };
 
   const handleSendMessage = async () => {
     if (input.trim() !== "") {
@@ -146,12 +149,48 @@ const ChatbotPage = () => {
       };
       setMessages((prevMessages) => [...prevMessages, userMessage]);
       setInput("");
+      setLoading(true); // 로딩 시작
 
-      // 챗 로그에 추가
-      await appendChatLog(userMessage.text);
+      try {
+        const botResponse = await createChatbotMessage(sessionId, input);
+        const botMessage = {
+          text: botResponse,
+          isBot: true,
+          time: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        };
+        setMessages((prevMessages) => [...prevMessages, botMessage]);
+      } catch (error) {
+        console.error("Error sending message to chatbot:", error);
+      } finally {
+        setLoading(false); // 로딩 종료
+      }
+    }
+  };
 
-      // 챗 로그 저장
-      await saveChatLog();
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSaveChatlog = async () => {
+    try {
+      await saveChatlog(sessionId);
+    } catch (error) {
+      console.error("Error saving chat log:", error);
+    }
+  };
+
+  const handleReportClick = async () => {
+    try {
+      console.log("Report button clicked");
+      setReportLoading(true); // 전체 페이지 로딩 시작
+      const reportData = await getReport(sessionId);
+      navigate("/report", { state: { reportData } });
+    } catch (error) {
+      console.error("Error getting report:", error);
+      setReportLoading(false); // 오류 시 로딩 종료
     }
   };
 
@@ -166,60 +205,70 @@ const ChatbotPage = () => {
     }
   };
 
-  const handleCreateReport = async () => {
+  const handleBackClick = async () => {
     try {
-      // saveChatLog 함수를 호출하여 레포트 생성 위한 컨텐츠 생성
-      const chatContent = await saveChatLog();
-      await createReport(chatContent);
+      console.log("back click");
+      await handleSaveChatlog();
     } catch (error) {
-      console.error("Error creating report:", error);
+      console.error("Error saving chat log on back click:", error);
+    } finally {
+      if (userType === "faculty") {
+        navigate("/studentlog");
+      } else if (userType === "student") {
+        navigate("/studentchat");
+      }
     }
   };
 
   return (
     <div className="chatbot-container">
-      <div className="chatbot-header">
-        <button
-          className="back-btn"
-          onClick={() => {
-            navigate("/studentchat");
-          }}
-        >
+      {reportLoading && (
+        <div className="loading-overlay">
+          <PuffLoader color="#36d7b7" size={150} />
+        </div>
+      )}
+      <div className={`chatbot-header ${reportLoading ? "hidden" : ""}`}>
+        <button className="back-btn" onClick={handleBackClick}>
           <FaArrowLeft size="20" />
         </button>
-        <button className="report-btn" onClick={handleCreateReport}>
+        <button
+          className="report-btn"
+          onClick={handleReportClick}
+          disabled={reportLoading}
+        >
           레포트 보기
         </button>
       </div>
-      <div className="chatbot-messages">
+      <div className={`chatbot-messages ${reportLoading ? "hidden" : ""}`}>
         <div className="chatbot-messages-wrapper">
           {messages.map((msg, index) => (
             <div
               key={index}
               className={`message-wrapper ${msg.isBot ? "bot" : "user"}`}
             >
-              {msg.isDate ? (
-                <div className="date-message">{msg.text}</div>
-              ) : (
-                <>
-                  <div className={`message ${msg.isBot ? "bot" : "user"}`}>
-                    <div className="text" style={{ whiteSpace: "pre-wrap" }}>
-                      {msg.text}
-                    </div>
-                  </div>
-                  <div
-                    className={`time ${msg.isBot ? "bot-time" : "user-time"}`}
-                  >
-                    {msg.time}
-                  </div>
-                </>
-              )}
+              <div className={`message ${msg.isBot ? "bot" : "user"}`}>
+                <div className="text" style={{ whiteSpace: "pre-wrap" }}>
+                  {msg.text}
+                </div>
+              </div>
+              <div className={`time ${msg.isBot ? "bot-time" : "user-time"}`}>
+                {msg.time}
+              </div>
             </div>
           ))}
+          {loading && (
+            <div className="message-wrapper bot">
+              <div className="message bot">
+                <PulseLoader color="white" size="10px" />
+              </div>
+            </div>
+          )}
           <div ref={messagesEndRef}></div>
         </div>
       </div>
-      <div className="chatbot-input-container">
+      <div
+        className={`chatbot-input-container ${reportLoading ? "hidden" : ""}`}
+      >
         <textarea
           type="text"
           className="chatbot-input"
