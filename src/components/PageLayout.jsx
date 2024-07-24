@@ -11,13 +11,13 @@ import { IoClose } from "react-icons/io5";
 const PageLayout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation(); // 현재 경로를 가져옴
-  const { userType: authUserType } = useAuth();
+  const { userType, logout } = useAuth(); // useAuth에서 userType과 logout 함수를 가져옴
   const [isMobile, setIsMobile] = useState(false); // 모바일 여부 상태 관리
   const [isMenuOpen, setIsMenuOpen] = useState(false); // 메뉴 상태 관리
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
 
-  const userType = authUserType || "student"; // 삭제 예정
+  console.log("Current userType:", userType); // userType 로그 출력
 
   const openModal = (content) => {
     setModalContent(content);
@@ -47,6 +47,11 @@ const PageLayout = ({ children }) => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleLogout = () => {
+    // logout();
+    navigate("/"); // 로그아웃 후 로그인 페이지로 이동
+  };
+
   // 현재 경로와 일치하는 링크에 active 클래스를 추가하는 함수
   const getLinkClass = (path) => {
     return location.pathname === path ? "topbar-link active" : "topbar-link";
@@ -63,17 +68,8 @@ const PageLayout = ({ children }) => {
           />
         </div>
         <div className={`topbar-links ${isMenuOpen ? "open" : ""}`}>
-          {userType === "faculty" ? (
+          {userType === "teacher" ? (
             <>
-              <div
-                className={getLinkClass("/dashboardfaculty")}
-                onClick={() => {
-                  navigate("/dashboardfaculty");
-                  setIsMenuOpen(false);
-                }}
-              >
-                홈
-              </div>
               <div
                 className={getLinkClass("/studentlog")}
                 onClick={() => {
@@ -95,15 +91,6 @@ const PageLayout = ({ children }) => {
             </>
           ) : (
             <>
-              <div
-                className={getLinkClass("/dashboardstudent")}
-                onClick={() => {
-                  navigate("/dashboardstudent");
-                  setIsMenuOpen(false);
-                }}
-              >
-                홈
-              </div>
               <div
                 className={getLinkClass("/studentChat")}
                 onClick={() => {
@@ -128,7 +115,7 @@ const PageLayout = ({ children }) => {
             <button
               className="checkout"
               onClick={() => {
-                navigate("/");
+                handleLogout();
                 setIsMenuOpen(false);
               }}
             >
@@ -139,11 +126,10 @@ const PageLayout = ({ children }) => {
         </div>
         {!isMobile && ( // 모바일이 아닐 때만 표시되는 프로필과 로그아웃 버튼
           <div className="top-right-container">
-            {/* <IoPersonCircleOutline className="profile" /> */}
             <button
               className="checkout"
               onClick={() => {
-                navigate("/");
+                handleLogout();
                 setIsMenuOpen(false);
               }}
             >
