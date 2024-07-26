@@ -14,7 +14,7 @@ const SignupStudent = () => {
     student_grade: "",
     student_class: "",
     student_number: "",
-    student_teacher_email: "",  // 선생님 이메일 추가
+    teacher_email: "", // 선생님 이메일 추가
   });
 
   const [schools, setSchools] = useState([]); // 학교 목록 상태 추가
@@ -30,7 +30,9 @@ const SignupStudent = () => {
     // 학교 목록 불러오기
     const fetchSchools = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/student/school_list");
+        const response = await axios.get(
+          "http://localhost:8000/student/school_list"
+        );
         setSchools(response.data);
       } catch (error) {
         console.error("학교 목록 불러오기 오류:", error);
@@ -51,6 +53,18 @@ const SignupStudent = () => {
 
     if (name === "student_name" || name === "student_school") {
       filteredValue = filteredValue.replace(/[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, ""); // 한글만 허용
+    }
+
+    // 학년, 반, 번호를 정수로 변환
+    if (
+      name === "student_grade" ||
+      name === "student_class" ||
+      name === "student_number"
+    ) {
+      filteredValue = parseInt(filteredValue, 10);
+      if (isNaN(filteredValue)) {
+        filteredValue = ""; // NaN일 경우 빈 문자열로 설정
+      }
     }
 
     setFormData((prev) => ({ ...prev, [name]: filteredValue }));
@@ -102,11 +116,11 @@ const SignupStudent = () => {
           setErrors((prev) => ({ ...prev, student_password2: "" }));
         }
         break;
-      case "student_teacher_email":
+      case "teacher_email":
         if (!validateEmail(filteredValue)) {
           setErrors((prev) => ({
             ...prev,
-            student_teacher_email: "유효한 이메일 주소를 입력해 주세요.",
+            teacher_email: "유효한 이메일 주소를 입력해 주세요.",
           }));
         }
         break;
@@ -149,7 +163,8 @@ const SignupStudent = () => {
       newErrors.student_password2 = "비밀번호를 확인해 주세요.";
     if (formData.student_password !== formData.student_password2)
       newErrors.student_password2 = "비밀번호가 일치하지 않습니다.";
-    if (!formData.school_id) // 학교 ID 확인
+    if (!formData.school_id)
+      // 학교 ID 확인
       newErrors.school_id = "학교를 선택해 주세요.";
     if (!formData.student_grade)
       newErrors.student_grade = "학년을 입력해 주세요.";
@@ -157,8 +172,9 @@ const SignupStudent = () => {
       newErrors.student_class = "반을 입력해 주세요.";
     if (!formData.student_number)
       newErrors.student_number = "번호를 입력해 주세요.";
-    if (!formData.student_teacher_email) // 선생님 이메일 확인
-      newErrors.student_teacher_email = "담임 선생님 이메일을 입력해 주세요.";
+    if (!formData.teacher_email)
+      // 선생님 이메일 확인
+      newErrors.teacher_email = "담임 선생님 이메일을 입력해 주세요.";
 
     setErrors(newErrors);
 
@@ -184,7 +200,8 @@ const SignupStudent = () => {
       console.log(formData);
       const response = await axios.post(endpoint, formData);
 
-      if (response.status !== 201) { // 상태 코드를 201로 기대
+      if (response.status !== 201) {
+        // 상태 코드를 201로 기대
         throw new Error("회원가입에 실패했습니다.");
       }
 
@@ -200,7 +217,7 @@ const SignupStudent = () => {
         student_grade: "",
         student_class: "",
         student_number: "",
-        student_teacher_email: "", // 선생님 이메일 초기화
+        teacher_email: "", // 선생님 이메일 초기화
       });
       setAgree(false);
       setTerms(false);
@@ -349,17 +366,17 @@ const SignupStudent = () => {
           )}
         </div>
         <div className="lg-form-group">
-          <label htmlFor="student_teacher_email">담임 선생님 이메일</label>
+          <label htmlFor="teacher_email">담임 선생님 이메일</label>
           <input
             type="email"
-            id="student_teacher_email"
-            name="student_teacher_email"
-            value={formData.student_teacher_email}
+            id="teacher_email"
+            name="teacher_email"
+            value={formData.teacher_email}
             placeholder="teacher@example.com"
             onChange={handleChange}
           />
-          {errors.student_teacher_email && (
-            <div className="error-message">{errors.student_teacher_email}</div>
+          {errors.teacher_email && (
+            <div className="error-message">{errors.teacher_email}</div>
           )}
         </div>
         <div className="info-check">

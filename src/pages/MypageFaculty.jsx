@@ -26,9 +26,13 @@ const MypageFaculty = () => {
     const fetchTeacherInfo = async () => {
       if (authToken) {
         try {
-          const response = await axios.get(
-            "http://localhost:8000/api/v1/teacher/read",
+          const response = await axios.post(
+            "http://localhost:8000/teacher/read",
+            null,
             {
+              params: {
+                token: authToken,
+              },
               headers: {
                 Authorization: `Bearer ${authToken}`,
               },
@@ -72,18 +76,19 @@ const MypageFaculty = () => {
     }
 
     try {
-      await axios.put(
-        "http://localhost:8000/api/v1/teacher/update",
-        {
+      await axios.put("http://localhost:8000/teacher/update", null, { // 안됨
+        params: {
+          token: authToken,
+          teacher_grade: teacher.teacher_grade,
+          teacher_class: teacher.teacher_class,
+          teacher_name: teacher.teacher_name,
           teacher_password: currentPassword,
-          new_password: newPassword,
+          teacher_new_password: newPassword,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -113,7 +118,7 @@ const MypageFaculty = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:8000/api/v1/file/upload",
+          "http://localhost:8000/file/upload",
           formData,
           {
             headers: {
@@ -129,7 +134,7 @@ const MypageFaculty = () => {
           const fileName = fileUrl.split("/").pop();
           setTeacher((prevTeacher) => ({
             ...prevTeacher,
-            profilePicture: `http://localhost:8000/api/v1/file/images/${fileName}`,
+            profilePicture: `http://localhost:8000/file/images/${fileName}`,
           }));
           setProfilePicture(null);
           alert("프로필 사진이 성공적으로 변경되었습니다.");

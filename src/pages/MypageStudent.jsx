@@ -28,9 +28,13 @@ const MypageStudent = () => {
     const fetchStudentInfo = async () => {
       if (authToken) {
         try {
-          const response = await axios.get(
-            "http://localhost:8000/api/v1/student/read",
+          const response = await axios.post(
+            "http://localhost:8000/student/read",
+            null,
             {
+              params: {
+                token: authToken,
+              },
               headers: {
                 Authorization: `Bearer ${authToken}`,
               },
@@ -75,7 +79,7 @@ const MypageStudent = () => {
 
     try {
       await axios.put(
-        "http://localhost:8000/api/v1/student/update",
+        "http://localhost:8000/student/update",
         {
           student_password: currentPassword,
           new_password: newPassword,
@@ -115,7 +119,7 @@ const MypageStudent = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:8000/api/v1/file/upload",
+          "http://localhost:8000/file/upload",
           formData,
           {
             headers: {
@@ -131,7 +135,7 @@ const MypageStudent = () => {
           const fileName = fileUrl.split("/").pop();
           setStudent((prevStudent) => ({
             ...prevStudent,
-            profilePicture: `http://localhost:8000/api/v1/file/images/${fileName}`,
+            profilePicture: `http://localhost:8000/file/images/${fileName}`,
           }));
           setProfilePicture(null);
           alert("프로필 사진이 성공적으로 변경되었습니다.");

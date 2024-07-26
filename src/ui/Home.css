@@ -1,3 +1,20 @@
+@font-face {
+  font-family: "Gowun Batang";
+  src: url("https://fonts.gstatic.com/s/gowunbatang/v7/ijwSs5nhRMIjYsdSgcMa3wRhWbH4yuF3PCOgtbXrpkZDCDpAGUeXohsoWQ.0.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunBatang-Regular.woff")
+      format("woff");
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gowun Batang";
+  src: url("https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wXiWtFCc.woff2")
+    format("woff2");
+  font-style: normal;
+  unicode-range: U+0020-007E;
+}
+
 body {
   margin: 0;
   padding: 0;
