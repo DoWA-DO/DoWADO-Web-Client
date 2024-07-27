@@ -1,3 +1,7 @@
+// 이 파일은 React를 사용하여 학생 상담 기록을 테이블로 표시하는 기능을 구현한 코드입니다.
+// 상담 기록은 교사의 이메일과 검색 조건에 따라 필터링됩니다.
+// 테이블은 react-table 라이브러리를 사용하여 구현되었으며, 페이지네이션 및 정렬 기능을 포함합니다.
+
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import axios from "axios";
 import {
@@ -11,6 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../ui/ChatLog.css";
 import { useAuth } from "../components/AuthContext";
 
+// Table 컴포넌트는 상담 기록 데이터를 표 형태로 렌더링합니다.
 const Table = ({ columns, data, navigate, userEmail }) => {
   const {
     getTableProps,
@@ -26,14 +31,15 @@ const Table = ({ columns, data, navigate, userEmail }) => {
     pageCount,
     state: { pageIndex },
   } = useTable(
-    { columns, data, initialState: { pageIndex: 0, pageSize: 10 } },
+    { columns, data, initialState: { pageIndex: 0, pageSize: 10 } }, // 페이지 초기 상태 설정
     useGlobalFilter,
     useSortBy,
     usePagination
   );
 
-  const buttonsToShow = 5;
+  const buttonsToShow = 5; // 페이지 네이션 버튼 수
 
+  // 페이지네이션 버튼 계산 함수
   const calculatePageButtons = useCallback(() => {
     const totalButtons = Math.min(buttonsToShow, pageCount);
     const start = Math.max(0, pageIndex - Math.floor(totalButtons / 2));
@@ -56,8 +62,8 @@ const Table = ({ columns, data, navigate, userEmail }) => {
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                     {column.render("Header")}
                     {column.canSort &&
-                    column.Header !== "상담기록" &&
-                    column.Header !== "레포트" ? (
+                      column.Header !== "상담기록" &&
+                      column.Header !== "레포트" ? ( // 상담기록과 레포트 컬럼에는 정렬 기능 비활성화
                       column.isSorted ? (
                         column.isSortedDesc ? (
                           <FaSortDown style={{ marginLeft: "5px" }} />
@@ -80,14 +86,14 @@ const Table = ({ columns, data, navigate, userEmail }) => {
                 <tr {...row.getRowProps()}>
                   {row.cells.map((cell) => (
                     <td {...cell.getCellProps()}>
-                      {cell.column.id === "chat-log" ? (
+                      {cell.column.id === "chat-log" ? ( // 상담기록 버튼
                         <button
                           className="log-btn"
                           onClick={() =>
                             navigate("/chatbotdetail", {
                               state: {
                                 chat_id: row.original.id,
-                                chat_student_email: userEmail, 
+                                chat_student_email: userEmail,
                                 chat_status: row.original.chat_status,
                               },
                             })
@@ -95,13 +101,13 @@ const Table = ({ columns, data, navigate, userEmail }) => {
                         >
                           상담기록 확인
                         </button>
-                      ) : cell.column.id === "report" ? (
+                      ) : cell.column.id === "report" ? ( // 레포트 버튼
                         <button
                           className="log-btn"
                           onClick={() =>
                             navigate("/report", {
                               state: {
-                                teacher_email: userEmail, 
+                                teacher_email: userEmail,
                                 chat_id: row.original.id,
                                 report_id: row.original.report_id,
                               },
@@ -145,9 +151,8 @@ const Table = ({ columns, data, navigate, userEmail }) => {
           <button
             key={pageNumber}
             onClick={() => gotoPage(pageNumber)}
-            className={`sl-page-btn ${
-              pageIndex === pageNumber ? "active" : ""
-            }`}
+            className={`sl-page-btn ${pageIndex === pageNumber ? "active" : ""
+              }`}
           >
             {pageNumber + 1}
           </button>
@@ -171,14 +176,16 @@ const Table = ({ columns, data, navigate, userEmail }) => {
   );
 };
 
+// ChatLogFaculty 컴포넌트는 필터와 검색어를 기반으로 학생 상담 기록을 가져와서 Table 컴포넌트에 전달합니다.
 const ChatLogFaculty = ({ filterType, searchTerm }) => {
   const navigate = useNavigate();
   const { userEmail } = useAuth();
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const chat_status = 1; // 교사 chat_status는 1
+  const chat_status = 1; // 교사 chat_status는 1로 설정
 
+  // 학생 상담 기록을 가져오는 함수
   const fetchStudents = useCallback(
     async (filterType, search) => {
       try {
@@ -203,6 +210,7 @@ const ChatLogFaculty = ({ filterType, searchTerm }) => {
     [userEmail, chat_status]
   );
 
+  // 컴포넌트가 마운트될 때와 검색 조건이 변경될 때마다 학생 상담 기록을 다시 가져옴
   useEffect(() => {
     if (userEmail) {
       fetchStudents(filterType, searchTerm);
@@ -283,7 +291,7 @@ const ChatLogFaculty = ({ filterType, searchTerm }) => {
           data={filteredStudents}
           navigate={navigate}
           userEmail={userEmail}
-        />  
+        />
       )}
     </>
   );

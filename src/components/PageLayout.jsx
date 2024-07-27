@@ -1,3 +1,7 @@
+// 이 파일은 React로 작성된 페이지 레이아웃 컴포넌트입니다.
+// 이 컴포넌트는 웹 애플리케이션의 상단 네비게이션 바와 페이지 콘텐츠, 푸터를 포함하고 있습니다.
+// 사용자 유형에 따라 네비게이션 바의 링크가 다르게 표시되며, 모바일 화면에서는 메뉴 버튼으로 토글됩니다.
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";

@@ -1,3 +1,6 @@
+// 이 파일은 React를 사용하여 학생 상담 기록을 표시하는 페이지입니다.
+// 학생 또는 교사의 역할에 따라 서로 다른 테이블을 렌더링하며, react-table을 이용하여 페이지네이션과 정렬 기능을 제공합니다.
+
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import axios from "axios";
 import {
@@ -11,6 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import "../ui/ChatLog.css";
 
+// Table 컴포넌트는 상담 기록 데이터를 표 형태로 렌더링하며, 페이지네이션과 정렬 기능을 제공합니다.
 const Table = ({ columns, data, navigate }) => {
   const {
     getTableProps,
@@ -26,7 +30,7 @@ const Table = ({ columns, data, navigate }) => {
     pageCount,
     state: { pageIndex },
   } = useTable(
-    { columns, data, initialState: { pageIndex: 0, pageSize: 10 } },
+    { columns, data, initialState: { pageIndex: 0, pageSize: 10 } }, // 초기 페이지 크기를 설정합니다.
     useGlobalFilter,
     useSortBy,
     usePagination
@@ -34,7 +38,7 @@ const Table = ({ columns, data, navigate }) => {
 
   const buttonsToShow = 5;
 
-  // 페이징
+  // 페이지 버튼을 계산하는 함수
   const calculatePageButtons = useCallback(() => {
     const totalButtons = Math.min(buttonsToShow, pageCount);
     const start = Math.max(0, pageIndex - Math.floor(totalButtons / 2));
@@ -57,8 +61,8 @@ const Table = ({ columns, data, navigate }) => {
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                     {column.render("Header")}
                     {column.canSort &&
-                    column.Header !== "상담기록" &&
-                    column.Header !== "레포트" ? (
+                      column.Header !== "상담기록" &&
+                      column.Header !== "레포트" ? ( // 특정 컬럼은 정렬을 비활성화합니다.
                       column.isSorted ? (
                         column.isSortedDesc ? (
                           <FaSortDown style={{ marginLeft: "5px" }} />
@@ -159,9 +163,8 @@ const Table = ({ columns, data, navigate }) => {
           <button
             key={pageNumber}
             onClick={() => gotoPage(pageNumber)}
-            className={`sl-page-btn ${
-              pageIndex === pageNumber ? "active" : ""
-            }`}
+            className={`sl-page-btn ${pageIndex === pageNumber ? "active" : ""
+              }`}
           >
             {pageNumber + 1}
           </button>
@@ -185,13 +188,15 @@ const Table = ({ columns, data, navigate }) => {
   );
 };
 
+// ChatLogStudent 컴포넌트는 학생의 상담 기록을 관리하고 표시합니다.
 const ChatLogStudent = () => {
   const navigate = useNavigate();
-  const { userEmail } = useAuth(); // useAuth 훅 사용
+  const { userEmail } = useAuth(); // 현재 로그인된 사용자의 이메일을 가져옵니다.
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // 학생 데이터를 가져오는 useEffect
   useEffect(() => {
     const fetchStudents = async () => {
       try {
@@ -212,6 +217,7 @@ const ChatLogStudent = () => {
     fetchStudents();
   }, [userEmail]);
 
+  // 테이블에 표시할 컬럼 정의
   const columns = useMemo(
     () => [
       {

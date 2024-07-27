@@ -1,3 +1,7 @@
+// 이 파일은 MypageFaculty 컴포넌트로, 교직원이 자신의 정보를 조회하고 수정할 수 있는 마이페이지를 구성합니다.
+// 프로필 사진 변경, 비밀번호 변경, 그리고 교직원의 기본 정보를 보여주는 기능을 포함하고 있으며, 
+// 'AuthContext'를 사용하여 인증 토큰을 통해 교직원의 정보를 가져옵니다.
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../ui/Mypage.css";
@@ -7,7 +11,7 @@ import ChangePassword from "../components/ChangePasswordModal";
 import PageLayout from "../components/PageLayout";
 
 const MypageFaculty = () => {
-  const { authToken } = useAuth();
+  const { authToken } = useAuth(); // 인증 토큰을 가져오는 useAuth 훅 사용
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -23,6 +27,7 @@ const MypageFaculty = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
+    // 교직원 정보 가져오기
     const fetchTeacherInfo = async () => {
       if (authToken) {
         try {
@@ -38,7 +43,6 @@ const MypageFaculty = () => {
               },
             }
           );
-          console.log("Teacher Info Response", response.data);
           setTeacher(response.data);
         } catch (error) {
           console.error("Failed to fetch teacher info:", error);
@@ -76,7 +80,7 @@ const MypageFaculty = () => {
     }
 
     try {
-      await axios.put("http://localhost:8000/teacher/update", null, { // 안됨
+      await axios.put("http://localhost:8000/teacher/update", null, {
         params: {
           token: authToken,
           teacher_grade: teacher.teacher_grade,

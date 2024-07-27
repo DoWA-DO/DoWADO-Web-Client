@@ -1,3 +1,7 @@
+// 이 파일은 React로 작성된 로그인 폼 컴포넌트입니다.
+// 사용자는 이메일과 비밀번호를 입력하여 로그인할 수 있으며, '기억하기' 옵션을 통해 로그인 정보를 브라우저에 저장할 수 있습니다.
+// 로그인 시 사용자의 유형에 따라 다른 페이지로 리다이렉트됩니다.
+
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -5,6 +9,7 @@ import { useAuth } from "./AuthContext";
 import UserTypeSelector from "./UserTypeSelector";
 
 const LoginForm = () => {
+  // 사용자 유형, 이메일, 비밀번호, 오류 메시지 등의 상태를 관리
   const [userType, setUserType] = useState(
     () => localStorage.getItem("rememberedUserType") || "teacher"
   );
@@ -30,6 +35,7 @@ const LoginForm = () => {
     setUserEmail,
   } = useAuth();
 
+  // 이메일과 비밀번호 변경 시 상태 업데이트
   useEffect(() => {
     const handleUserTypeChange = (e) => {
       setUserType(e.target.value);
@@ -52,12 +58,14 @@ const LoginForm = () => {
     };
   }, []);
 
+  // 폼 제출 시 로그인 처리
   const handleSubmit = async (e) => {
     e.preventDefault();
     setEmailErrorMessage("");
     setPwErrorMessage("");
     setErrorMessage("");
 
+    // 이메일과 비밀번호 입력 확인
     if (!email) {
       setEmailErrorMessage("이메일을 입력해주세요.");
       return;
@@ -68,6 +76,7 @@ const LoginForm = () => {
       return;
     }
 
+    // 로그인 요청
     try {
       const response = await axios.post(
         "http://localhost:8000/auth/login",
@@ -83,6 +92,7 @@ const LoginForm = () => {
         }
       );
 
+      // 로그인 성공 시 토큰 및 사용자 정보 저장
       if (response.status === 200) {
         const token = response.data.access_token;
         const userEmail = email;
@@ -102,6 +112,7 @@ const LoginForm = () => {
         setUserEmail(userEmail);
         localStorage.setItem("userEmail", userEmail);
 
+        // 사용자 유형에 따른 리다이렉트
         if (userType === "teacher") {
           navigate("/studentlog");
         } else if (userType === "student") {

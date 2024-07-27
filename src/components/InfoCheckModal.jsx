@@ -1,6 +1,9 @@
+// 이 파일은 이용약관, 개인정보 수집 및 이용, 개인정보 처리방침을 모달 창으로 표시하는 React 컴포넌트입니다.
+// 사용자가 서비스 사용 시 필요한 법적 문서의 내용을 확인할 수 있도록 합니다.
+
 import React from "react";
 import Modal from "react-modal";
-import "../ui/InfoCheckModal.css"; 
+import "../ui/InfoCheckModal.css";
 
 const InfoCheck = ({ isOpen, closeModal, content }) => {
   return (
@@ -12,13 +15,15 @@ const InfoCheck = ({ isOpen, closeModal, content }) => {
       overlayClassName="info-modal-overlay"
     >
       <h2 className="info-modal-title">
+        {/* content prop에 따라 모달의 제목을 다르게 설정 */}
         {content === "terms"
           ? "이용약관"
           : content === "privacy"
-          ? "개인정보 수집 및 이용"
-          : "개인정보 처리방침"}
+            ? "개인정보 수집 및 이용"
+            : "개인정보 처리방침"}
       </h2>
       <pre className="info-modal-content">
+        {/* content prop에 따라 모달의 내용을 다르게 표시 */}
         {content === "terms"
           ? `
 '도와도'(이하 "회사" 또는 "도와도"라고 함)의 서비스 이용약관은 회사가 제공하는 모든 서비스의 이용과 관련하여 이용자의 권리, 의무 및 책임사항을 규정하고 있습니다. 회사의 서비스를 이용하기 위해서는 본 약관에 동의하여야 합니다.
@@ -46,7 +51,7 @@ const InfoCheck = ({ isOpen, closeModal, content }) => {
 회사는 필요한 경우 관련 법령을 위반하지 않는 범위 내에서 본 약관을 개정할 수 있습니다. 약관이 개정될 경우 회사는 개정 내용과 시행일을 명시하여 서비스 초기 화면에 공지합니다.
           `
           : content === "privacy"
-          ? `
+            ? `
 '도와도'(이하 "회사" 또는 "도와도"라고 함) 는 개인정보 보호법에 따라 이용자의 개인정보를 보호하고 이를 위하여 개인정보 수집 및 이용에 대한 동의를 받고자 합니다. 본 동의서는 회사의 서비스를 이용함에 있어 개인정보를 제공받고, 이용하는 목적, 항목, 보유 및 이용기간 등을 명시하고 있습니다.
 
 1. 개인정보의 수집 및 이용 목적
@@ -68,7 +73,7 @@ const InfoCheck = ({ isOpen, closeModal, content }) => {
 4. 동의를 거부할 권리 및 동의 거부에 따른 불이익
 이용자는 개인정보 수집 및 이용에 대한 동의를 거부할 권리가 있습니다. 다만, 동의를 거부할 경우 서비스 제공이 제한될 수 있습니다.
           `
-          : `
+            : `
 '도와도'(이하 "회사"라 함)는 개인정보 보호법 제30조에 따라 정보주체의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같은 개인정보처리방침을 수립·공개합니다.
 
 제1조(개인정보의 처리 목적)

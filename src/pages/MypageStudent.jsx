@@ -1,3 +1,7 @@
+// 이 파일은 MypageStudent 컴포넌트를 정의하며, 학생이 자신의 정보를 확인하고 수정할 수 있는 마이페이지를 제공합니다.
+// 사용자는 이름, 이메일, 학년, 반, 번호 등의 정보를 확인할 수 있으며, 비밀번호와 프로필 사진을 변경할 수 있습니다.
+// AuthContext를 통해 인증 토큰을 사용하여 학생의 정보를 가져오고, 서버와의 통신을 통해 변경된 정보를 저장합니다.
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../ui/Mypage.css";
@@ -7,7 +11,7 @@ import ChangePassword from "../components/ChangePasswordModal";
 import PageLayout from "../components/PageLayout";
 
 const MypageStudent = () => {
-  const { authToken } = useAuth();
+  const { authToken } = useAuth(); // 인증 토큰을 가져오기 위한 AuthContext 사용
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -25,6 +29,7 @@ const MypageStudent = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
+    // 학생 정보 가져오기
     const fetchStudentInfo = async () => {
       if (authToken) {
         try {
@@ -40,7 +45,6 @@ const MypageStudent = () => {
               },
             }
           );
-          console.log("Student Info Response", response.data);
           setStudent(response.data);
         } catch (error) {
           console.error("Failed to fetch student info:", error);

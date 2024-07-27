@@ -1,3 +1,8 @@
+// 이 파일은 학생 회원가입 폼을 구현한 React 컴포넌트입니다.
+// 학생이 이름, 이메일, 비밀번호, 학교, 학년, 반, 번호 등의 정보를 입력하고
+// 개인정보 수집 및 이용에 동의하고 이용약관에 동의하여 회원가입을 진행할 수 있습니다.
+// 학교 목록을 불러오고, 입력된 정보의 유효성을 검사하며 오류 메시지를 표시합니다.
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -26,8 +31,8 @@ const SignupStudent = () => {
   const [agreeError, setAgreeError] = useState("");
   const [termsError, setTermsError] = useState("");
 
+  // 학교 목록 불러오기
   useEffect(() => {
-    // 학교 목록 불러오기
     const fetchSchools = async () => {
       try {
         const response = await axios.get(

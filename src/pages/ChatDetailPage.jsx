@@ -1,3 +1,7 @@
+// 이 파일은 ChatbotPage 컴포넌트로, 사용자가 과거 챗봇과의 대화 내용을 확인할 수 있는 인터페이스를 제공합니다.
+// 이 컴포넌트는 주어진 chat_id와 chat_student_email, chat_status를 기반으로 서버에서 대화 기록을 가져와서 화면에 표시합니다.
+// 사용자는 이전 화면으로 돌아갈 수 있으며, 사용자 유형에 따라 다른 페이지로 리디렉션됩니다.
+
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "../ui/Chatbot.css";

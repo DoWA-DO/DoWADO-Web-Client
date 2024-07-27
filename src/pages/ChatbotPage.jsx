@@ -1,3 +1,7 @@
+// 이 파일은 ChatbotPage 컴포넌트로, 사용자와 챗봇 간의 대화를 처리하는 기능을 포함하고 있습니다.
+// 사용자 입력을 받아 챗봇에 전송하고, 챗봇의 응답을 화면에 표시합니다. 또한, 사용자는 대화 내용을 저장하거나,
+// 보고서를 생성할 수 있습니다. UI는 메시지 입력창과 메시지 표시 영역, 로딩 상태 등을 관리합니다.
+
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -7,11 +11,11 @@ import { useAuth } from "../components/AuthContext";
 import { PulseLoader, PuffLoader } from "react-spinners";
 
 const ChatbotPage = () => {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const [sessionId, setSessionId] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [reportLoading, setReportLoading] = useState(false); // 추가된 상태
+  const [messages, setMessages] = useState([]); // 챗봇과의 대화를 저장하는 상태
+  const [input, setInput] = useState(""); // 사용자 입력을 관리하는 상태
+  const [sessionId, setSessionId] = useState(null); // 챗봇 세션 ID를 저장하는 상태
+  const [loading, setLoading] = useState(false); // 메시지 로딩 상태
+  const [reportLoading, setReportLoading] = useState(false); // 보고서 생성 로딩 상태
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
   const { authToken, userType } = useAuth();
@@ -20,7 +24,7 @@ const ChatbotPage = () => {
     const initiateChatSession = async () => {
       try {
         if (!sessionId) {
-          const newSessionId = await createChatbotSession();
+          const newSessionId = await createChatbotSession(); // 새로운 챗봇 세션 생성
           setSessionId(newSessionId);
         }
       } catch (error) {
@@ -77,7 +81,7 @@ const ChatbotPage = () => {
           },
         }
       );
-      return response.data.response;
+      return response.data.response; // 챗봇의 응답 텍스트 반환
     } catch (error) {
       console.error("Error creating chatbot message:", error);
       if (error.response) {
@@ -110,7 +114,7 @@ const ChatbotPage = () => {
 
   const getReport = async (sessionId) => {
     try {
-      setReportLoading(true); // 로딩 시작
+      setReportLoading(true); // 레포트 생성 로딩 시작
       const response = await axios.post(
         "http://localhost:8000/careerchat/predict",
         null,
@@ -125,7 +129,7 @@ const ChatbotPage = () => {
         }
       );
       console.log("Report response:", response.data);
-      return response.data; // 레포트 결과를 반환
+      return response.data; // 레포트 데이터 반환
     } catch (error) {
       console.error("Error getting report:", error);
       if (error.response) {
@@ -149,10 +153,10 @@ const ChatbotPage = () => {
       };
       setMessages((prevMessages) => [...prevMessages, userMessage]);
       setInput("");
-      setLoading(true); // 로딩 시작
+      setLoading(true); // 메시지 로딩 시작
 
       try {
-        const botResponse = await createChatbotMessage(sessionId, input);
+        const botResponse = await createChatbotMessage(sessionId, input); // 챗봇에 메시지 전송
         const botMessage = {
           text: botResponse,
           isBot: true,
@@ -165,18 +169,18 @@ const ChatbotPage = () => {
       } catch (error) {
         console.error("Error sending message to chatbot:", error);
       } finally {
-        setLoading(false); // 로딩 종료
+        setLoading(false); // 메시지 로딩 종료
       }
     }
   };
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); // 메시지 화면 자동 스크롤
   }, [messages]);
 
   const handleSaveChatlog = async () => {
     try {
-      await saveChatlog(sessionId);
+      await saveChatlog(sessionId); // 대화 로그 저장
     } catch (error) {
       console.error("Error saving chat log:", error);
     }
@@ -186,8 +190,8 @@ const ChatbotPage = () => {
     try {
       console.log("Report button clicked");
       setReportLoading(true); // 전체 페이지 로딩 시작
-      const reportData = await getReport(sessionId);
-      navigate("/report", { state: { reportData } });
+      const reportData = await getReport(sessionId); // 보고서 생성 요청
+      navigate("/report", { state: { reportData } }); // 보고서 페이지로 이동
     } catch (error) {
       console.error("Error getting report:", error);
       setReportLoading(false); // 오류 시 로딩 종료
@@ -195,27 +199,27 @@ const ChatbotPage = () => {
   };
 
   const handleInputChange = (e) => {
-    setInput(e.target.value);
+    setInput(e.target.value); // 사용자 입력 상태 업데이트
   };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage();
+      handleSendMessage(); // Enter 키로 메시지 전송
     }
   };
 
   const handleBackClick = async () => {
     try {
       console.log("back click");
-      await handleSaveChatlog();
+      await handleSaveChatlog(); // 뒤로 가기 전에 대화 로그 저장
     } catch (error) {
       console.error("Error saving chat log on back click:", error);
     } finally {
       if (userType === "faculty") {
-        navigate("/studentlog");
+        navigate("/studentlog"); // 교직원의 경우 학생 로그 페이지로 이동
       } else if (userType === "student") {
-        navigate("/studentchat");
+        navigate("/studentchat"); // 학생의 경우 학생 채팅 페이지로 이동
       }
     }
   };

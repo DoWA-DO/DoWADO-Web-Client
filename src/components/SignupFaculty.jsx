@@ -1,3 +1,8 @@
+// 이 파일은 교직원 회원가입 폼을 구현한 React 컴포넌트입니다.
+// 사용자가 이름, 이메일, 비밀번호, 학교, 학년, 반 등의 정보를 입력하고,
+// 이메일 인증 및 약관 동의를 통해 회원가입을 진행할 수 있습니다.
+// 학교 목록을 불러오고, 폼 검증 및 오류 메시지 처리를 포함합니다.
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -32,8 +37,9 @@ const SignupFaculty = () => {
   const [emailError, setEmailError] = useState(""); // 이메일 오류 메시지
   const [verificationError, setVerificationError] = useState("");
 
+
+  // 학교 목록 불러오기
   useEffect(() => {
-    // 학교 목록 불러오기
     const fetchSchools = async () => {
       try {
         const response = await axios.get(
@@ -53,6 +59,8 @@ const SignupFaculty = () => {
   const validatePassword = (value) =>
     /^(?=.*\d)(?=.*[a-z])(?=.*[@#$%^&+=!])(?!.*\s).{8,}$/.test(value);
 
+
+  // 폼 입력 처리
   const handleChange = (e) => {
     const { name, value } = e.target;
     let filteredValue = value.replace(/\s/g, ""); // 공백 제거
@@ -103,6 +111,8 @@ const SignupFaculty = () => {
     }
   };
 
+
+  // 학교 선택 처리
   const handleSchoolChange = (e) => {
     const selectedSchoolId = e.target.value;
     setFormData((prev) => ({ ...prev, school_id: selectedSchoolId }));
@@ -123,6 +133,8 @@ const SignupFaculty = () => {
     }
   };
 
+
+  // 이메일 인증 처리
   const handleEmailAuth = async () => {
     const email = formData.teacher_email;
 
@@ -154,6 +166,8 @@ const SignupFaculty = () => {
     }
   };
 
+
+  // 인증번호 입력 및 확인 처리
   const handleVerificationCodeChange = (e) => {
     setInputVerificationCode(e.target.value);
   };
@@ -174,6 +188,7 @@ const SignupFaculty = () => {
     }
   };
 
+  // 회원가입 폼 제출 처리
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newErrors = {};
