@@ -92,6 +92,7 @@ const Table = ({ columns, data, navigate, userEmail }) => {
                                 chat_id: row.original.id,
                                 teacher_email: userEmail,
                                 chat_status: row.original.chat_status,
+                                userType: "faculty", // 사용자 유형 추가
                               },
                             })
                           }
@@ -260,6 +261,7 @@ const ChatLogFaculty = ({ filterType, searchTerm }) => {
                   chat_id: row.original.id,
                   teacher_email: userEmail,
                   chat_status: row.original.chat_status,
+                  userType: "faculty",
                 },
               })
             }

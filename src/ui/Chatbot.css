@@ -304,3 +304,39 @@
     font-size: 12px; /* 버튼 폰트 크기 조정 */
   }
 }
+
+
+
+/* Chatbot.css */
+.chatbot-message-wrapper {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.chatbot-message-wrapper.bot {
+  justify-content: flex-start;
+}
+
+.chatbot-message-wrapper.user {
+  justify-content: flex-end;
+}
+
+.chatbot-message {
+  padding: 10px;
+  border-radius: 5px;
+  max-width: 60%;
+  position: relative;
+}
+
+.chatbot-message.bot {
+  background-color: #fb6d47;
+  color: #ffffff;
+  align-self: flex-start;
+}
+
+.chatbot-message.user {
+  background-color: #21a6a1;
+  color: white;
+  align-self: flex-end;
+}

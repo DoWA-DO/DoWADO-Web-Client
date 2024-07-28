@@ -11,7 +11,7 @@ import {
 } from "react-table";
 import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../components/AuthContext";
 import "../ui/ChatLog.css";
 
 // Table 컴포넌트는 상담 기록 데이터를 표 형태로 렌더링하며, 페이지네이션과 정렬 기능을 제공합니다.
@@ -91,13 +91,13 @@ const Table = ({ columns, data, navigate }) => {
                           onClick={() =>
                             navigate("/chatbotdetail", {
                               state: {
-                                chat_id: row.original.id,
-                                chat_student_email: row.original.email,
-                                chat_status: row.original.chat_status,
+                                chat_session_id: row.original.chat.chat_session_id, // session_id 전달
+                                chat_student_email: row.original.chat.student_email,
+                                chat_status: row.original.chat.chat_status,
+                                userType: "student",
                               },
                             })
                           }
-                          disabled={!row.original.chat_status}
                         >
                           상담기록 보기
                         </button>
@@ -105,26 +105,26 @@ const Table = ({ columns, data, navigate }) => {
                         <button
                           className="log-btn"
                           onClick={() => {
-                            if (!row.original.chat_status) {
+                            if (!row.original.chat.chat_status) {
                               navigate("/chatbot", {
                                 state: {
-                                  chat_id: row.original.id,
-                                  chat_student_email: row.original.email,
-                                  chat_status: row.original.chat_status,
+                                  chat_session_id: row.original.chat.chat_session_id,
+                                  chat_student_email: row.original.chat.student_email,
+                                  chat_status: row.original.chat.chat_status,
                                 },
                               });
                             } else {
                               navigate("/report", {
                                 state: {
-                                  chat_id: row.original.id,
-                                  chat_student_email: row.original.email,
-                                  report_id: row.original.report_id,
+                                  chat_session_id: row.original.chat.chat_session_id,
+                                  chat_student_email: row.original.chat.student_email,
+                                  report_id: row.original.chat.report_id,
                                 },
                               });
                             }
                           }}
                         >
-                          {!row.original.chat_status ? "상담 이어하기" : "레포트 보기"}
+                          {row.original.chat.chat_status ? "레포트 보기" : "상담 이어하기"}
                         </button>
                       ) : (
                         <Link
@@ -223,7 +223,7 @@ const ChatLogStudent = () => {
     () => [
       {
         Header: "상담일시",
-        accessor: "chat.chat_date",  // 데이터 구조에 맞게 수정
+        accessor: "chat.chat_date",
         Cell: ({ value }) => {
           // 날짜 형식을 변환하여 표시
           const date = new Date(value);
@@ -256,13 +256,13 @@ const ChatLogStudent = () => {
             onClick={() =>
               navigate("/chatbotdetail", {
                 state: {
-                  chat_id: row.original.id,
-                  chat_student_email: row.original.email,
-                  chat_status: row.original.chat_status,
+                  chat_session_id: row.original.chat.chat_session_id, // session_id 전달
+                  chat_student_email: row.original.chat.student_email,
+                  chat_status: row.original.chat.chat_status,
+                  userType: "student",
                 },
               })
             }
-            disabled={!row.original.chat_status}
           >
             상담기록 보기
           </button>
@@ -276,26 +276,26 @@ const ChatLogStudent = () => {
           <button
             className="log-btn"
             onClick={() => {
-              if (!row.original.chat_status) {
-                navigate("/chatbot", {
+              if (row.original.chat.chat_status) {
+                navigate("/report", {
                   state: {
-                    chat_id: row.original.id,
-                    chat_student_email: row.original.email,
-                    chat_status: row.original.chat_status,
+                    chat_session_id: row.original.chat.chat_session_id,
+                    chat_student_email: row.original.chat.student_email,
+                    report_id: row.original.chat.report_id,
                   },
                 });
               } else {
-                navigate("/report", {
+                navigate("/chatbot", {
                   state: {
-                    chat_id: row.original.id,
-                    chat_student_email: row.original.email,
-                    report_id: row.original.report_id,
+                    chat_session_id: row.original.chat.chat_session_id,
+                    chat_student_email: row.original.chat.student_email,
+                    chat_status: row.original.chat.chat_status,
                   },
                 });
               }
             }}
           >
-            {!row.original.chat_status ? "상담 이어하기" : "레포트 보기"}
+            {row.original.chat.chat_status ? "레포트 보기" : "상담 이어하기"}
           </button>
         ),
       },

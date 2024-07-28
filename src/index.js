@@ -37,7 +37,7 @@ root.render(
           <Route path="/chatbot" element={<ChatbotPage />} />
           <Route path="/studentchat" element={<StudentChatPage />} />
           <Route path="/report" element={<ReportPage />} />
-          <Route path="/chatdetail" element={<ChatDetailPage />} />
+          <Route path="/chatbotdetail" element={<ChatDetailPage />} />
           <Route path="/mypagestudent" element={<MypageStudent />} />
           <Route path="/mypageFaculty" element={<MypageFaculty />} />
         </Routes>
