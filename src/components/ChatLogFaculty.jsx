@@ -224,15 +224,15 @@ const ChatLogFaculty = ({ filterType, searchTerm }) => {
     () => [
       {
         Header: "상담일시",
-        accessor: "chat_date",
+        accessor: "chat.chat_date",
       },
       {
-        Header: "학번",
-        accessor: "student_number",
+        Header: "이메일",
+        accessor: "chat.student_email", // 이메일 필드
       },
       {
         Header: "이름",
-        accessor: "student_name",
+        accessor: "student_name", // 이름 필드
       },
       {
         Header: "상담기록",
