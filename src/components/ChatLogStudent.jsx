@@ -223,15 +223,28 @@ const ChatLogStudent = () => {
     () => [
       {
         Header: "상담일시",
-        accessor: "date",
+        accessor: "chat.chat_date",  // 데이터 구조에 맞게 수정
+        Cell: ({ value }) => {
+          // 날짜 형식을 변환하여 표시
+          const date = new Date(value);
+          const formattedDate = date.toLocaleString("ko-KR", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          });
+          return <span>{formattedDate}</span>;
+        },
       },
       {
-        Header: "학번",
-        accessor: "number",
+        Header: "이메일",
+        accessor: "chat.student_email",
       },
       {
         Header: "이름",
-        accessor: "name",
+        accessor: "student_name",
       },
       {
         Header: "상담기록",

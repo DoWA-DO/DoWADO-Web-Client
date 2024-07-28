@@ -225,7 +225,20 @@ const ChatLogFaculty = ({ filterType, searchTerm }) => {
       {
         Header: "상담일시",
         accessor: "chat.chat_date",
+        Cell: ({ value }) => {
+          const date = new Date(value);
+          const formattedDate = date.toLocaleString("ko-KR", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          });
+          return <span>{formattedDate}</span>;
+        },
       },
+
       {
         Header: "이메일",
         accessor: "chat.student_email", // 이메일 필드
