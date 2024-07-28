@@ -99,7 +99,7 @@ const Table = ({ columns, data, navigate }) => {
                             })
                           }
                         >
-                          상담기록 보기
+                          상담기록 확인
                         </button>
                       ) : cell.column.id === "report" ? (
                         <button
@@ -124,7 +124,7 @@ const Table = ({ columns, data, navigate }) => {
                             }
                           }}
                         >
-                          {row.original.chat.chat_status ? "레포트 보기" : "상담 이어하기"}
+                          {row.original.chat.chat_status ? "레포트 확인" : "상담 이어하기"}
                         </button>
                       ) : (
                         <Link
@@ -264,7 +264,7 @@ const ChatLogStudent = () => {
               })
             }
           >
-            상담기록 보기
+            상담기록 확인
           </button>
         ),
       },
@@ -295,7 +295,7 @@ const ChatLogStudent = () => {
               }
             }}
           >
-            {row.original.chat.chat_status ? "레포트 보기" : "상담 이어하기"}
+            {row.original.chat.chat_status ? "레포트 확인" : "상담 이어하기"}
           </button>
         ),
       },

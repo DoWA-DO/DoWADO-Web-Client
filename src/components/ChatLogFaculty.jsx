@@ -89,10 +89,10 @@ const Table = ({ columns, data, navigate, userEmail }) => {
                           onClick={() =>
                             navigate("/chatbotdetail", {
                               state: {
-                                chat_id: row.original.id,
-                                teacher_email: userEmail,
-                                chat_status: row.original.chat_status,
-                                userType: "faculty", // 사용자 유형 추가
+                                chat_session_id: row.original.chat.chat_session_id, // session_id 전달
+                                chat_student_email: row.original.chat.student_email,
+                                chat_status: row.original.chat.chat_status,
+                                userType: "faculty",
                               },
                             })
                           }
@@ -105,9 +105,9 @@ const Table = ({ columns, data, navigate, userEmail }) => {
                           onClick={() =>
                             navigate("/report", {
                               state: {
-                                teacher_email: userEmail,
-                                chat_id: row.original.id,
-                                report_id: row.original.report_id,
+                                chat_session_id: row.original.chat.chat_session_id,
+                                chat_student_email: row.original.chat.student_email,
+                                report_id: row.original.chat.report_id,
                               },
                             })
                           }
@@ -258,9 +258,9 @@ const ChatLogFaculty = ({ filterType, searchTerm }) => {
             onClick={() =>
               navigate("/chatbotdetail", {
                 state: {
-                  chat_id: row.original.id,
-                  teacher_email: userEmail,
-                  chat_status: row.original.chat_status,
+                  chat_session_id: row.original.chat.chat_session_id, // session_id 전달
+                  chat_student_email: row.original.chat.student_email,
+                  chat_status: row.original.chat.chat_status,
                   userType: "faculty",
                 },
               })

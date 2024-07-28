@@ -45,7 +45,7 @@ const ChatbotDetailPage = () => {
 
   const handleBackClick = () => {
     if (userType === "faculty") {
-      navigate("/facultychatlog"); // 교직원용 상담 기록 목록 페이지
+      navigate("/studentlog"); // 교직원용 상담 기록 목록 페이지
     } else if (userType === "student") {
       navigate("/studentchat"); // 학생용 상담 기록 목록 페이지
     } else {
