@@ -14,7 +14,6 @@ import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import "../ui/ChatLog.css";
 import { useAuth } from "../components/AuthContext";
-
 // Table 컴포넌트는 상담 기록 데이터를 표 형태로 렌더링합니다.
 const Table = ({ columns, data, navigate, userEmail }) => {
   const {
@@ -179,24 +178,27 @@ const Table = ({ columns, data, navigate, userEmail }) => {
 // ChatLogFaculty 컴포넌트는 필터와 검색어를 기반으로 학생 상담 기록을 가져와서 Table 컴포넌트에 전달합니다.
 const ChatLogFaculty = ({ filterType, searchTerm }) => {
   const navigate = useNavigate();
-  const { userEmail } = useAuth();
+  const { userEmail, authToken } = useAuth(); // Fetch the authToken from context
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const chat_status = 1; // 교사 chat_status는 1로 설정
+  const chat_status = true; // 교사는 chat_status true으로 설정(레포트 생성 완료)
 
   // 학생 상담 기록을 가져오는 함수
   const fetchStudents = useCallback(
     async (filterType, search) => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/v1/chat/read", // 학생 상담 기록 조회
+          "http://localhost:8000/report/teacher/chatlogs", // 학생 상담 기록 조회
           {
             params: {
               teacher_email: userEmail,
               chat_status,
               filter_type: filterType,
               search,
+            },
+            headers: {
+              "Authorization": `Bearer ${authToken}`, // Add the auth token to the headers
             },
           }
         );
@@ -207,7 +209,7 @@ const ChatLogFaculty = ({ filterType, searchTerm }) => {
         setLoading(false);
       }
     },
-    [userEmail, chat_status]
+    [userEmail, chat_status, authToken]
   );
 
   // 컴포넌트가 마운트될 때와 검색 조건이 변경될 때마다 학생 상담 기록을 다시 가져옴

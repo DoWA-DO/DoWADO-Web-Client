@@ -97,7 +97,7 @@ const Table = ({ columns, data, navigate }) => {
                               },
                             })
                           }
-                          disabled={row.original.chat_status === 0}
+                          disabled={!row.original.chat_status}
                         >
                           상담기록 보기
                         </button>
@@ -105,7 +105,7 @@ const Table = ({ columns, data, navigate }) => {
                         <button
                           className="log-btn"
                           onClick={() => {
-                            if (row.original.chat_status === 0) {
+                            if (!row.original.chat_status) {
                               navigate("/chatbot", {
                                 state: {
                                   chat_id: row.original.id,
@@ -124,9 +124,7 @@ const Table = ({ columns, data, navigate }) => {
                             }
                           }}
                         >
-                          {row.original.chat_status === 0
-                            ? "상담 이어하기"
-                            : "레포트 보기"}
+                          {!row.original.chat_status ? "상담 이어하기" : "레포트 보기"}
                         </button>
                       ) : (
                         <Link
@@ -191,7 +189,7 @@ const Table = ({ columns, data, navigate }) => {
 // ChatLogStudent 컴포넌트는 학생의 상담 기록을 관리하고 표시합니다.
 const ChatLogStudent = () => {
   const navigate = useNavigate();
-  const { userEmail } = useAuth(); // 현재 로그인된 사용자의 이메일을 가져옵니다.
+  const { userEmail, authToken } = useAuth(); // 현재 로그인된 사용자의 이메일과 토큰을 가져옵니다.
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -201,8 +199,11 @@ const ChatLogStudent = () => {
     const fetchStudents = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/v1/chat/read", // 학생 상담 기록 조회
+          "http://localhost:8000/report/student/chatlogs",  // 학생 상담 기록 조회
           {
+            headers: {
+              Authorization: `Bearer ${authToken}`, // authToken 추가
+            },
             params: { email: userEmail },
           }
         );
@@ -215,7 +216,7 @@ const ChatLogStudent = () => {
     };
 
     fetchStudents();
-  }, [userEmail]);
+  }, [userEmail, authToken]);
 
   // 테이블에 표시할 컬럼 정의
   const columns = useMemo(
@@ -248,7 +249,7 @@ const ChatLogStudent = () => {
                 },
               })
             }
-            disabled={row.original.chat_status === 0}
+            disabled={!row.original.chat_status}
           >
             상담기록 보기
           </button>
@@ -262,7 +263,7 @@ const ChatLogStudent = () => {
           <button
             className="log-btn"
             onClick={() => {
-              if (row.original.chat_status === 0) {
+              if (!row.original.chat_status) {
                 navigate("/chatbot", {
                   state: {
                     chat_id: row.original.id,
@@ -281,7 +282,7 @@ const ChatLogStudent = () => {
               }
             }}
           >
-            {row.original.chat_status === 0 ? "상담 이어하기" : "레포트 보기"}
+            {!row.original.chat_status ? "상담 이어하기" : "레포트 보기"}
           </button>
         ),
       },
