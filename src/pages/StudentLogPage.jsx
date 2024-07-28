@@ -6,7 +6,7 @@ import ChatLogFaculty from "../components/ChatLogFaculty";
 import "../ui/StudentLogPage.css";
 import PageLayout from "../components/PageLayout";
 
-// Search 컴포넌트는 이름 또는 번호로 학생의 상담 기록을 검색할 수 있는 검색 폼을 제공합니다.
+// Search 컴포넌트는 이름 또는 아이디로 학생의 상담 기록을 검색할 수 있는 검색 폼을 제공합니다.
 const Search = ({ onSubmit }) => {
   const [filterType, setFilterType] = useState("name");
   const [filterValue, setFilterValue] = useState("");
@@ -39,13 +39,14 @@ const Search = ({ onSubmit }) => {
         <option className="sl-option" value="name">
           이름
         </option>
-        <option className="sl-option" value="number">
-          번호
+        <option className="sl-option" value="email">
+          아이디
         </option>
       </select>
       <input
         name="filter"
         className="sl-input"
+        placeholder={`학생 ${filterType === "name" ? "이름" : "아이디"} 입력`}
         value={filterValue}
         onChange={handleChange}
         onKeyDown={handleKeyDown}

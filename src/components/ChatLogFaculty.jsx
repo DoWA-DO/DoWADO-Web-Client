@@ -14,6 +14,7 @@ import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import "../ui/ChatLog.css";
 import { useAuth } from "../components/AuthContext";
+
 // Table 컴포넌트는 상담 기록 데이터를 표 형태로 렌더링합니다.
 const Table = ({ columns, data, navigate, userEmail }) => {
   const {
@@ -45,10 +46,7 @@ const Table = ({ columns, data, navigate, userEmail }) => {
     return Array.from({ length: totalButtons }, (_, i) => start + i);
   }, [pageCount, pageIndex]);
 
-  const pageButtons = useMemo(
-    () => calculatePageButtons(),
-    [calculatePageButtons]
-  );
+  const pageButtons = useMemo(() => calculatePageButtons(), [calculatePageButtons]);
 
   return (
     <div className="sl-table-container">
@@ -92,7 +90,7 @@ const Table = ({ columns, data, navigate, userEmail }) => {
                             navigate("/chatbotdetail", {
                               state: {
                                 chat_id: row.original.id,
-                                chat_student_email: userEmail,
+                                teacher_email: userEmail,
                                 chat_status: row.original.chat_status,
                               },
                             })
@@ -150,8 +148,7 @@ const Table = ({ columns, data, navigate, userEmail }) => {
           <button
             key={pageNumber}
             onClick={() => gotoPage(pageNumber)}
-            className={`sl-page-btn ${pageIndex === pageNumber ? "active" : ""
-              }`}
+            className={`sl-page-btn ${pageIndex === pageNumber ? "active" : ""}`}
           >
             {pageNumber + 1}
           </button>
@@ -178,38 +175,42 @@ const Table = ({ columns, data, navigate, userEmail }) => {
 // ChatLogFaculty 컴포넌트는 필터와 검색어를 기반으로 학생 상담 기록을 가져와서 Table 컴포넌트에 전달합니다.
 const ChatLogFaculty = ({ filterType, searchTerm }) => {
   const navigate = useNavigate();
-  const { userEmail, authToken } = useAuth(); // Fetch the authToken from context
+  const { userEmail, authToken } = useAuth();
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const chat_status = true; // 교사는 chat_status true으로 설정(레포트 생성 완료)
 
   // 학생 상담 기록을 가져오는 함수
   const fetchStudents = useCallback(
     async (filterType, search) => {
       try {
+        // 검색어가 없으면 전체 조회, 검색어가 있으면 검색 수행
+        const endpoint = search ? "search-chatlogs" : "chatlogs";
         const response = await axios.get(
-          "http://localhost:8000/report/teacher/chatlogs", // 학생 상담 기록 조회
+          `http://localhost:8000/report/teacher/${endpoint}`,
           {
             params: {
               teacher_email: userEmail,
-              chat_status,
-              filter_type: filterType,
-              search,
+              search_type: filterType,  // 검색 타입 파라미터 이름 확인
+              search_query: search || "",  // 검색어가 없을 때 빈 문자열 전달
             },
             headers: {
-              "Authorization": `Bearer ${authToken}`, // Add the auth token to the headers
+              Authorization: `Bearer ${authToken}`,
             },
           }
         );
         setFilteredStudents(response.data);
       } catch (error) {
-        setError(error.message);
+        if (error.response && error.response.status === 404) {
+          setFilteredStudents([]);
+        } else {
+          setError(error.message);
+        }
       } finally {
         setLoading(false);
       }
     },
-    [userEmail, chat_status, authToken]
+    [userEmail, authToken]
   );
 
   // 컴포넌트가 마운트될 때와 검색 조건이 변경될 때마다 학생 상담 기록을 다시 가져옴
@@ -217,7 +218,7 @@ const ChatLogFaculty = ({ filterType, searchTerm }) => {
     if (userEmail) {
       fetchStudents(filterType, searchTerm);
     }
-  }, [userEmail, chat_status, filterType, searchTerm, fetchStudents]);
+  }, [userEmail, filterType, searchTerm, fetchStudents]);
 
   const columns = useMemo(
     () => [
@@ -300,3 +301,4 @@ const ChatLogFaculty = ({ filterType, searchTerm }) => {
 };
 
 export default ChatLogFaculty;
+
