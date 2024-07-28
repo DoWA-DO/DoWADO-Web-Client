@@ -2,29 +2,95 @@
 // 사용자 입력을 받아 챗봇에 전송하고, 챗봇의 응답을 화면에 표시합니다. 또한, 사용자는 대화 내용을 저장하거나,
 // 보고서를 생성할 수 있습니다. UI는 메시지 입력창과 메시지 표시 영역, 로딩 상태 등을 관리합니다.
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../ui/Chatbot.css";
 import { FaArrowUp, FaArrowLeft } from "react-icons/fa";
 import { useAuth } from "../components/AuthContext";
 import { PulseLoader, PuffLoader } from "react-spinners";
 
+
 const ChatbotPage = () => {
-  const [messages, setMessages] = useState([]); // 챗봇과의 대화를 저장하는 상태
-  const [input, setInput] = useState(""); // 사용자 입력을 관리하는 상태
-  const [sessionId, setSessionId] = useState(null); // 챗봇 세션 ID를 저장하는 상태
-  const [loading, setLoading] = useState(false); // 메시지 로딩 상태
+  const [messages, setMessages] = useState([]);              // 챗봇과의 대화를 저장하는 상태
+  const [input, setInput] = useState("");                    // 사용자 입력을 관리하는 상태
+  const [sessionId, setSessionId] = useState(null);          // 챗봇 세션 ID를 저장하는 상태
+  const [loading, setLoading] = useState(false);             // 메시지 로딩 상태
   const [reportLoading, setReportLoading] = useState(false); // 보고서 생성 로딩 상태
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
   const { authToken, userType } = useAuth();
+  const location = useLocation();
+
+  // 챗봇 세션 생성
+  const createChatbotSession = useCallback(async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/careerchat/new-session",
+        null,
+        {
+          headers: { Authorization: `Bearer ${authToken}`, },
+          params: { token: authToken, },
+        }
+      );
+      console.log("Session creation response:", response.data);
+      return response.data.session_id;
+    } catch (error) {
+      console.error("Error creating chatbot session:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+      }
+      throw error;
+    }
+  }, [authToken]);
+
+
+  // 기존 채팅 세션 가져오기 
+  const fetchChatHistory = useCallback(async (sessionId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/careerchat/chat/content`,
+        {
+          headers: { Authorization: `Bearer ${authToken}`, },
+          params: { session_id: sessionId, },
+        }
+      );
+
+      // 서버에서 받아온 데이터가 JSON 형식의 문자열이라면 파싱
+      const chatData = JSON.parse(response.data.chat_content);
+
+      // 각 쿼리와 응답을 분리하여 메시지 배열에 추가
+      const formattedMessages = chatData.map(({ query, response }) => [
+        {
+          text: query,
+          isBot: false,
+          time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) // 현재 시간으로 설정
+        },
+        {
+          text: response,
+          isBot: true,
+          time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) // 현재 시간으로 설정
+        }
+      ]).flat(); // 이중 배열을 평탄화하여 하나의 배열로 만듦
+
+      setMessages(formattedMessages);
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+    }
+  }, [authToken]);
+
+
 
   useEffect(() => {
     const initiateChatSession = async () => {
       try {
-        if (!sessionId) {
-          const newSessionId = await createChatbotSession(); // 새로운 챗봇 세션 생성
+        if (location.state && location.state.chat_session_id) {
+          const sessionId = location.state.chat_session_id;
+          setSessionId(sessionId);
+          await fetchChatHistory(sessionId); // 이전 대화 내용 불러오기
+        } else if (!sessionId) {
+          // 새로운 세션 생성
+          const newSessionId = await createChatbotSession();
           setSessionId(newSessionId);
         }
       } catch (error) {
@@ -38,42 +104,18 @@ const ChatbotPage = () => {
     } else {
       console.error("Auth token is missing");
     }
-  }, [authToken, sessionId]);
+  }, [authToken, location.state, sessionId, createChatbotSession, fetchChatHistory]);
 
-  const createChatbotSession = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/careerchat/new-session",
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-          params: {
-            token: authToken,
-          },
-        }
-      );
-      console.log("Session creation response:", response.data);
-      return response.data.session_id;
-    } catch (error) {
-      console.error("Error creating chatbot session:", error);
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-      }
-      throw error;
-    }
-  };
 
+
+  // 챗봇에게 쿼리 전송
   const createChatbotMessage = async (sessionId, inputQuery) => {
     try {
       const response = await axios.post(
         "http://localhost:8000/careerchat/chat",
         {},
         {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
+          headers: { Authorization: `Bearer ${authToken}`, },
           params: {
             session_id: sessionId,
             input_query: inputQuery,
@@ -91,18 +133,21 @@ const ChatbotPage = () => {
     }
   };
 
+
+  // 채팅 기록 저장
   const saveChatlog = async (sessionId) => {
     try {
       console.log("sessionid: ", sessionId);
-      await axios.post("http://localhost:8000/careerchat/save-chatlog", null, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-        params: {
-          session_id: sessionId,
-          token: authToken,
-        },
-      });
+      await axios.post(
+        "http://localhost:8000/careerchat/save-chatlog",
+        null,
+        {
+          headers: { Authorization: `Bearer ${authToken}`, },
+          params: {
+            session_id: sessionId,
+            token: authToken,
+          },
+        });
     } catch (error) {
       console.error("Error saving chat log:", error);
       if (error.response) {
@@ -112,6 +157,8 @@ const ChatbotPage = () => {
     }
   };
 
+
+  // 레포트 생성 
   const getReport = async (sessionId) => {
     try {
       setReportLoading(true); // 레포트 생성 로딩 시작
@@ -119,9 +166,7 @@ const ChatbotPage = () => {
         "http://localhost:8000/careerchat/predict",
         null,
         {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
+          headers: { Authorization: `Bearer ${authToken}`, },
           params: {
             session_id: sessionId,
             token: authToken,
@@ -141,6 +186,32 @@ const ChatbotPage = () => {
     }
   };
 
+
+  // //
+  // const handleContinueChat = async () => {
+  //   try {
+  //     // continue-chat API를 호출하여 세션 업데이트
+  //     const response = await axios.post(
+  //       "http://localhost:8000/careerchat/continue-chat",
+  //       { session_id: sessionId },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${authToken}`,
+  //         },
+  //       }
+  //     );
+  //     const newSessionId = response.data.new_session_id;
+  //     setSessionId(newSessionId);
+
+  //     // 세션이 업데이트된 후 채팅 기록을 가져와 화면에 표시
+  //     await fetchChatHistory(newSessionId);
+  //   } catch (error) {
+  //     console.error("Error continuing chat:", error);
+  //   }
+  // };
+
+
+  // 
   const handleSendMessage = async () => {
     if (input.trim() !== "") {
       const userMessage = {
@@ -178,6 +249,8 @@ const ChatbotPage = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); // 메시지 화면 자동 스크롤
   }, [messages]);
 
+
+  // 
   const handleSaveChatlog = async () => {
     try {
       await saveChatlog(sessionId); // 대화 로그 저장
@@ -186,6 +259,8 @@ const ChatbotPage = () => {
     }
   };
 
+
+  // 
   const handleReportClick = async () => {
     try {
       console.log("Report button clicked");
@@ -198,10 +273,13 @@ const ChatbotPage = () => {
     }
   };
 
+
+  //
   const handleInputChange = (e) => {
     setInput(e.target.value); // 사용자 입력 상태 업데이트
   };
 
+  //
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -209,6 +287,7 @@ const ChatbotPage = () => {
     }
   };
 
+  //
   const handleBackClick = async () => {
     try {
       console.log("back click");
@@ -224,6 +303,8 @@ const ChatbotPage = () => {
     }
   };
 
+
+  // 
   return (
     <div className="chatbot-container">
       {reportLoading && (
