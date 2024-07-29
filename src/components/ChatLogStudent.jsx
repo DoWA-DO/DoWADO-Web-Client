@@ -100,8 +100,6 @@ const Table = ({ columns, data, navigate, onContinueChat }) => {
                               navigate("/report", {
                                 state: {
                                   chat_session_id: row.original.chat.chat_session_id,
-                                  chat_student_email: row.original.chat.student_email,
-                                  report_id: row.original.chat.report_id,
                                 },
                               });
                             }
@@ -204,7 +202,7 @@ const ChatLogStudent = () => {
         console.log("Sending session_id:", sessionId);
         const response = await axios.post(
           "http://localhost:8000/careerchat/continue-chat",
-          null,  // 여기가 기존에 있었던 문제의 소스입니다. session_id가 올바르게 전달되지 않았습니다.
+          null,
           {
             headers: {
               Authorization: `Bearer ${authToken}`,
@@ -291,11 +289,7 @@ const ChatLogStudent = () => {
                 );
               } else {
                 navigate("/report", {
-                  state: {
-                    chat_session_id: row.original.chat.chat_session_id,
-                    chat_student_email: row.original.chat.student_email,
-                    report_id: row.original.chat.report_id,
-                  },
+                  state: { chat_session_id: row.original.chat.chat_session_id, },
                 });
               }
             }}

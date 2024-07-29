@@ -11,7 +11,7 @@ import {
   usePagination,
 } from "react-table";
 import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../ui/ChatLog.css";
 import { useAuth } from "../components/AuthContext";
 
@@ -104,23 +104,14 @@ const Table = ({ columns, data, navigate, userEmail }) => {
                           className="log-btn"
                           onClick={() =>
                             navigate("/report", {
-                              state: {
-                                chat_session_id: row.original.chat.chat_session_id,
-                                chat_student_email: row.original.chat.student_email,
-                                report_id: row.original.chat.report_id,
-                              },
+                              state: { chat_session_id: row.original.chat.chat_session_id, },
                             })
                           }
                         >
                           레포트 확인
                         </button>
                       ) : (
-                        <Link
-                          to={`/students/${row.original.id}`} // 학생 개별 페이지로 이동
-                          style={{ textDecoration: "none", color: "inherit" }}
-                        >
-                          {cell.render("Cell")}
-                        </Link>
+                        cell.render("Cell")
                       )}
                     </td>
                   ))}
@@ -280,9 +271,7 @@ const ChatLogFaculty = ({ filterType, searchTerm }) => {
             onClick={() =>
               navigate("/report", {
                 state: {
-                  teacher_email: userEmail,
-                  chat_id: row.original.id,
-                  report_id: row.original.report_id,
+                  chat_session_id: row.original.chat.chat_session_id,
                 },
               })
             }
@@ -292,7 +281,7 @@ const ChatLogFaculty = ({ filterType, searchTerm }) => {
         ),
       },
     ],
-    [navigate, userEmail]
+    [navigate]
   );
 
   return (
