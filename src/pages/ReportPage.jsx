@@ -1,6 +1,3 @@
-// ReportPage 컴포넌트는 학생 또는 교사가 상담 후 생성된 직업 추천 보고서를 볼 수 있도록 합니다.
-// 사용자는 이전 화면으로 돌아갈 수 있으며, 보고서에는 추천된 직업군이 표시됩니다.
-
 import React from "react";
 import "../ui/Report.css";
 import { FaArrowLeft } from "react-icons/fa";
@@ -34,14 +31,34 @@ const ReportPage = () => {
         <button className="back-btn" onClick={handleBackClick}>
           <FaArrowLeft size="20" />
         </button>
+        <h1>진로 추천 보고서</h1>
       </div>
+
       <div className="report-content">
-        <div className="sentences-container">
-          {/* 추천된 직업군을 화면에 표시 */}
-          {reportData.prediction.map((item, index) => (
-            <div key={index} className="sentences">
-              ***님께 추천드리는 직업군은 <span className="job">{item}</span>
-              입니다.
+        {/* 추천된 직업군 */}
+        <div className="section">
+          <h2>추천 직업군</h2>
+          <p className="job-title">{reportData.prediction}</p>
+        </div>
+
+        {/* 연관 직업 */}
+        <div className="section">
+          <h2>연관 직업</h2>
+          {reportData.relatedJobs?.map((job, index) => (
+            <div key={index} className="related-job">
+              <p className="job-title">{job.title}</p>
+              <p className="job-info">{job.info}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* 연관 전공 */}
+        <div className="section">
+          <h2>연관 전공</h2>
+          {reportData.relatedMajors?.map((major, index) => (
+            <div key={index} className="related-major">
+              <p className="major-title">{major.major}</p>
+              <p className="major-info">{major.info}</p>
             </div>
           ))}
         </div>

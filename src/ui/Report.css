@@ -5,6 +5,7 @@
   width: 50vw;
   background-color: #ffffff;
   border-radius: 20px;
+  overflow-y: auto; /* 컨텐츠가 많을 경우 스크롤 가능 */
 }
 
 .report-header {
@@ -28,20 +29,25 @@
   cursor: pointer;
 }
 
-.sentence {
-  font-size: 16px;
-  color: #333;
-  margin: 0;
-  white-space: pre-wrap;
-}
-
-.sentences-container {
+.report-content {
   padding: 20px;
 }
 
-.job {
+.section {
+  margin-bottom: 20px;
+}
+
+.job-title {
+  font-size: 20px;
   font-weight: 600;
   color: #21a6a1;
+}
+
+.job-info,
+.major-info {
+  font-size: 16px;
+  color: #333;
+  margin: 5px 0;
 }
 
 @media (max-width: 767px) {

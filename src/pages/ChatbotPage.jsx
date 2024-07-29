@@ -161,54 +161,20 @@ const ChatbotPage = () => {
   // 레포트 생성 
   const getReport = async (sessionId) => {
     try {
-      setReportLoading(true); // 레포트 생성 로딩 시작
       const response = await axios.post(
-        "http://localhost:8000/careerchat/predict",
+        "http://localhost:8000/report/predict",
         null,
         {
-          headers: { Authorization: `Bearer ${authToken}`, },
-          params: {
-            session_id: sessionId,
-            token: authToken,
-          },
+          headers: { Authorization: `Bearer ${authToken}` },
+          params: { session_id: sessionId }
         }
       );
-      console.log("Report response:", response.data);
-      return response.data; // 레포트 데이터 반환
+      return response.data;
     } catch (error) {
       console.error("Error getting report:", error);
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-      }
       throw error;
-    } finally {
-      setReportLoading(false); // 로딩 종료
     }
   };
-
-
-  // //
-  // const handleContinueChat = async () => {
-  //   try {
-  //     // continue-chat API를 호출하여 세션 업데이트
-  //     const response = await axios.post(
-  //       "http://localhost:8000/careerchat/continue-chat",
-  //       { session_id: sessionId },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${authToken}`,
-  //         },
-  //       }
-  //     );
-  //     const newSessionId = response.data.new_session_id;
-  //     setSessionId(newSessionId);
-
-  //     // 세션이 업데이트된 후 채팅 기록을 가져와 화면에 표시
-  //     await fetchChatHistory(newSessionId);
-  //   } catch (error) {
-  //     console.error("Error continuing chat:", error);
-  //   }
-  // };
 
 
   // 
@@ -263,13 +229,13 @@ const ChatbotPage = () => {
   // 
   const handleReportClick = async () => {
     try {
-      console.log("Report button clicked");
-      setReportLoading(true); // 전체 페이지 로딩 시작
-      const reportData = await getReport(sessionId); // 보고서 생성 요청
-      navigate("/report", { state: { reportData } }); // 보고서 페이지로 이동
+      setReportLoading(true);
+      const reportData = await getReport(sessionId); // 진로 추천 데이터 요청
+      navigate("/report", { state: { reportData } }); // Report 페이지로 이동
     } catch (error) {
       console.error("Error getting report:", error);
-      setReportLoading(false); // 오류 시 로딩 종료
+    } finally {
+      setReportLoading(false); // 로딩 종료
     }
   };
 
@@ -321,7 +287,7 @@ const ChatbotPage = () => {
           onClick={handleReportClick}
           disabled={reportLoading}
         >
-          레포트 보기
+          레포트 생성
         </button>
       </div>
       <div className={`chatbot-messages ${reportLoading ? "hidden" : ""}`}>
